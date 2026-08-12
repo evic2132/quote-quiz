@@ -7,11 +7,14 @@ plugins {
 }
 
 dependencies {
+    // Shared app code
     implementation(projects.app.shared)
 
+    // Desktop runtime
     implementation(compose.desktop.currentOs)
     implementation(libs.kotlinx.coroutinesSwing)
 
+    // Tooling
     implementation(libs.compose.uiToolingPreview)
 }
 

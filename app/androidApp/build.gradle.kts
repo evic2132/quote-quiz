@@ -10,11 +10,15 @@ kotlin {
         jvmTarget = JvmTarget.JVM_21
     }
 }
+
 dependencies {
+    // Shared app code
     implementation(projects.app.shared)
 
+    // Android entry point
     implementation(libs.androidx.activity.compose)
 
+    // Tooling
     implementation(libs.compose.uiToolingPreview)
     debugImplementation(libs.compose.uiTooling)
 }

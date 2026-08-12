@@ -24,6 +24,7 @@ kotlin {
 
     sourceSets {
         commonMain.dependencies {
+            // Shared wire models
             api(libs.kotlinx.serialization.core)
         }
         commonTest.dependencies {
