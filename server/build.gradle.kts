@@ -17,7 +17,7 @@ java {
 
 dependencies {
     // Shared contract
-    implementation(project(":api-contract"))
+    implementation(projects.apiContract)
 
     // Spring Boot runtime
     implementation(libs.spring.boot.h2console)
