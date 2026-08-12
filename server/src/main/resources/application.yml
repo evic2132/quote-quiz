@@ -1,5 +1,5 @@
 server:
-  port: 8080
+  port: ${SERVER_PORT:8080}
 
 spring:
   application:
@@ -15,14 +15,10 @@ spring:
     properties:
       hibernate:
         format_sql: true
-  security:
-    user:
-      name: ${QUOTEQUIZ_SECURITY_USERNAME:admin}
-      password: ${QUOTEQUIZ_SECURITY_PASSWORD:change-me}
 
 quotequiz:
   security:
-    jwt-secret: ${QUOTEQUIZ_JWT_SECRET:dev-only-jwt-secret-change-me}
+    jwt-secret: ${QUOTEQUIZ_JWT_SECRET:dev-only-jwt-secret-change-me-32chars}
   seed:
     demo-user-password: ${QUOTEQUIZ_DEMO_USER_PASSWORD:password123}
     reviewer-user-password: ${QUOTEQUIZ_REVIEWER_USER_PASSWORD:reviewer123}

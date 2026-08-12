@@ -29,8 +29,8 @@ Do not overengineer the assignment.
 
 - Task 1 — Repository and build scaffolding: `Completed`
 - Task 2 — Shared API contract: `Completed`
-- Task 3 — Server persistence and seed data: `Verified awaiting approval/commit`
-- Task 4 — Server authentication and profile: `Pending`
+- Task 3 — Server persistence and seed data: `Completed`
+- Task 4 — Server authentication and profile: `Completed`
 - Task 5 — Server quiz engine and API: `Pending`
 - Task 6 — Client core infrastructure: `Pending`
 - Task 7 — App shell and Navigation 3: `Pending`

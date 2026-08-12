@@ -29,10 +29,13 @@ dependencies {
 
     // Kotlin / JSON support
     implementation(libs.jackson.module.kotlin)
+    implementation(libs.jjwt.api)
     implementation(libs.kotlin.reflect)
 
     // Runtime database
     runtimeOnly(libs.h2)
+    runtimeOnly(libs.jjwt.impl)
+    runtimeOnly(libs.jjwt.jackson)
 
     // Test support
     testImplementation(libs.kotlin.testJunit5)

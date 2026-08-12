@@ -48,6 +48,18 @@ The implementation plan file is also the progress tracker:
   - the task has actually been committed
 - If work is implemented and verified but not yet approved/committed, mark it `Verified awaiting approval/commit`.
 
+Required workflow for numbered tasks:
+
+1. Implement the current task and run relevant verification.
+2. Brief the user on what was changed, why it was done, and the verification results.
+3. Wait for the user's review. The user may approve, request changes, ask questions about the task, or refine requirements before finalizing the task.
+4. Do not commit or push until the user explicitly asks for the commit.
+5. When the user explicitly asks for the commit, first update the progress tracker, then commit the approved task, then briefly state the next task.
+6. Wait for the user to explicitly start the next task.
+
+Do not commit or push unapproved work.
+Do not start the next numbered task merely because the previous one is implemented; wait for the user's explicit go-ahead.
+
 Before starting a task:
 
 - Read the task in `docs/plans/2026-08-12-famous-quote-quiz-plan.md`.
@@ -181,6 +193,17 @@ Bonus-platform work must never destabilize or delay required Android behavior.
 ### Required backend
 
 Use Spring Boot with Kotlin.
+
+### Shared dev server workflow
+
+Assume the user-owned Spring Boot server running on `localhost:8080` is the primary manual-test instance.
+
+Rules:
+
+- Do not start `bootRun` on port `8080` if the user may already be running the server.
+- Prefer automated verification through tests over probing the shared live server.
+- If a separate server instance is required for agent-side checks, run it on an explicit alternate port such as `SERVER_PORT=8081` or `SERVER_PORT=0`.
+- Treat inability to reach the user's localhost server from the agent environment as an environment limitation, not automatically as an application failure.
 
 ### Deliberate scope limits
 

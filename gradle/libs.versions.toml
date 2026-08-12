@@ -21,6 +21,7 @@ kotlinx-serialization = "1.11.0"
 # Server
 h2 = "2.4.240"
 jackson-kotlin = "3.2.1"
+jjwt = "0.12.7"
 logback = "1.6.2"
 spring-boot = "4.1.0"
 spring-dependency-management = "1.1.7"
@@ -58,6 +59,9 @@ kotlinx-serialization-core = { module = "org.jetbrains.kotlinx:kotlinx-serializa
 # Server
 h2 = { module = "com.h2database:h2", version.ref = "h2" }
 jackson-module-kotlin = { module = "tools.jackson.module:jackson-module-kotlin", version.ref = "jackson-kotlin" }
+jjwt-api = { module = "io.jsonwebtoken:jjwt-api", version.ref = "jjwt" }
+jjwt-impl = { module = "io.jsonwebtoken:jjwt-impl", version.ref = "jjwt" }
+jjwt-jackson = { module = "io.jsonwebtoken:jjwt-jackson", version.ref = "jjwt" }
 kotlin-reflect = { module = "org.jetbrains.kotlin:kotlin-reflect", version.ref = "kotlin" }
 logback = { module = "ch.qos.logback:logback-classic", version.ref = "logback" }
 spring-boot-h2console = { module = "org.springframework.boot:spring-boot-h2console" }
