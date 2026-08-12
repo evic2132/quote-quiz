@@ -31,6 +31,23 @@ Do not silently reinterpret or weaken an assignment requirement.
 
 Work **one numbered plan task at a time**.
 
+## Progress Tracking
+
+The implementation plan file is also the progress tracker:
+
+- Maintain a clearly visible progress section near the top of `docs/plans/2026-08-12-famous-quote-quiz-plan.md`.
+- Update it whenever a numbered task changes state.
+- Allowed task states:
+  - `Pending`
+  - `In progress`
+  - `Verified awaiting approval/commit`
+  - `Completed`
+- Do not mark a task `Completed` until:
+  - the task-specific verification has passed
+  - the user has approved the commit when approval is required
+  - the task has actually been committed
+- If work is implemented and verified but not yet approved/committed, mark it `Verified awaiting approval/commit`.
+
 Before starting a task:
 
 - Read the task in `docs/plans/2026-08-12-famous-quote-quiz-plan.md`.
@@ -137,8 +154,9 @@ At the end of each numbered task:
 2. List verification commands and results.
 3. List important design decisions or deviations.
 4. Show the proposed commit message.
-5. Commit only after the task is verified.
-6. Stop before starting the next numbered task unless explicitly instructed to continue.
+5. Update the plan progress tracker with the new task state.
+6. Commit only after the task is verified and user approval requirements are satisfied.
+7. Stop before starting the next numbered task unless explicitly instructed to continue.
 
 Do not rewrite existing Git history unless explicitly requested.
 
@@ -382,6 +400,22 @@ Use multiple back stacks only when they provide clear state-preservation value. 
 ---
 
 ## Code Quality
+
+Every meaningful code or test addition must be easy to defend in an interview.
+
+Before adding non-trivial code, be able to explain in plain language:
+
+- what requirement it satisfies
+- why it is the simplest reasonable approach
+- why it is not overengineering
+
+Before adding a test, be able to explain:
+
+- what behavior it protects
+- why that behavior matters to the assignment
+- why this is the smallest useful test for it
+
+If a line, class, dependency, abstraction, or test cannot be justified clearly and briefly, do not add it without explicit user approval.
 
 Prefer:
 

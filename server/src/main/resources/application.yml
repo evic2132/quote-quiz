@@ -4,3 +4,25 @@ server:
 spring:
   application:
     name: quote-quiz-server
+  datasource:
+    url: jdbc:h2:mem:quote-quiz;DB_CLOSE_DELAY=-1;DB_CLOSE_ON_EXIT=FALSE
+    username: ${QUOTEQUIZ_DB_USERNAME:sa}
+    password: ${QUOTEQUIZ_DB_PASSWORD:}
+  jpa:
+    hibernate:
+      ddl-auto: update
+    open-in-view: false
+    properties:
+      hibernate:
+        format_sql: true
+  security:
+    user:
+      name: ${QUOTEQUIZ_SECURITY_USERNAME:admin}
+      password: ${QUOTEQUIZ_SECURITY_PASSWORD:change-me}
+
+quotequiz:
+  security:
+    jwt-secret: ${QUOTEQUIZ_JWT_SECRET:dev-only-jwt-secret-change-me}
+  seed:
+    demo-user-password: ${QUOTEQUIZ_DEMO_USER_PASSWORD:password123}
+    reviewer-user-password: ${QUOTEQUIZ_REVIEWER_USER_PASSWORD:reviewer123}

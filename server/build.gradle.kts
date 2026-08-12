@@ -1,4 +1,5 @@
 plugins {
+    alias(libs.plugins.gradleDotenv)
     alias(libs.plugins.kotlinJvm)
     alias(libs.plugins.kotlinSpring)
     alias(libs.plugins.springBoot)

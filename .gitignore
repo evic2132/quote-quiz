@@ -8,6 +8,8 @@
 .gradle/
 .gradle-home/
 .kotlin/
+.env
+bin/
 build/
 **/build/
 

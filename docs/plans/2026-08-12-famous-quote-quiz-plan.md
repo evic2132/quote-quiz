@@ -25,6 +25,25 @@ The implementation must optimize for:
 
 Do not overengineer the assignment.
 
+## Progress
+
+- Task 1 — Repository and build scaffolding: `Completed`
+- Task 2 — Shared API contract: `Completed`
+- Task 3 — Server persistence and seed data: `Verified awaiting approval/commit`
+- Task 4 — Server authentication and profile: `Pending`
+- Task 5 — Server quiz engine and API: `Pending`
+- Task 6 — Client core infrastructure: `Pending`
+- Task 7 — App shell and Navigation 3: `Pending`
+- Task 8 — Login feature: `Pending`
+- Task 9 — Quiz feature: `Pending`
+- Task 10 — Settings and Profile: `Pending`
+- Task 11 — Android polish and compliance hardening: `Pending`
+- Task 12 — Comprehensive test hardening: `Pending`
+- Task 13 — Bonus platforms: `Pending`
+- Task 14 — CI, Docker, and documentation: `Pending`
+- Task 15 — Optional deployment/showcase: `Pending`
+- Task 16 — Final assignment compliance audit: `Pending`
+
 ---
 
 # 1. Acceptance Criteria

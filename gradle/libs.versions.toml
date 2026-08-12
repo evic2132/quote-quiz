@@ -5,7 +5,7 @@ android-compileSdk = "37"
 android-minSdk = "26"
 android-targetSdk = "37"
 androidx-activity = "1.13.0"
-androidx-appcompat = "1.7.1"
+androidx-appcompat = "1.8.0"
 androidx-core = "1.19.0"
 androidx-espresso = "3.7.0"
 androidx-lifecycle = "2.11.0"
@@ -27,6 +27,9 @@ spring-dependency-management = "1.1.7"
 
 # Testing
 junit = "4.13.2"
+
+# Build tooling
+gradle-dotenv = "0.1.0"
 
 [libraries]
 # Android / Compose
@@ -77,6 +80,9 @@ androidApplication = { id = "com.android.application", version.ref = "agp" }
 androidMultiplatformLibrary = { id = "com.android.kotlin.multiplatform.library", version.ref = "agp" }
 composeMultiplatform = { id = "org.jetbrains.compose", version.ref = "composeMultiplatform" }
 composeCompiler = { id = "org.jetbrains.kotlin.plugin.compose", version.ref = "kotlin" }
+
+# Build tooling
+gradleDotenv = { id = "io.github.dsdolzhenko.dotenv", version.ref = "gradle-dotenv" }
 
 # Kotlin
 kotlinJvm = { id = "org.jetbrains.kotlin.jvm", version.ref = "kotlin" }
