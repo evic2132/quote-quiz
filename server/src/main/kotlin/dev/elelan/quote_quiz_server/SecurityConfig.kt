@@ -26,9 +26,13 @@ class SecurityConfig(
             .csrf { it.disable() }
             .sessionManagement { it.sessionCreationPolicy(SessionCreationPolicy.STATELESS) }
             .exceptionHandling { it.authenticationEntryPoint(apiAuthenticationEntryPoint) }
+            .headers { headers ->
+                headers.frameOptions { frame -> frame.sameOrigin() }
+            }
             .authorizeHttpRequests {
                 it
-                    .requestMatchers("/api/test", "/api/v1/auth/login").permitAll()
+                    // 2. Add H2 console path alongside your existing public endpoints
+                    .requestMatchers("/api/test", "/api/v1/auth/login", "/h2-console/**").permitAll()
                     .anyRequest().authenticated()
             }
             .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter::class.java)

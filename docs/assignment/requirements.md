@@ -31,7 +31,7 @@ Two quiz modes are required:
 Welcome but not required:
 
 - iOS 15+
-- Desktop JVM 11+
+- Desktop JVM 21+
 
 ### Backend
 

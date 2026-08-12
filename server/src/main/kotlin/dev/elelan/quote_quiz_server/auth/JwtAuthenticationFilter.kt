@@ -48,4 +48,9 @@ class JwtAuthenticationFilter(
 
         filterChain.doFilter(request, response)
     }
+
+    override fun shouldNotFilter(request: HttpServletRequest): Boolean {
+        val path = request.requestURI
+        return path.startsWith("/h2-console")
+    }
 }
