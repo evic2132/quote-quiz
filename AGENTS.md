@@ -194,7 +194,7 @@ This repository uses the modern AGP 9+ Kotlin Multiplatform structure.
 The shared client and Android application MUST be separate Gradle
 modules.
 
-#### `:client:shared`
+#### `:app:shared`
 
 This is a Kotlin Multiplatform library containing shared client logic
 and shared Compose Multiplatform UI.
@@ -220,7 +220,7 @@ It must NOT own:
 Use the current Android-KMP library DSL supported by the selected stable
 AGP version. Do not copy deprecated DSL from old KMP examples.
 
-#### `:client:androidApp`
+#### `:app:androidApp`
 
 This is the standalone Android application module.
 
@@ -229,22 +229,22 @@ It:
 - owns `MainActivity`
 - owns `AndroidManifest.xml`
 - owns the application ID and Android packaging
-- depends on `:client:shared`
+- depends on `:app:shared`
 - renders the shared `App()` Compose entry point
 
 Do not apply Kotlin Multiplatform to `androidApp`.
 
 Follow current AGP 9 built-in Kotlin configuration.
 
-#### `:client:desktopApp`
+#### `:app:desktopApp`
 
 This is a thin JVM Desktop application entry point.
 
-It depends on `:client:shared`.
+It depends on `:app:shared`.
 
 Do not duplicate shared UI or business logic in this module.
 
-#### `:client:iosApp`
+#### `:app:iosApp`
 
 This is the iOS/Xcode application consuming the shared KMP framework.
 

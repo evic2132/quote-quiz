@@ -218,7 +218,7 @@ Web must never become a blocker for submission.
 
 ## Platform architecture rule
 
-All client platforms consume the same shared `:client:shared` KMP
+All client platforms consume the same shared `:app:shared` KMP
 module.
 
 Platform application modules are thin entry points:
@@ -300,7 +300,7 @@ Kotlin Multiplatform library containing only shared REST wire contracts.
 Consumed by:
 
 - `:server`
-- `:client:shared`
+- `:app:shared`
 
 It must not contain client or server business logic.
 
@@ -320,7 +320,7 @@ Contains:
 
 The server is not a KMP application target.
 
-### `:client:shared`
+### `:app:shared`
 
 The shared Kotlin Multiplatform client application library.
 
@@ -350,7 +350,7 @@ single KMP module.
 
 Do not create separate `sharedLogic` and `sharedUI` modules for this assignment.
 
-### `:client:androidApp`
+### `:app:androidApp`
 
 Standalone Android APPLICATION module.
 
@@ -367,7 +367,7 @@ Contains Android-specific application concerns such as:
 
 Depends on:
 
-`:client:shared`
+`:app:shared`
 
 Its `MainActivity` should remain intentionally thin and render the shared Compose application.
 
@@ -376,19 +376,19 @@ Conceptually:
 setContent { App ()
 }
 
-### `:client:desktopApp`
+### `:app:desktopApp`
 
 Thin JVM Desktop application launcher.
 
 Depends on:
 
-`:client:shared`
+`:app:shared`
 
 It owns only Desktop application entry-point and packaging concerns.
 
 The application UI and business logic remain in `shared`.
 
-### `:client:iosApp`
+### `:app:iosApp`
 
 iOS/Xcode application consuming the framework produced from the shared KMP client.
 
@@ -400,7 +400,7 @@ iOS-specific bootstrap code should remain thin.
 
 The project must use the modern AGP 9+ compatible KMP structure.
 
-`:client:shared` must use:
+`:app:shared` must use:
 
 - `org.jetbrains.kotlin.multiplatform`
 - `com.android.kotlin.multiplatform.library`
@@ -412,7 +412,7 @@ It must NOT apply:
 - `com.android.application`
 - legacy `com.android.library`
 
-`:client:androidApp` is the standalone Android application module and owns Android application packaging.
+`:app:androidApp` is the standalone Android application module and owns Android application packaging.
 
 Do not apply the Kotlin Multiplatform plugin and Android application plugin to the same Gradle module.
 
@@ -1239,15 +1239,15 @@ Deliverables:
 - version catalog
 - `:api-contract`
 - `:server`
-- `:client:shared`
-- `:client:androidApp`
-- `:client:desktopApp`
-- `:client:iosApp` - The iOS project may be represented by an Xcode application directory rather than a conventional Gradle application module
+- `:app:shared`
+- `:app:androidApp`
+- `:app:desktopApp`
+- `:app:iosApp` - The iOS project may be represented by an Xcode application directory rather than a conventional Gradle application module
 - required Android launcher/module arrangement
 - iOS project skeleton if generated naturally by the selected KMP template
 - minimal `.gitignore`
 
-### `:client:shared`
+### `:app:shared`
 Configure as the shared Kotlin Multiplatform application/UI library.
 
 It must:
@@ -1274,14 +1274,14 @@ It must NOT contain:
 - Android application ID
 - Android application packaging configuration
 
-### `:client:androidApp`
+### `:app:androidApp`
 
 Configure as a standalone Android application module.
 
 It must:
 
 - use the Android application plugin
-- depend on `:client:shared`
+- depend on `:app:shared`
 - own `AndroidManifest.xml`
 - own `MainActivity`
 - own application ID
@@ -1296,19 +1296,19 @@ Do not apply the Kotlin Multiplatform plugin to this module.
 Follow current AGP 9 built-in Kotlin requirements rather than copying
 pre-AGP-9 Android Gradle configuration.
 
-### `:client:desktopApp`
+### `:app:desktopApp`
 
 Create a thin JVM Desktop launcher.
 
 It must:
 
-- depend on `:client:shared`
+- depend on `:app:shared`
 - contain only Desktop entry-point/application packaging concerns
 - render the shared Compose application
 
 Do not duplicate screens or business logic.
 
-### `:client:iosApp`
+### `:app:iosApp`
 
 Prepare the iOS application to consume the shared KMP framework and host
 the shared Compose UI.
@@ -1350,8 +1350,8 @@ Verification:
 1. Inspect the generated Gradle project and available tasks.
 2. Verify `:api-contract` compiles.
 3. Verify `:server` compiles/starts sufficiently to validate its skeleton.
-4. Verify `:client:shared` compiles as a KMP library.
-5. Verify `:client:androidApp` builds as the Android application.
+4. Verify `:app:shared` compiles as a KMP library.
+5. Verify `:app:androidApp` builds as the Android application.
 6. Verify the Desktop launcher compiles/runs.
 7. Verify Android application code depends on `shared`, not vice versa.
 8. Verify `shared` does not apply `com.android.application`.

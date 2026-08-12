@@ -1,2 +1,22 @@
 /.junie/
 /.idea/
+
+# macOS
+.DS_Store
+
+# Gradle / Kotlin
+.gradle/
+.gradle-home/
+.kotlin/
+build/
+**/build/
+
+# Android local machine config
+local.properties
+
+# Xcode user-specific files
+*.xcuserstate
+**/xcuserdata/
+
+# Temporary duplicate local generator copy
+quote-quiz-server/

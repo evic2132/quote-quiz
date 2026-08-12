@@ -17,7 +17,7 @@ Use a Gradle monorepo with:
 
 - `:api-contract`
 - `:server`
-- `:client:shared`
+- `:app:shared`
 - thin platform launchers where required
 
 Feature separation will primarily be package-level rather than one Gradle module per feature.
