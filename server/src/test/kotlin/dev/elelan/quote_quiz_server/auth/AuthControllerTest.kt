@@ -1,5 +1,9 @@
 package dev.elelan.quote_quiz_server.auth
 
+import dev.elelan.quotequiz.contract.auth.LoginRequest
+import dev.elelan.quotequiz.contract.auth.LoginResponse
+import dev.elelan.quotequiz.contract.auth.UserDto
+import kotlin.test.assertEquals
 import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.context.SpringBootTest
@@ -10,6 +14,7 @@ import org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers.status
+import tools.jackson.databind.ObjectMapper
 
 @SpringBootTest
 @AutoConfigureMockMvc
@@ -18,24 +23,33 @@ class AuthControllerTest {
     @Autowired
     lateinit var mockMvc: MockMvc
 
+    @Autowired
+    lateinit var objectMapper: ObjectMapper
+
     @Test
     fun `login succeeds for seeded demo user`() {
-        mockMvc.perform(
-            post("/api/v1/auth/login")
-                .contentType(MediaType.APPLICATION_JSON)
-                .content(
-                    """
-                    {
-                      "email": "demo@example.com",
-                      "password": "password123"
-                    }
-                    """.trimIndent(),
-                ),
-        )
-            .andExpect(status().isOk)
-            .andExpect(jsonPath("$.token").isString)
-            .andExpect(jsonPath("$.user.email").value("demo@example.com"))
-            .andExpect(jsonPath("$.user.name").value("Demo User"))
+        val responseJson =
+            mockMvc.perform(
+                post("/api/v1/auth/login")
+                    .contentType(MediaType.APPLICATION_JSON)
+                    .content(
+                        objectMapper.writeValueAsString(
+                            LoginRequest(
+                                email = "demo@example.com",
+                                password = "password123",
+                            ),
+                        ),
+                    ),
+            )
+                .andExpect(status().isOk)
+                .andReturn()
+                .response
+                .contentAsString
+
+        val response = objectMapper.readValue(responseJson, LoginResponse::class.java)
+
+        assertEquals("demo@example.com", response.user.email)
+        assertEquals("Demo User", response.user.name)
     }
 
     @Test
@@ -44,12 +58,12 @@ class AuthControllerTest {
             post("/api/v1/auth/login")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(
-                    """
-                    {
-                      "email": "missing@example.com",
-                      "password": "password123"
-                    }
-                    """.trimIndent(),
+                    objectMapper.writeValueAsString(
+                        LoginRequest(
+                            email = "missing@example.com",
+                            password = "password123",
+                        ),
+                    ),
                 ),
         )
             .andExpect(status().isUnauthorized)
@@ -63,12 +77,12 @@ class AuthControllerTest {
             post("/api/v1/auth/login")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(
-                    """
-                    {
-                      "email": "demo@example.com",
-                      "password": "wrong-password"
-                    }
-                    """.trimIndent(),
+                    objectMapper.writeValueAsString(
+                        LoginRequest(
+                            email = "demo@example.com",
+                            password = "wrong-password",
+                        ),
+                    ),
                 ),
         )
             .andExpect(status().isUnauthorized)
@@ -86,17 +100,36 @@ class AuthControllerTest {
 
     @Test
     fun `me returns authenticated user`() {
-        val loginResponse =
+        val token = loginAndExtractToken("reviewer@example.com", "reviewer123")
+
+        val responseJson =
+            mockMvc.perform(
+                get("/api/v1/me")
+                    .header("Authorization", "Bearer $token"),
+            )
+                .andExpect(status().isOk)
+                .andReturn()
+                .response
+                .contentAsString
+
+        val response = objectMapper.readValue(responseJson, UserDto::class.java)
+
+        assertEquals("reviewer@example.com", response.email)
+        assertEquals("Reviewer User", response.name)
+    }
+
+    private fun loginAndExtractToken(email: String, password: String): String {
+        val responseJson =
             mockMvc.perform(
                 post("/api/v1/auth/login")
                     .contentType(MediaType.APPLICATION_JSON)
                     .content(
-                        """
-                        {
-                          "email": "reviewer@example.com",
-                          "password": "reviewer123"
-                        }
-                        """.trimIndent(),
+                        objectMapper.writeValueAsString(
+                            LoginRequest(
+                                email = email,
+                                password = password,
+                            ),
+                        ),
                     ),
             )
                 .andExpect(status().isOk)
@@ -104,15 +137,6 @@ class AuthControllerTest {
                 .response
                 .contentAsString
 
-        val token = "\"token\":\"([^\"]+)\"".toRegex().find(loginResponse)?.groupValues?.get(1)
-            ?: error("Token missing from login response")
-
-        mockMvc.perform(
-            get("/api/v1/me")
-                .header("Authorization", "Bearer $token"),
-        )
-            .andExpect(status().isOk)
-            .andExpect(jsonPath("$.email").value("reviewer@example.com"))
-            .andExpect(jsonPath("$.name").value("Reviewer User"))
+        return objectMapper.readValue(responseJson, LoginResponse::class.java).token
     }
 }

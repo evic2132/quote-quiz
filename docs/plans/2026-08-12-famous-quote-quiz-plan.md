@@ -31,7 +31,7 @@ Do not overengineer the assignment.
 - Task 2 — Shared API contract: `Completed`
 - Task 3 — Server persistence and seed data: `Completed`
 - Task 4 — Server authentication and profile: `Completed`
-- Task 5 — Server quiz engine and API: `Pending`
+- Task 5 — Server quiz engine and API: `Completed`
 - Task 6 — Client core infrastructure: `Pending`
 - Task 7 — App shell and Navigation 3: `Pending`
 - Task 8 — Login feature: `Pending`
@@ -101,7 +101,7 @@ Each session:
 - Uses currently selected mode.
 - Tracks current progress.
 - Tracks score.
-- Does not accept the same question twice.
+- Does not score the same question twice; duplicate submissions are treated as idempotent retries.
 - Shows useful progress such as `Question 3 of 10`.
 
 ### Binary mode
@@ -778,7 +778,7 @@ Final answer response may also include final result summary.
 
 Server rules:
 
-- reject duplicate answers
+- treat duplicate answers as idempotent retries and return the stored accepted result
 - ensure question belongs to session
 - ensure session belongs to authenticated user
 - ensure selected option belongs to the generated question

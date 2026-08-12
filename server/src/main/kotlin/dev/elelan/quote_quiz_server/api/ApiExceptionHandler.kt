@@ -1,9 +1,12 @@
 package dev.elelan.quote_quiz_server.api
 
+import dev.elelan.quote_quiz_server.quiz.QuizQuestionNotFoundException
+import dev.elelan.quote_quiz_server.quiz.QuizSessionNotFoundException
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
 import org.springframework.security.authentication.BadCredentialsException
 import org.springframework.security.core.userdetails.UsernameNotFoundException
+import org.springframework.http.converter.HttpMessageNotReadableException
 import org.springframework.web.bind.MethodArgumentNotValidException
 import org.springframework.web.bind.annotation.ExceptionHandler
 import org.springframework.web.bind.annotation.RestControllerAdvice
@@ -32,8 +35,38 @@ class ApiExceptionHandler {
                 ),
             )
 
+    @ExceptionHandler(QuizSessionNotFoundException::class)
+    fun handleQuizSessionNotFound(): ResponseEntity<ApiErrorResponse> =
+        ResponseEntity.status(HttpStatus.NOT_FOUND)
+            .body(
+                ApiErrorResponse(
+                    code = "QUIZ_SESSION_NOT_FOUND",
+                    message = "Quiz session not found",
+                ),
+            )
+
+    @ExceptionHandler(QuizQuestionNotFoundException::class)
+    fun handleQuizQuestionNotFound(): ResponseEntity<ApiErrorResponse> =
+        ResponseEntity.status(HttpStatus.NOT_FOUND)
+            .body(
+                ApiErrorResponse(
+                    code = "QUESTION_NOT_FOUND",
+                    message = "Question not found in quiz session",
+                ),
+            )
+
     @ExceptionHandler(MethodArgumentNotValidException::class)
     fun handleValidationFailure(): ResponseEntity<ApiErrorResponse> =
+        ResponseEntity.status(HttpStatus.BAD_REQUEST)
+            .body(
+                ApiErrorResponse(
+                    code = "BAD_REQUEST",
+                    message = "Invalid request body",
+                ),
+            )
+
+    @ExceptionHandler(HttpMessageNotReadableException::class, IllegalArgumentException::class)
+    fun handleInvalidRequest(): ResponseEntity<ApiErrorResponse> =
         ResponseEntity.status(HttpStatus.BAD_REQUEST)
             .body(
                 ApiErrorResponse(

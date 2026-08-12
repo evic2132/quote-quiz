@@ -5,5 +5,6 @@ import kotlinx.serialization.Serializable
 @Serializable
 data class SubmitAnswerRequest(
     val questionId: String,
-    val answer: String,
+    val binaryAnswer: Boolean? = null,
+    val selectedOptionId: String? = null,
 )
