@@ -1,6 +1,7 @@
 package dev.elelan.quotequiz.app
 
 import androidx.navigation3.runtime.NavKey
+import dev.elelan.quotequiz.contract.quiz.QuizResultDto
 import kotlinx.serialization.Serializable
 
 @Serializable
@@ -13,6 +14,8 @@ data object SettingsTab : NavKey
 data object ProfileTab : NavKey
 
 @Serializable
-data object QuizResultRoute : NavKey
+data class QuizResultRoute(
+    val result: QuizResultDto,
+) : NavKey
 
 val MAIN_TABS: Set<NavKey> = linkedSetOf(QuizTab, SettingsTab, ProfileTab)

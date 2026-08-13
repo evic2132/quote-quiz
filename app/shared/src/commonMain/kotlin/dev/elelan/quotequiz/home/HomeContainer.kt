@@ -8,14 +8,18 @@ import androidx.compose.animation.togetherWith
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.RowScope
 import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.material3.Button
+import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.NavigationBar
 import androidx.compose.material3.NavigationBarItem
+import androidx.compose.material3.NavigationBarItemDefaults
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -36,18 +40,32 @@ import dev.elelan.quotequiz.app.QuizTab
 import dev.elelan.quotequiz.app.SettingsTab
 import dev.elelan.quotequiz.contract.auth.UserDto
 import dev.elelan.quotequiz.feature.profile.ProfileScreen
-import dev.elelan.quotequiz.feature.quiz.QuizScreen
+import dev.elelan.quotequiz.feature.quiz.QuizRouteScreen
 import dev.elelan.quotequiz.feature.quiz.QuizResultScreen
+import dev.elelan.quotequiz.feature.quiz.QuizViewModel
+import dev.elelan.quotequiz.feature.quiz.QuizAction
 import dev.elelan.quotequiz.feature.settings.SettingsScreen
 import dev.elelan.quotequiz.ui.core.DefaultScaffoldBody
 import dev.elelan.quotequiz.ui.core.QuoteQuizBackground
 import kotlinx.coroutines.launch
+import org.jetbrains.compose.resources.DrawableResource
+import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.resources.stringResource
+import org.koin.compose.viewmodel.koinViewModel
 import quotequiz.app.shared.generated.resources.Res
 import quotequiz.app.shared.generated.resources.action_logout
+import quotequiz.app.shared.generated.resources.ic_account_circle
+import quotequiz.app.shared.generated.resources.ic_psychology
+import quotequiz.app.shared.generated.resources.ic_settings
 import quotequiz.app.shared.generated.resources.tab_profile
 import quotequiz.app.shared.generated.resources.tab_quiz
 import quotequiz.app.shared.generated.resources.tab_settings
+
+private data class HomeTabItem(
+    val route: NavKey,
+    val label: String,
+    val iconRes: DrawableResource,
+)
 
 @Composable
 fun HomeContainer(
@@ -56,24 +74,21 @@ fun HomeContainer(
 ) {
     val navigationState = rememberHomeNavigationState()
     val navigator = remember { HomeNavigator(navigationState) }
+    val quizViewModel: QuizViewModel = koinViewModel()
     val saveableDecorator = rememberSaveableStateHolderNavEntryDecorator<NavKey>()
     val entryDecorators = remember(saveableDecorator) {
         listOf(saveableDecorator)
     }
+    val tabs = rememberHomeTabItems()
 
     Scaffold(
         contentWindowInsets = WindowInsets(0, 0, 0, 0),
         bottomBar = {
-            NavigationBar {
-                MAIN_TABS.forEach { tab ->
-                    NavigationBarItem(
-                        selected = tab == navigationState.selectedTab,
-                        onClick = { navigator.selectTab(tab) },
-                        icon = {},
-                        label = { Text(tab.tabLabel()) },
-                    )
-                }
-            }
+            HomeBottomBar(
+                tabs = tabs,
+                selectedTab = navigationState.selectedTab,
+                onTabSelected = navigator::selectTab,
+            )
         },
     ) { innerPadding ->
         NavDisplay(
@@ -94,12 +109,21 @@ fun HomeContainer(
             entryDecorators = entryDecorators,
             entryProvider = entryProvider {
                 entry<QuizTab> {
-                    QuizScreen(
-                        onOpenResult = { navigator.navigate(QuizResultRoute) },
+                    QuizRouteScreen(
+                        viewModel = quizViewModel,
+                        onQuizCompleted = { result ->
+                            navigator.navigate(QuizResultRoute(result))
+                        },
                     )
                 }
-                entry<QuizResultRoute> {
-                    QuizResultScreen()
+                entry<QuizResultRoute> { route ->
+                    QuizResultScreen(
+                        result = route.result,
+                        onStartAgain = {
+                            quizViewModel.onAction(QuizAction.RestartQuizClicked)
+                            navigator.goBack()
+                        },
+                    )
                 }
                 entry<SettingsTab> { SettingsScreen() }
                 entry<ProfileTab> {
@@ -116,13 +140,71 @@ fun HomeContainer(
 }
 
 @Composable
-private fun NavKey.tabLabel(): String =
-    when (this) {
-        QuizTab -> stringResource(Res.string.tab_quiz)
-        SettingsTab -> stringResource(Res.string.tab_settings)
-        ProfileTab -> stringResource(Res.string.tab_profile)
-        else -> error("Unknown tab: $this")
+private fun rememberHomeTabItems(): List<HomeTabItem> = listOf(
+    HomeTabItem(
+        route = QuizTab,
+        label = stringResource(Res.string.tab_quiz),
+        iconRes = Res.drawable.ic_psychology,
+    ),
+    HomeTabItem(
+        route = SettingsTab,
+        label = stringResource(Res.string.tab_settings),
+        iconRes = Res.drawable.ic_settings,
+    ),
+    HomeTabItem(
+        route = ProfileTab,
+        label = stringResource(Res.string.tab_profile),
+        iconRes = Res.drawable.ic_account_circle,
+    ),
+)
+
+@Composable
+private fun HomeBottomBar(
+    tabs: List<HomeTabItem>,
+    selectedTab: NavKey,
+    onTabSelected: (NavKey) -> Unit,
+) {
+    NavigationBar {
+        tabs.forEach { tab ->
+            MainNavigationBarItem(
+                label = tab.label,
+                iconRes = tab.iconRes,
+                selected = tab.route == selectedTab,
+                onClick = { onTabSelected(tab.route) },
+            )
+        }
     }
+}
+
+@Composable
+private fun RowScope.MainNavigationBarItem(
+    label: String,
+    iconRes: DrawableResource,
+    selected: Boolean,
+    onClick: () -> Unit,
+) {
+    NavigationBarItem(
+        selected = selected,
+        onClick = onClick,
+        icon = {
+            Icon(
+                painter = painterResource(iconRes),
+                contentDescription = label,
+                modifier = Modifier.size(24.dp),
+            )
+        },
+        label = {
+            Text(label)
+        },
+        colors = NavigationBarItemDefaults.colors(
+            selectedIconColor = MaterialTheme.colorScheme.onPrimary,
+            selectedTextColor = MaterialTheme.colorScheme.primary,
+            indicatorColor = MaterialTheme.colorScheme.primary,
+            unselectedIconColor = MaterialTheme.colorScheme.tertiary,
+            unselectedTextColor = MaterialTheme.colorScheme.onSurfaceVariant,
+        ),
+    )
+}
 
 @Composable
 internal fun HomePlaceholderScreen(

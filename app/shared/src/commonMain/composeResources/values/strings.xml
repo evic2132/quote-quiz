@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <resources>
-    <string name="app_title">Famous Quote Quiz</string>
+    <string name="app_title">Wisdom Trivia</string>
     <string name="tab_quiz">Quiz</string>
     <string name="tab_settings">Settings</string>
     <string name="tab_profile">Profile</string>
@@ -13,6 +13,36 @@
     <string name="quiz_open_result">Open quiz result screen</string>
     <string name="quiz_result_title">Quiz Results</string>
     <string name="quiz_result_body">This placeholder represents the result screen shown after all quiz questions have been answered.</string>
+    <string name="quiz_result_title_complete">Quiz Complete</string>
+    <string name="quiz_result_mode">Mode: %1$s</string>
+    <string name="quiz_result_mode_binary">Binary</string>
+    <string name="quiz_result_mode_multiple_choice">Multiple Choice</string>
+    <string name="quiz_result_accuracy">%1$d%% Accuracy</string>
+    <string name="quiz_result_correct">Correct answers</string>
+    <string name="quiz_result_incorrect">Incorrect answers</string>
+    <string name="quiz_action_start_again">Start Again</string>
+    <string name="quiz_loading">Starting a new quiz session from the backend.</string>
+    <string name="quiz_progress">Question %1$d of %2$d</string>
+    <string name="quiz_binary_prompt">Did %1$s say this?</string>
+    <string name="quiz_action_yes">Yes</string>
+    <string name="quiz_action_no">No</string>
+    <string name="quiz_multiple_choice_prompt">Who said it?</string>
+    <string name="quiz_label_mode">Mode</string>
+    <string name="quiz_label_proposed_author">Proposed author</string>
+    <string name="quiz_label_options">Options</string>
+    <string name="quiz_action_retry">Retry</string>
+    <string name="quiz_completed_score">%1$d/%2$d</string>
+    <string name="quiz_state_loading">Loading quiz</string>
+    <string name="quiz_state_answering">Submitting answer...</string>
+    <string name="quiz_state_error">Unable to load quiz</string>
+    <string name="quiz_error_network">Unable to reach the quiz service. Please try again.</string>
+    <string name="quiz_error_unauthorized">Your session expired. Please sign in again.</string>
+    <string name="quiz_error_http">Unable to load the quiz right now.</string>
+    <string name="quiz_error_unknown">Something went wrong while loading the quiz.</string>
+    <string name="quiz_feedback_correct_title">Correct!</string>
+    <string name="quiz_feedback_incorrect_title">Sorry, you are wrong!</string>
+    <string name="quiz_feedback_body">The right answer is:</string>
+    <string name="quiz_feedback_ok">OK</string>
     <string name="settings_placeholder_body">Task 10 will add quiz mode controls and restart behavior here.</string>
     <string name="profile_title">Profile</string>
     <string name="profile_body">Signed in as %1$s\n%2$s</string>

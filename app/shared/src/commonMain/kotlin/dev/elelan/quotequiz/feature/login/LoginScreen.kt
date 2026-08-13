@@ -56,6 +56,7 @@ import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.text.Placeholder
 import androidx.compose.ui.text.PlaceholderVerticalAlign
 import androidx.compose.ui.text.buildAnnotatedString
+import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
@@ -236,9 +237,11 @@ fun LoginQuoteInline(
     quote: String,
     author: String,
     modifier: Modifier = Modifier,
+    textAlign: TextAlign = TextAlign.Start,
+    quoteTextStyle: TextStyle = MaterialTheme.typography.headlineMedium,
 ) {
     val spacing = QuoteQuizTheme.spacing
-    val quoteStyle = MaterialTheme.typography.headlineMedium
+    val quoteStyle = quoteTextStyle
     val iconStyle = MaterialTheme.typography.displayLargeEmphasized
     val primaryColor = MaterialTheme.colorScheme.primary
     val iconSize = iconStyle.fontSize.value.dp
@@ -296,14 +299,19 @@ fun LoginQuoteInline(
             style = quoteStyle,
             color = MaterialTheme.colorScheme.onBackground,
             inlineContent = inlineContent,
+            textAlign = textAlign,
             modifier = Modifier.fillMaxWidth(),
         )
 
-        Text(
-            text = "— $author",
-            style = MaterialTheme.typography.bodyLarge.copy(fontStyle = FontStyle.Italic),
-            color = MaterialTheme.colorScheme.onSurfaceVariant,
-        )
+        if (author.isNotBlank()) {
+            Text(
+                text = "— $author",
+                style = MaterialTheme.typography.bodyLarge.copy(fontStyle = FontStyle.Italic),
+                color = MaterialTheme.colorScheme.onSurfaceVariant,
+                textAlign = textAlign,
+                modifier = Modifier.fillMaxWidth(),
+            )
+        }
     }
 }
 
