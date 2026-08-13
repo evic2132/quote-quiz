@@ -33,7 +33,7 @@ Do not overengineer the assignment.
 - Task 4 — Server authentication and profile: `Completed`
 - Task 5 — Server quiz engine and API: `Completed`
 - Task 6 — Client core infrastructure: `Completed`
-- Task 7 — App shell and Navigation 3: `Pending`
+- Task 7 — App shell and Navigation 3: `Completed`
 - Task 8 — Login feature: `Pending`
 - Task 9 — Quiz feature: `Pending`
 - Task 10 — Settings and Profile: `Pending`
