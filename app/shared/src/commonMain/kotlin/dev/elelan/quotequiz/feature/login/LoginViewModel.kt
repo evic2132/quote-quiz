@@ -27,8 +27,10 @@ import quotequiz.app.shared.generated.resources.not_implemented_sign_up
 class LoginViewModel(
     private val authApi: AuthApi,
     private val sessionRepository: SessionRepository,
-    private val validator: CredentialsValidator = CredentialsValidator(),
 ) : ViewModel() {
+
+    private val validator: CredentialsValidator = CredentialsValidator()
+
     private val _uiState = MutableStateFlow(LoginUiState())
     val uiState: StateFlow<LoginUiState> = _uiState
 

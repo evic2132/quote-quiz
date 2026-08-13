@@ -6,6 +6,7 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.BoxWithConstraints
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
@@ -17,10 +18,12 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.widthIn
 import androidx.compose.foundation.layout.wrapContentHeight
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.InlineTextContent
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.text.appendInlineContent
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Card
@@ -50,18 +53,19 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.text.Placeholder
 import androidx.compose.ui.text.PlaceholderVerticalAlign
-import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.TextStyle
+import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import dev.elelan.quotequiz.core.ui.UiText
+import dev.elelan.quotequiz.ui.core.AdaptiveWindowLayout
 import dev.elelan.quotequiz.ui.core.DefaultScaffoldBody
+import dev.elelan.quotequiz.ui.core.FormFactorPreviews
 import dev.elelan.quotequiz.ui.core.QuoteQuizBackground
 import dev.elelan.quotequiz.ui.theme.AssignmentValidationError
 import dev.elelan.quotequiz.ui.theme.QuoteQuizTheme
@@ -91,6 +95,9 @@ import quotequiz.app.shared.generated.resources.login_remember_me
 import quotequiz.app.shared.generated.resources.login_sign_up
 import quotequiz.app.shared.generated.resources.login_title
 
+private const val START_QUOTE_ID = "start_quote_icon"
+private const val END_QUOTE_ID = "end_quote_icon"
+
 @Composable
 fun LoginRouteScreen(
     viewModel: LoginViewModel = koinViewModel(),
@@ -101,9 +108,7 @@ fun LoginRouteScreen(
     LaunchedEffect(viewModel, snackbarHostState) {
         viewModel.uiEvent.collectLatest { effect ->
             when (effect) {
-                is LoginUiEffect.ShowMessage -> snackbarHostState.showSnackbar(
-                    effect.message.asString(),
-                )
+                is LoginUiEffect.ShowMessage -> snackbarHostState.showSnackbar(effect.message.asString())
             }
         }
     }
@@ -130,15 +135,33 @@ private fun LoginScreen(
             DefaultScaffoldBody(
                 modifier = Modifier
                     .fillMaxSize()
-                    .padding(innerPadding)
-                    .navigationBarsPadding(),
+                    .padding(innerPadding),
             ) {
-                LoginScreenContent(
-                    uiState = uiState,
-                    onAction = onAction,
+                AdaptiveWindowLayout(
+                    compactContent = {
+                        LoginCompactLayout(
+                            uiState = uiState,
+                            onAction = onAction,
+                        )
+                    },
+                    mediumContent = {
+                        LoginSplitLayout(
+                            uiState = uiState,
+                            onAction = onAction,
+                            compactBranding = true,
+                        )
+                    },
+                    expandedContent = {
+                        LoginSplitLayout(
+                            uiState = uiState,
+                            onAction = onAction,
+                            compactBranding = false,
+                        )
+                    },
                 )
             }
         }
+
         if (uiState.isSubmitting) {
             Box(
                 modifier = Modifier
@@ -155,22 +178,27 @@ private fun LoginScreen(
 }
 
 @Composable
-private fun LoginScreenContent(
+private fun LoginCompactLayout(
     uiState: LoginUiState,
     onAction: (LoginAction) -> Unit,
 ) {
+    val spacing = QuoteQuizTheme.spacing
+
     Column(
         modifier = Modifier
             .fillMaxSize()
-            .padding(8.dp),
+            .padding(horizontal = spacing.marginMobile, vertical = spacing.stackSm),
         horizontalAlignment = Alignment.CenterHorizontally,
     ) {
-        HeaderSection()
+        LoginHeader(
+            modifier = Modifier.fillMaxWidth(),
+            showQuote = true,
+        )
 
         Column(
             modifier = Modifier
-                .weight(1f)
-                .fillMaxWidth(),
+                .fillMaxWidth()
+                .weight(1f),
             verticalArrangement = Arrangement.Center,
             horizontalAlignment = Alignment.CenterHorizontally,
         ) {
@@ -180,21 +208,157 @@ private fun LoginScreenContent(
             )
         }
 
-        FooterSection(
+        LoginFooter(
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(top = 8.dp),
+                .padding(top = spacing.stackMd),
         )
     }
 }
 
 @Composable
-private fun HeaderSection() {
+private fun LoginSplitLayout(
+    uiState: LoginUiState,
+    onAction: (LoginAction) -> Unit,
+    compactBranding: Boolean,
+) {
     val spacing = QuoteQuizTheme.spacing
-    Column(
+    BoxWithConstraints(
         modifier = Modifier
-            .fillMaxWidth()
-            .padding(top = spacing.stackSm),
+            .fillMaxSize()
+            .navigationBarsPadding()
+            .padding(horizontal = spacing.marginTablet, vertical = spacing.stackLg),
+    ) {
+        val isShortHeight = maxHeight < 480.dp
+        Row(
+            modifier = Modifier.fillMaxSize(),
+            horizontalArrangement = Arrangement.spacedBy(if (isShortHeight) spacing.stackMd else spacing.stackLg),
+            verticalAlignment = Alignment.CenterVertically,
+        ) {
+            LoginBrandingPane(
+                modifier = Modifier.weight(if (compactBranding) 0.95f else 1.1f),
+                compact = compactBranding || isShortHeight,
+            )
+            LoginFormPane(
+                modifier = Modifier.weight(1f),
+                uiState = uiState,
+                onAction = onAction,
+                compactMode = isShortHeight,
+            )
+        }
+    }
+}
+
+@Composable
+private fun LoginBrandingPane(
+    modifier: Modifier = Modifier,
+    compact: Boolean,
+) {
+    val spacing = QuoteQuizTheme.spacing
+
+    Column(
+        modifier = modifier,
+        verticalArrangement = Arrangement.Center,
+    ) {
+        Card(
+            modifier = Modifier.fillMaxWidth(),
+            shape = RoundedCornerShape(24.dp),
+            colors = CardDefaults.cardColors(
+                containerColor = MaterialTheme.colorScheme.surface.copy(alpha = 0.94f),
+            ),
+            border = BorderStroke(1.dp, MaterialTheme.colorScheme.outlineVariant.copy(alpha = 0.9f)),
+        ) {
+            Column(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(
+                        horizontal = if (compact) 24.dp else 32.dp,
+                        vertical = if (compact) 28.dp else 36.dp,
+                    ),
+                verticalArrangement = Arrangement.spacedBy(if (compact) spacing.stackLg else 28.dp),
+            ) {
+                Text(
+                    text = stringResource(Res.string.app_title),
+                    style = if (compact) MaterialTheme.typography.displayMedium else MaterialTheme.typography.displayLarge,
+                    color = MaterialTheme.colorScheme.primary,
+                )
+
+                LoginQuoteInline(
+                    quote = stringResource(Res.string.login_quote),
+                    author = stringResource(Res.string.login_quote_author),
+                    quoteTextStyle = if (compact) {
+                        MaterialTheme.typography.headlineLarge
+                    } else {
+                        MaterialTheme.typography.displaySmall
+                    },
+                )
+
+                Text(
+                    text = "A daily intellectual exercise.",
+                    style = MaterialTheme.typography.bodyMedium,
+                    color = MaterialTheme.colorScheme.onSurfaceVariant,
+                )
+            }
+        }
+    }
+}
+
+@Composable
+private fun LoginFormPane(
+    modifier: Modifier = Modifier,
+    uiState: LoginUiState,
+    onAction: (LoginAction) -> Unit,
+    compactMode: Boolean,
+) {
+    val spacing = QuoteQuizTheme.spacing
+    val scrollState = rememberScrollState()
+
+    Column(
+        modifier = modifier
+            .fillMaxSize()
+            .navigationBarsPadding()
+            .imePadding()
+            .then(
+                if (compactMode) {
+                    Modifier.verticalScroll(scrollState)
+                } else {
+                    Modifier
+                },
+            ),
+        verticalArrangement = if (compactMode) Arrangement.Top else Arrangement.Center,
+        horizontalAlignment = Alignment.CenterHorizontally,
+    ) {
+        Column(
+            modifier = Modifier
+                .fillMaxWidth()
+                .widthIn(max = 440.dp),
+            verticalArrangement = Arrangement.spacedBy(if (compactMode) spacing.stackMd else spacing.stackLg),
+        ) {
+            LoginHeader(
+                modifier = Modifier.fillMaxWidth(),
+                showQuote = false,
+            )
+            LoginFormCard(
+                uiState = uiState,
+                onAction = onAction,
+                compactMode = compactMode,
+            )
+            LoginFooter(
+                modifier = Modifier.fillMaxWidth(),
+            )
+        }
+    }
+}
+
+@Composable
+private fun LoginHeader(
+    modifier: Modifier = Modifier,
+    showQuote: Boolean,
+) {
+    val spacing = QuoteQuizTheme.spacing
+
+    Column(
+        modifier = modifier.padding(top = spacing.stackSm),
         verticalArrangement = Arrangement.spacedBy(spacing.stackMd),
     ) {
         Text(
@@ -203,15 +367,20 @@ private fun HeaderSection() {
             color = MaterialTheme.colorScheme.primary,
         )
 
-        LoginQuoteInline(
-            quote = stringResource(Res.string.login_quote),
-            author = stringResource(Res.string.login_quote_author),
-        )
+        if (showQuote) {
+            LoginQuoteInline(
+                quote = stringResource(Res.string.login_quote),
+                author = stringResource(Res.string.login_quote_author),
+            )
+        } else {
+            Text(
+                text = stringResource(Res.string.login_title),
+                style = MaterialTheme.typography.headlineMedium,
+                color = MaterialTheme.colorScheme.onBackground,
+            )
+        }
     }
 }
-
-private const val START_QUOTE_ID = "start_quote_icon"
-private const val END_QUOTE_ID = "end_quote_icon"
 
 @Composable
 fun LoginQuoteInline(
@@ -222,10 +391,9 @@ fun LoginQuoteInline(
     quoteTextStyle: TextStyle = MaterialTheme.typography.headlineMedium,
 ) {
     val spacing = QuoteQuizTheme.spacing
-    val quoteStyle = quoteTextStyle
     val iconStyle = MaterialTheme.typography.displayLargeEmphasized
-    val primaryColor = MaterialTheme.colorScheme.primary
     val iconSize = iconStyle.fontSize.value.dp
+    val primaryColor = MaterialTheme.colorScheme.primary
     val annotatedQuote = remember(quote) {
         buildAnnotatedString {
             appendInlineContent(START_QUOTE_ID, "“")
@@ -236,12 +404,12 @@ fun LoginQuoteInline(
         }
     }
 
-    val inlineContent = remember(primaryColor, iconSize) {
+    val inlineContent = remember(primaryColor, iconSize, quoteTextStyle) {
         mapOf(
             START_QUOTE_ID to InlineTextContent(
                 Placeholder(
-                    width = quoteStyle.fontSize,
-                    height = quoteStyle.fontSize,
+                    width = quoteTextStyle.fontSize,
+                    height = quoteTextStyle.fontSize,
                     placeholderVerticalAlign = PlaceholderVerticalAlign.Center,
                 ),
             ) {
@@ -256,8 +424,8 @@ fun LoginQuoteInline(
             },
             END_QUOTE_ID to InlineTextContent(
                 Placeholder(
-                    width = quoteStyle.fontSize,
-                    height = quoteStyle.fontSize,
+                    width = quoteTextStyle.fontSize,
+                    height = quoteTextStyle.fontSize,
                     placeholderVerticalAlign = PlaceholderVerticalAlign.Center,
                 ),
             ) {
@@ -277,7 +445,7 @@ fun LoginQuoteInline(
     ) {
         Text(
             text = annotatedQuote,
-            style = quoteStyle,
+            style = quoteTextStyle,
             color = MaterialTheme.colorScheme.onBackground,
             inlineContent = inlineContent,
             textAlign = textAlign,
@@ -300,20 +468,19 @@ fun LoginQuoteInline(
 private fun LoginFormCard(
     uiState: LoginUiState,
     onAction: (LoginAction) -> Unit,
+    compactMode: Boolean = false,
 ) {
-    Card(
-        modifier = Modifier
-            .fillMaxWidth()
-            .widthIn(max = 440.dp),
-        colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surface),
-        shape = RoundedCornerShape(16.dp),
-        border = BorderStroke(1.dp, MaterialTheme.colorScheme.outlineVariant),
-    ) {
+    val contentSpacing = if (compactMode) 8.dp else 12.dp
+    val buttonHeight = if (compactMode) 40.dp else 48.dp
+    val contentPaddingHorizontal = if (compactMode) 0.dp else 24.dp
+    val contentPaddingVertical = if (compactMode) 0.dp else 24.dp
+
+    val content: @Composable () -> Unit = {
         Column(
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(horizontal = 24.dp, vertical = 24.dp),
-            verticalArrangement = Arrangement.spacedBy(12.dp),
+                .padding(horizontal = contentPaddingHorizontal, vertical = contentPaddingVertical),
+            verticalArrangement = Arrangement.spacedBy(contentSpacing),
         ) {
             Text(
                 text = stringResource(Res.string.login_title),
@@ -371,7 +538,7 @@ private fun LoginFormCard(
                 enabled = !uiState.isSubmitting,
                 modifier = Modifier
                     .fillMaxWidth()
-                    .height(48.dp),
+                    .height(buttonHeight),
                 shape = RoundedCornerShape(8.dp),
                 colors = ButtonDefaults.buttonColors(),
             ) {
@@ -402,15 +569,32 @@ private fun LoginFormCard(
             }
         }
     }
+
+    if (compactMode) {
+        content()
+    } else {
+        Card(
+            modifier = Modifier
+                .fillMaxWidth()
+                .widthIn(max = 440.dp),
+            colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surface),
+            shape = RoundedCornerShape(16.dp),
+            border = BorderStroke(1.dp, MaterialTheme.colorScheme.outlineVariant),
+        ) {
+            content()
+        }
+    }
 }
 
 @Composable
-private fun FooterSection(
+private fun LoginFooter(
     modifier: Modifier = Modifier,
 ) {
     Column(
-        modifier = modifier.fillMaxWidth().wrapContentHeight(),
-        horizontalAlignment = Alignment.CenterHorizontally
+        modifier = modifier
+            .fillMaxWidth()
+            .wrapContentHeight(),
+        horizontalAlignment = Alignment.CenterHorizontally,
     ) {
         Text(
             text = stringResource(Res.string.login_footer_copyright),
@@ -430,8 +614,8 @@ private fun LoginField(
     imeAction: ImeAction,
     onValueChange: (String) -> Unit,
 ) {
-    val focusedColor =
-        if (error != null) AssignmentValidationError else MaterialTheme.colorScheme.primary
+    val focusedColor = if (error != null) AssignmentValidationError else MaterialTheme.colorScheme.primary
+
     OutlinedTextField(
         value = value,
         onValueChange = onValueChange,
@@ -475,8 +659,8 @@ private fun PasswordField(
     onValueChange: (String) -> Unit,
 ) {
     var passwordHidden by rememberSaveable { mutableStateOf(true) }
-    val focusedColor =
-        if (error != null) AssignmentValidationError else MaterialTheme.colorScheme.primary
+    val focusedColor = if (error != null) AssignmentValidationError else MaterialTheme.colorScheme.primary
+
     OutlinedTextField(
         value = value,
         onValueChange = onValueChange,
@@ -532,20 +716,19 @@ private fun PasswordField(
     )
 }
 
-@Preview
+@FormFactorPreviews
 @Composable
 private fun LoginScreenPreview() {
     QuoteQuizTheme {
         LoginScreen(
-            uiState = LoginUiState(
-            ),
+            uiState = LoginUiState(),
             snackbarHostState = SnackbarHostState(),
             onAction = {},
         )
     }
 }
 
-@Preview
+@FormFactorPreviews
 @Composable
 private fun LoginScreenErrorPreview() {
     QuoteQuizTheme {
@@ -562,7 +745,7 @@ private fun LoginScreenErrorPreview() {
     }
 }
 
-@Preview
+@FormFactorPreviews
 @Composable
 private fun LoginScreenDarkPreview() {
     QuoteQuizTheme(darkTheme = true) {
