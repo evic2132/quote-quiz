@@ -8,10 +8,13 @@ import dev.elelan.quotequiz.contract.quiz.SubmitAnswerRequest
 import dev.elelan.quotequiz.contract.quiz.SubmitAnswerResponse
 import dev.elelan.quotequiz.core.network.ApiError
 import dev.elelan.quotequiz.core.network.ApiResult
+import dev.elelan.quotequiz.core.settings.QuizPreferencesRepository
 import dev.elelan.quotequiz.core.ui.UiText
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.delay
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.test.StandardTestDispatcher
 import kotlinx.coroutines.test.advanceUntilIdle
 import kotlinx.coroutines.test.resetMain
@@ -31,8 +34,9 @@ class QuizViewModelTest {
     fun `initial load starts binary session`() = runTest {
         Dispatchers.setMain(StandardTestDispatcher(testScheduler))
         val repository = FakeQuizRepository()
+        val preferencesRepository = FakeQuizPreferencesRepository()
 
-        val viewModel = QuizViewModel(repository)
+        val viewModel = QuizViewModel(repository, preferencesRepository)
         advanceUntilIdle()
 
         assertEquals(QuizMode.BINARY, repository.lastStartedMode)
@@ -53,8 +57,9 @@ class QuizViewModelTest {
                 ),
             ),
         )
+        val preferencesRepository = FakeQuizPreferencesRepository()
 
-        val viewModel = QuizViewModel(repository)
+        val viewModel = QuizViewModel(repository, preferencesRepository)
         advanceUntilIdle()
 
         assertEquals(UiText.StringResourceId(Res.string.quiz_error_network), viewModel.uiState.value.error)
@@ -86,8 +91,9 @@ class QuizViewModelTest {
                 )
             },
         )
+        val preferencesRepository = FakeQuizPreferencesRepository()
 
-        val viewModel = QuizViewModel(repository)
+        val viewModel = QuizViewModel(repository, preferencesRepository)
         advanceUntilIdle()
 
         viewModel.onAction(QuizAction.SubmitBinaryAnswer(true))
@@ -127,8 +133,9 @@ class QuizViewModelTest {
                 ),
             ),
         )
+        val preferencesRepository = FakeQuizPreferencesRepository()
 
-        val viewModel = QuizViewModel(repository)
+        val viewModel = QuizViewModel(repository, preferencesRepository)
         advanceUntilIdle()
 
         viewModel.onAction(QuizAction.SubmitBinaryAnswer(true))
@@ -164,8 +171,9 @@ class QuizViewModelTest {
                 ),
             ),
         )
+        val preferencesRepository = FakeQuizPreferencesRepository()
 
-        val viewModel = QuizViewModel(repository)
+        val viewModel = QuizViewModel(repository, preferencesRepository)
         advanceUntilIdle()
 
         viewModel.onAction(QuizAction.SubmitBinaryAnswer(true))
@@ -218,8 +226,9 @@ class QuizViewModelTest {
                 ),
             ),
         )
+        val preferencesRepository = FakeQuizPreferencesRepository()
 
-        val viewModel = QuizViewModel(repository)
+        val viewModel = QuizViewModel(repository, preferencesRepository)
         advanceUntilIdle()
 
         viewModel.onAction(QuizAction.SubmitBinaryAnswer(true))
@@ -235,6 +244,38 @@ class QuizViewModelTest {
         assertNull(viewModel.uiState.value.result)
         assertEquals("session-2", viewModel.uiState.value.sessionId)
         assertEquals("q1-restart", viewModel.uiState.value.currentQuestion?.id)
+        Dispatchers.resetMain()
+    }
+
+    @Test
+    fun `mode change starts a fresh session in the selected mode`() = runTest {
+        Dispatchers.setMain(StandardTestDispatcher(testScheduler))
+        val repository = FakeQuizRepository(
+            startResults = ArrayDeque(
+                listOf(
+                    ApiResult.Success(binarySession()),
+                    ApiResult.Success(
+                        multipleChoiceSession(
+                            sessionId = "session-2",
+                            questionId = "mcq-1",
+                        ),
+                    ),
+                ),
+            ),
+        )
+        val preferencesRepository = FakeQuizPreferencesRepository()
+
+        val viewModel = QuizViewModel(repository, preferencesRepository)
+        advanceUntilIdle()
+
+        preferencesRepository.updateSelectedMode(QuizMode.MULTIPLE_CHOICE)
+        advanceUntilIdle()
+
+        assertEquals(2, repository.startCallCount)
+        assertEquals(QuizMode.MULTIPLE_CHOICE, repository.lastStartedMode)
+        assertEquals(QuizMode.MULTIPLE_CHOICE, viewModel.uiState.value.mode)
+        assertEquals("session-2", viewModel.uiState.value.sessionId)
+        assertEquals("mcq-1", viewModel.uiState.value.currentQuestion?.id)
         Dispatchers.resetMain()
     }
 
@@ -255,8 +296,13 @@ class QuizViewModelTest {
         var submitCallCount: Int = 0
             private set
 
-        override suspend fun startSession(mode: QuizMode): ApiResult<QuizSessionDto> {
-            lastStartedMode = mode
+        override suspend fun startSession(): ApiResult<QuizSessionDto> {
+            lastStartedMode = queuedStartResults.firstOrNull()?.let {
+                when (it) {
+                    is ApiResult.Success -> it.value.mode
+                    is ApiResult.Failure -> lastStartedMode
+                }
+            }
             startCallCount += 1
             return queuedStartResults.removeFirst()
         }
@@ -269,6 +315,18 @@ class QuizViewModelTest {
             return submitResultProvider?.invoke()
                 ?: queuedSubmitResults.removeFirstOrNull()
                 ?: ApiResult.Failure(ApiError.Unknown(IllegalStateException("No submit result configured")))
+        }
+    }
+
+    private class FakeQuizPreferencesRepository(
+        initialMode: QuizMode = QuizMode.BINARY,
+    ) : QuizPreferencesRepository {
+        private val mutableSelectedMode = MutableStateFlow(initialMode)
+
+        override val selectedMode: StateFlow<QuizMode> = mutableSelectedMode
+
+        override suspend fun updateSelectedMode(mode: QuizMode) {
+            mutableSelectedMode.value = mode
         }
     }
 }
@@ -290,4 +348,21 @@ private fun binaryQuestion(
     progress = progress,
     totalQuestions = 10,
     proposedAuthor = "Socrates",
+)
+
+private fun multipleChoiceSession(
+    sessionId: String,
+    questionId: String,
+) = QuizSessionDto(
+    sessionId = sessionId,
+    mode = QuizMode.MULTIPLE_CHOICE,
+    totalQuestions = 10,
+    currentQuestion = QuizQuestionDto(
+        id = questionId,
+        quote = "We accept the love we think we deserve.",
+        mode = QuizMode.MULTIPLE_CHOICE,
+        progress = 1,
+        totalQuestions = 10,
+        options = listOf(),
+    ),
 )
