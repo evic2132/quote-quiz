@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+
+<html lang="en"><head>
+    <meta charset="utf-8"/>
+    <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+    <title>Wisdom Trivia - Famous Quote Quiz</title>
+    <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&amp;family=Playfair+Display:wght@700&amp;display=swap" rel="stylesheet"/>
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+    <script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "secondary-fixed": "#e4e2e2",
+                        "secondary-container": "#e4e2e2",
+                        "primary-fixed-dim": "#c0c1ff",
+                        "surface-container-low": "#f7f2f8",
+                        "surface-container-high": "#ebe7ec",
+                        "secondary-fixed-dim": "#c8c6c6",
+                        "inverse-on-surface": "#f4eff5",
+                        "background": "#fdf8fd",
+                        "inverse-primary": "#c0c1ff",
+                        "surface": "#fdf8fd",
+                        "on-error-container": "#93000a",
+                        "surface-tint": "#4f54b4",
+                        "error": "#ba1a1a",
+                        "on-tertiary-container": "#a6a9b4",
+                        "surface-container-highest": "#e5e1e7",
+                        "outline": "#777683",
+                        "surface-variant": "#e5e1e7",
+                        "surface-bright": "#fdf8fd",
+                        "on-tertiary-fixed": "#181b24",
+                        "on-secondary": "#ffffff",
+                        "tertiary": "#252831",
+                        "error-container": "#ffdad6",
+                        "on-primary": "#ffffff",
+                        "on-background": "#1c1b1f",
+                        "surface-dim": "#ddd9de",
+                        "outline-variant": "#c7c5d4",
+                        "on-secondary-container": "#656464",
+                        "on-error": "#ffffff",
+                        "surface-container-lowest": "#ffffff",
+                        "on-surface-variant": "#464652",
+                        "tertiary-fixed-dim": "#c4c6d2",
+                        "surface-container": "#f1ecf2",
+                        "primary-fixed": "#e1e0ff",
+                        "on-surface": "#1c1b1f",
+                        "inverse-surface": "#313034",
+                        "on-tertiary-fixed-variant": "#434750",
+                        "primary": "#15157d",
+                        "on-tertiary": "#ffffff",
+                        "tertiary-container": "#3b3e47",
+                        "primary-container": "#2e3192",
+                        "on-primary-fixed-variant": "#373a9b",
+                        "on-primary-container": "#9da1ff",
+                        "on-primary-fixed": "#04006d",
+                        "secondary": "#5e5e5e",
+                        "on-secondary-fixed": "#1b1c1c",
+                        "on-secondary-fixed-variant": "#474747",
+                        "tertiary-fixed": "#e0e2ee"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.125rem",
+                        "lg": "0.25rem",
+                        "xl": "0.5rem",
+                        "full": "0.75rem"
+                    },
+                    "spacing": {
+                        "stack-md": "1rem",
+                        "stack-lg": "2rem",
+                        "gutter": "1rem",
+                        "margin-tablet": "2.5rem",
+                        "stack-sm": "0.5rem",
+                        "margin-mobile": "1.25rem"
+                    },
+                    "fontFamily": {
+                        "body-md": ["Inter"],
+                        "display-quote": ["Playfair Display"],
+                        "body-lg": ["Inter"],
+                        "headline-md": ["Inter"],
+                        "label-sm": ["Inter"],
+                        "display-quote-mobile": ["Playfair Display"],
+                        "label-lg": ["Inter"]
+                    },
+                    "fontSize": {
+                        "body-md": ["16px", { "lineHeight": "24px", "fontWeight": "400" }],
+                        "display-quote": ["32px", { "lineHeight": "42px", "letterSpacing": "-0.02em", "fontWeight": "700" }],
+                        "body-lg": ["18px", { "lineHeight": "28px", "fontWeight": "400" }],
+                        "headline-md": ["20px", { "lineHeight": "28px", "fontWeight": "600" }],
+                        "label-sm": ["11px", { "lineHeight": "16px", "letterSpacing": "0.5px", "fontWeight": "500" }],
+                        "display-quote-mobile": ["24px", { "lineHeight": "32px", "letterSpacing": "-0.01em", "fontWeight": "700" }],
+                        "label-lg": ["14px", { "lineHeight": "20px", "letterSpacing": "0.1px", "fontWeight": "500" }]
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        [data-weight="fill"] {
+            font-variation-settings: 'FILL' 1;
+        }
+    </style>
+    <style>
+        body {
+          min-height: max(884px, 100dvh);
+        }
+    </style>
+</head>
+<body class="bg-surface text-on-surface font-body-md min-h-screen flex flex-col items-center justify-center relative overflow-hidden">
+<!-- Ambient Background Element -->
+<div class="absolute inset-0 pointer-events-none opacity-[0.03] flex items-center justify-center">
+    <span class="material-symbols-outlined text-[40rem]" data-weight="fill">format_quote</span>
+</div>
+<main class="w-full max-w-md px-margin-mobile flex flex-col items-center text-center z-10">
+    <!-- Brand Mark -->
+    <div class="mb-stack-lg">
+        <span class="material-symbols-outlined text-primary text-6xl" data-weight="fill">import_contacts</span>
+    </div>
+    <!-- Typography Anchor -->
+    <h1 class="font-display-quote text-display-quote text-primary mb-stack-sm md:font-display-quote md:text-display-quote">Wisdom Trivia</h1>
+    <p class="font-body-lg text-body-lg text-on-surface-variant mb-stack-lg max-w-sm mx-auto">
+        Test your knowledge of the world's most enduring thoughts and the minds behind them.
+    </p>
+    <!-- Call to Action -->
+    <button class="bg-primary text-on-primary font-label-lg text-label-lg rounded-full px-8 py-4 w-full md:w-auto hover:bg-primary-container hover:text-on-primary-container transition-colors duration-300 flex items-center justify-center gap-2 shadow-sm">
+        <span>Begin the Quiz</span>
+        <span class="material-symbols-outlined text-sm">arrow_forward</span>
+    </button>
+</main>
+</body></html>
