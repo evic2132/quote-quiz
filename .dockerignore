@@ -1,0 +1,13 @@
+.git
+.github
+.gradle
+.idea
+.kotlin
+local.properties
+
+**/build
+
+app
+docs
+
+README.md

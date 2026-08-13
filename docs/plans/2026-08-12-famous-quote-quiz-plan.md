@@ -40,7 +40,7 @@ Do not overengineer the assignment.
 - Task 11 — Android polish and compliance hardening: `Pending`
 - Task 12 — Comprehensive test hardening: `Pending`
 - Task 13 — Bonus platforms: `Pending`
-- Task 14 — CI, Docker, and documentation: `Pending`
+- Task 14 — CI, Docker, and documentation: `In progress`
 - Task 15 — Optional deployment/showcase: `Pending`
 - Task 16 — Final assignment compliance audit: `Pending`
 

@@ -1,0 +1,16 @@
+services:
+  - type: web
+    name: quote-quiz-server
+    runtime: docker
+    plan: free
+    region: singapore
+    branch: develop
+    dockerfilePath: ./Dockerfile
+    healthCheckPath: /api/test
+    envVars:
+      - key: QUOTEQUIZ_JWT_SECRET
+        generateValue: true
+      - key: QUOTEQUIZ_DEMO_USER_PASSWORD
+        sync: false
+      - key: QUOTEQUIZ_REVIEWER_USER_PASSWORD
+        sync: false
