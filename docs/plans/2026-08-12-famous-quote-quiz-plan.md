@@ -35,7 +35,7 @@ Do not overengineer the assignment.
 - Task 6 — Client core infrastructure: `Completed`
 - Task 7 — App shell and Navigation 3: `Completed`
 - Task 8 — Login feature: `Completed`
-- Task 9 — Quiz feature: `Pending`
+- Task 9 — Quiz feature: `Completed`
 - Task 10 — Settings and Profile: `Pending`
 - Task 11 — Android polish and compliance hardening: `Pending`
 - Task 12 — Comprehensive test hardening: `Pending`
@@ -1579,6 +1579,97 @@ Commit:
 Goal:
 
 Implement binary and multiple-choice quiz presentation and workflow.
+
+Suggested execution breakdown:
+
+### Task 9A — Quiz client data flow
+
+Scope:
+
+- wire client quiz API usage into a repository/service layer
+- load/start a quiz session from the authenticated client
+- define shared quiz UI state, actions, and ViewModel contract
+- keep the implementation mode-aware but screen-agnostic
+
+Verification:
+
+- narrow common/ViewModel tests for initial load
+- narrow common/ViewModel tests for load failure + retry
+- shared module compile/tests
+
+### Task 9B — Shared quiz screen and binary mode
+
+Scope:
+
+- build the shared quiz screen structure using the design system patterns already used in login
+- implement common quiz chrome: progress, quote card, loading, error, and submit state
+- implement binary answer UI inside the shared screen
+
+Verification:
+
+- common/ViewModel tests for binary submit path
+- Android manual binary session flow
+- shared + Android compile
+
+### Task 9C — Multiple-choice mode
+
+Scope:
+
+- implement the multiple-choice answer section inside the same quiz screen
+- render exactly three options from backend data
+- submit selected option through the existing quiz flow
+
+Verification:
+
+- common/ViewModel tests for multiple-choice submit path
+- Android manual multiple-choice flow
+- shared + Android compile
+
+### Task 9D — Feedback dialog and progression
+
+Scope:
+
+- show correct/incorrect modal using the provided design direction
+- keep feedback-dialog state in `QuizUiState`
+- block advancement until `OK`
+- advance to the next pre-generated question after `OK`
+- preserve behavior across configuration changes
+
+Verification:
+
+- common/ViewModel tests for:
+  - correct/incorrect feedback state
+  - no advance before `OK`
+  - advance after `OK`
+- Android manual rotation check while feedback dialog is visible
+
+### Task 9E — Results and restart
+
+Scope:
+
+- replace the current placeholder result route with the real result screen
+- show score, percentage, correct count, incorrect count, and mode
+- implement `Start again` with a fresh server session
+
+Verification:
+
+- common/ViewModel tests for question 10 -> results
+- common/ViewModel tests for `Start again`
+- Android manual full 10-question flow
+
+### Task 9F — Final quiz polish and verification
+
+Scope:
+
+- align the final quiz UI against the binary, multiple-choice, modal, and result HTML mockups
+- remove temporary quiz placeholders
+- review landscape usability and error/retry states
+
+Verification:
+
+- shared module tests
+- Android manual portrait + landscape checks
+- targeted compile/build verification
 
 Tests first:
 

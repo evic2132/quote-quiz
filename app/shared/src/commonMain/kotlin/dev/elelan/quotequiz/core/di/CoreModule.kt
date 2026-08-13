@@ -11,6 +11,8 @@ import dev.elelan.quotequiz.core.session.DefaultSessionRepository
 import dev.elelan.quotequiz.core.session.SessionRepository
 import dev.elelan.quotequiz.core.storage.SettingsTokenStorage
 import dev.elelan.quotequiz.core.storage.TokenStorage
+import dev.elelan.quotequiz.feature.quiz.DefaultQuizRepository
+import dev.elelan.quotequiz.feature.quiz.QuizRepository
 import io.ktor.client.engine.HttpClientEngineFactory
 import org.koin.dsl.module
 
@@ -21,4 +23,5 @@ val coreModule = module {
     single<ProfileApi> { KtorProfileApi(get()) }
     single<QuizApi> { KtorQuizApi(get()) }
     single<SessionRepository> { DefaultSessionRepository(tokenStorage = get(), profileApi = get()) }
+    single<QuizRepository> { DefaultQuizRepository(quizApi = get(), sessionRepository = get()) }
 }
