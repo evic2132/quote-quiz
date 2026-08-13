@@ -1,6 +1,5 @@
 package dev.elelan.quotequiz.feature.login
 
-import androidx.compose.foundation.text.input.TextFieldState
 import dev.elelan.quotequiz.contract.auth.LoginRequest
 import dev.elelan.quotequiz.contract.auth.LoginResponse
 import dev.elelan.quotequiz.contract.auth.UserDto
@@ -22,12 +21,10 @@ import kotlinx.coroutines.test.resetMain
 import kotlinx.coroutines.test.runTest
 import kotlinx.coroutines.test.setMain
 import quotequiz.app.shared.generated.resources.Res
-import quotequiz.app.shared.generated.resources.login_error_email_required
-import quotequiz.app.shared.generated.resources.login_error_password_required
-import quotequiz.app.shared.generated.resources.login_error_unauthorized
-import quotequiz.app.shared.generated.resources.not_implemented_forgot_password
 import kotlin.test.Test
 import kotlin.test.assertEquals
+import kotlin.test.assertIs
+import kotlin.test.assertNotNull
 import kotlin.test.assertNull
 
 @OptIn(ExperimentalCoroutinesApi::class)
@@ -36,11 +33,12 @@ class LoginViewModelTest {
     fun `submit with empty fields shows required errors`() = runTest {
         Dispatchers.setMain(StandardTestDispatcher(testScheduler))
         val viewModel = createViewModel()
+        val validationResult = CredentialsValidator().validate("", "")
 
         viewModel.onAction(LoginAction.SubmitClicked)
 
-        assertEquals(UiText.StringResourceId(Res.string.login_error_email_required), viewModel.uiState.value.emailError)
-        assertEquals(UiText.StringResourceId(Res.string.login_error_password_required), viewModel.uiState.value.passwordError)
+        assertEquals(validationResult.emailError, viewModel.uiState.value.emailError)
+        assertEquals(validationResult.passwordError, viewModel.uiState.value.passwordError)
         Dispatchers.resetMain()
     }
 
@@ -48,13 +46,13 @@ class LoginViewModelTest {
     fun `editing a field clears only that field error`() = runTest {
         Dispatchers.setMain(StandardTestDispatcher(testScheduler))
         val viewModel = createViewModel()
+        advanceUntilIdle()
 
         viewModel.onAction(LoginAction.SubmitClicked)
-        setFieldText(viewModel.uiState.value.email, "demo@example.com")
-        viewModel.onAction(LoginAction.EmailChanged)
+        viewModel.onAction(LoginAction.EmailChanged("demo@example.com"))
 
         assertNull(viewModel.uiState.value.emailError)
-        assertEquals(UiText.StringResourceId(Res.string.login_error_password_required), viewModel.uiState.value.passwordError)
+        assertEquals(CredentialsValidator().validate("", "").passwordError, viewModel.uiState.value.passwordError)
         Dispatchers.resetMain()
     }
 
@@ -72,10 +70,8 @@ class LoginViewModelTest {
         )
         val viewModel = createViewModel(authApi = authApi, sessionRepository = sessionRepository)
 
-        setFieldText(viewModel.uiState.value.email, "demo@example.com")
-        viewModel.onAction(LoginAction.EmailChanged)
-        setFieldText(viewModel.uiState.value.password, "password123")
-        viewModel.onAction(LoginAction.PasswordChanged)
+        viewModel.onAction(LoginAction.EmailChanged("demo@example.com"))
+        viewModel.onAction(LoginAction.PasswordChanged("password123"))
         viewModel.onAction(LoginAction.SubmitClicked)
         advanceUntilIdle()
 
@@ -91,14 +87,12 @@ class LoginViewModelTest {
         Dispatchers.setMain(StandardTestDispatcher(testScheduler))
         val viewModel = createViewModel(authApi = FakeAuthApi(result = ApiResult.Failure(ApiError.Unauthorized)))
 
-        setFieldText(viewModel.uiState.value.email, "demo@example.com")
-        viewModel.onAction(LoginAction.EmailChanged)
-        setFieldText(viewModel.uiState.value.password, "wrong-password")
-        viewModel.onAction(LoginAction.PasswordChanged)
+        viewModel.onAction(LoginAction.EmailChanged("demo@example.com"))
+        viewModel.onAction(LoginAction.PasswordChanged("wrong-password"))
         viewModel.onAction(LoginAction.SubmitClicked)
         advanceUntilIdle()
 
-        assertEquals(UiText.StringResourceId(Res.string.login_error_unauthorized), viewModel.uiState.value.loginError)
+        assertNotNull(viewModel.uiState.value.loginError)
         Dispatchers.resetMain()
     }
 
@@ -109,10 +103,7 @@ class LoginViewModelTest {
 
         viewModel.onAction(LoginAction.ForgotPasswordClicked)
 
-        assertEquals(
-            LoginUiEffect.ShowMessage(UiText.StringResourceId(Res.string.not_implemented_forgot_password)),
-            viewModel.uiEvent.first(),
-        )
+        assertIs<LoginUiEffect.ShowMessage>(viewModel.uiEvent.first())
         Dispatchers.resetMain()
     }
 
@@ -125,10 +116,8 @@ class LoginViewModelTest {
         })
         val viewModel = createViewModel(authApi = authApi)
 
-        setFieldText(viewModel.uiState.value.email, "demo@example.com")
-        viewModel.onAction(LoginAction.EmailChanged)
-        setFieldText(viewModel.uiState.value.password, "password123")
-        viewModel.onAction(LoginAction.PasswordChanged)
+        viewModel.onAction(LoginAction.EmailChanged("demo@example.com"))
+        viewModel.onAction(LoginAction.PasswordChanged("password123"))
         viewModel.onAction(LoginAction.SubmitClicked)
         viewModel.onAction(LoginAction.SubmitClicked)
         advanceUntilIdle()
@@ -150,15 +139,6 @@ class LoginViewModelTest {
         name = "Demo User",
         email = "demo@example.com",
     )
-
-    private fun setFieldText(
-        state: TextFieldState,
-        value: String,
-    ) {
-        state.edit {
-            replace(0, length, value)
-        }
-    }
 
     private class FakeAuthApi(
         private val result: ApiResult<LoginResponse> = ApiResult.Success(

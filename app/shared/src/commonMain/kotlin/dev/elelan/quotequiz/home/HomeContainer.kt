@@ -44,7 +44,7 @@ import dev.elelan.quotequiz.feature.quiz.QuizRouteScreen
 import dev.elelan.quotequiz.feature.quiz.QuizResultScreen
 import dev.elelan.quotequiz.feature.quiz.QuizViewModel
 import dev.elelan.quotequiz.feature.quiz.QuizAction
-import dev.elelan.quotequiz.feature.settings.SettingsScreen
+import dev.elelan.quotequiz.feature.settings.SettingsRouteScreen
 import dev.elelan.quotequiz.ui.core.DefaultScaffoldBody
 import dev.elelan.quotequiz.ui.core.QuoteQuizBackground
 import kotlinx.coroutines.launch
@@ -125,7 +125,7 @@ fun HomeContainer(
                         },
                     )
                 }
-                entry<SettingsTab> { SettingsScreen() }
+                entry<SettingsTab> { SettingsRouteScreen() }
                 entry<ProfileTab> {
                     ProfileScreen(
                         name = user.name,

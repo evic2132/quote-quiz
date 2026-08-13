@@ -1,11 +1,10 @@
 package dev.elelan.quotequiz.feature.login
 
-import androidx.compose.foundation.text.input.TextFieldState
 import dev.elelan.quotequiz.core.ui.UiText
 
 data class LoginUiState(
-    val email: TextFieldState = TextFieldState(),
-    val password: TextFieldState = TextFieldState(),
+    val email: String = "",
+    val password: String = "",
     val emailError: UiText? = null,
     val passwordError: UiText? = null,
     val loginError: UiText? = null,
@@ -17,8 +16,8 @@ sealed interface LoginUiEffect {
 }
 
 sealed interface LoginAction {
-    data object EmailChanged : LoginAction
-    data object PasswordChanged : LoginAction
+    data class EmailChanged(val value: String) : LoginAction
+    data class PasswordChanged(val value: String) : LoginAction
     data object SubmitClicked : LoginAction
     data object RememberMeClicked : LoginAction
     data object ForgotPasswordClicked : LoginAction

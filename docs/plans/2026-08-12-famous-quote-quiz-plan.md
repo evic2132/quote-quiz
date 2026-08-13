@@ -36,7 +36,7 @@ Do not overengineer the assignment.
 - Task 7 — App shell and Navigation 3: `Completed`
 - Task 8 — Login feature: `Completed`
 - Task 9 — Quiz feature: `Completed`
-- Task 10 — Settings and Profile: `Pending`
+- Task 10 — Settings and Profile: `Completed`
 - Task 11 — Android polish and compliance hardening: `Pending`
 - Task 12 — Comprehensive test hardening: `Pending`
 - Task 13 — Bonus platforms: `Pending`

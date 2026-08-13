@@ -6,7 +6,7 @@ import dev.elelan.quotequiz.contract.quiz.QuizResultDto
 import dev.elelan.quotequiz.core.ui.UiText
 
 data class QuizUiState(
-    val mode: QuizMode = QuizMode.MULTIPLE_CHOICE,
+    val mode: QuizMode = QuizMode.BINARY,
     val sessionId: String? = null,
     val currentQuestion: QuizQuestionDto? = null,
     val result: QuizResultDto? = null,

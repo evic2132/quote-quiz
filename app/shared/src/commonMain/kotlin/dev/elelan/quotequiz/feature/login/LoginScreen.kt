@@ -21,9 +21,6 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.InlineTextContent
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.text.appendInlineContent
-import androidx.compose.foundation.text.input.TextFieldLineLimits
-import androidx.compose.foundation.text.input.TextFieldState
-import androidx.compose.foundation.text.input.TextObfuscationMode
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Card
@@ -33,7 +30,6 @@ import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.OutlinedSecureTextField
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.OutlinedTextFieldDefaults
 import androidx.compose.material3.Scaffold
@@ -48,7 +44,6 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
-import androidx.compose.runtime.snapshotFlow
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -102,20 +97,6 @@ fun LoginRouteScreen(
 ) {
     val snackbarHostState = remember { SnackbarHostState() }
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
-
-    LaunchedEffect(uiState.email) {
-        snapshotFlow { uiState.email.text.toString() }
-            .collectLatest {
-                viewModel.onAction(LoginAction.EmailChanged)
-            }
-    }
-
-    LaunchedEffect(uiState.password) {
-        snapshotFlow { uiState.password.text.toString() }
-            .collectLatest {
-                viewModel.onAction(LoginAction.PasswordChanged)
-            }
-    }
 
     LaunchedEffect(viewModel, snackbarHostState) {
         viewModel.uiEvent.collectLatest { effect ->
@@ -343,17 +324,19 @@ private fun LoginFormCard(
             )
 
             LoginField(
-                state = uiState.email,
+                value = uiState.email,
                 label = stringResource(Res.string.login_email_label),
                 error = uiState.emailError,
                 keyboardType = KeyboardType.Email,
                 imeAction = ImeAction.Next,
+                onValueChange = { onAction(LoginAction.EmailChanged(it)) },
             )
             PasswordField(
-                state = uiState.password,
+                value = uiState.password,
                 label = stringResource(Res.string.login_password_label),
                 error = uiState.passwordError,
                 imeAction = ImeAction.Done,
+                onValueChange = { onAction(LoginAction.PasswordChanged(it)) },
             )
 
             if (uiState.loginError != null) {
@@ -440,19 +423,21 @@ private fun FooterSection(
 
 @Composable
 private fun LoginField(
-    state: TextFieldState,
+    value: String,
     label: String,
     error: UiText?,
     keyboardType: KeyboardType,
     imeAction: ImeAction,
+    onValueChange: (String) -> Unit,
 ) {
     val focusedColor =
         if (error != null) AssignmentValidationError else MaterialTheme.colorScheme.primary
     OutlinedTextField(
-        state = state,
+        value = value,
+        onValueChange = onValueChange,
         modifier = Modifier.fillMaxWidth(),
         label = { Text(label) },
-        lineLimits = TextFieldLineLimits.SingleLine,
+        singleLine = true,
         isError = error != null,
         supportingText = {
             if (error != null) {
@@ -483,19 +468,26 @@ private fun LoginField(
 
 @Composable
 private fun PasswordField(
-    state: TextFieldState,
+    value: String,
     label: String,
     error: UiText?,
     imeAction: ImeAction,
+    onValueChange: (String) -> Unit,
 ) {
     var passwordHidden by rememberSaveable { mutableStateOf(true) }
     val focusedColor =
         if (error != null) AssignmentValidationError else MaterialTheme.colorScheme.primary
-    OutlinedSecureTextField(
-        state = state,
+    OutlinedTextField(
+        value = value,
+        onValueChange = onValueChange,
         modifier = Modifier.fillMaxWidth(),
         label = { Text(label) },
-        textObfuscationMode = if (passwordHidden) TextObfuscationMode.Hidden else TextObfuscationMode.Visible,
+        singleLine = true,
+        visualTransformation = if (passwordHidden) {
+            androidx.compose.ui.text.input.PasswordVisualTransformation()
+        } else {
+            androidx.compose.ui.text.input.VisualTransformation.None
+        },
         isError = error != null,
         supportingText = {
             if (error != null) {
@@ -545,7 +537,8 @@ private fun PasswordField(
 private fun LoginScreenPreview() {
     QuoteQuizTheme {
         LoginScreen(
-            uiState = LoginUiState(),
+            uiState = LoginUiState(
+            ),
             snackbarHostState = SnackbarHostState(),
             onAction = {},
         )
@@ -558,8 +551,8 @@ private fun LoginScreenErrorPreview() {
     QuoteQuizTheme {
         LoginScreen(
             uiState = LoginUiState(
-                email = TextFieldState("demo@example.com"),
-                password = TextFieldState(""),
+                email = "demo@example.com",
+                password = "",
                 passwordError = UiText.StringResourceId(Res.string.login_error_password_required),
                 loginError = UiText.StringResourceId(Res.string.login_error_unauthorized),
             ),
@@ -575,8 +568,8 @@ private fun LoginScreenDarkPreview() {
     QuoteQuizTheme(darkTheme = true) {
         LoginScreen(
             uiState = LoginUiState(
-                email = TextFieldState("demo@example.com"),
-                password = TextFieldState("password123"),
+                email = "demo@example.com",
+                password = "password123",
             ),
             snackbarHostState = SnackbarHostState(),
             onAction = {},

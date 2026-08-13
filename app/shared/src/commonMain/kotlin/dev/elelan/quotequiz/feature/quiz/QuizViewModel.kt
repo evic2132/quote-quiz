@@ -2,10 +2,14 @@ package dev.elelan.quotequiz.feature.quiz
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import dev.elelan.quotequiz.contract.quiz.QuizMode
 import dev.elelan.quotequiz.contract.quiz.SubmitAnswerRequest
 import dev.elelan.quotequiz.core.network.ApiError
 import dev.elelan.quotequiz.core.network.ApiResult
+import dev.elelan.quotequiz.core.settings.QuizPreferencesRepository
 import dev.elelan.quotequiz.core.ui.UiText
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.update
@@ -18,12 +22,16 @@ import quotequiz.app.shared.generated.resources.quiz_error_unknown
 
 class QuizViewModel(
     private val quizRepository: QuizRepository,
+    private val quizPreferencesRepository: QuizPreferencesRepository,
 ) : ViewModel() {
+
     val uiState: StateFlow<QuizUiState>
         field = MutableStateFlow(QuizUiState())
 
+    private var loadSessionJob: Job? = null
+
     init {
-        loadSession()
+        observeSelectedMode()
     }
 
     fun onAction(action: QuizAction) {
@@ -36,11 +44,20 @@ class QuizViewModel(
         }
     }
 
-    private fun loadSession() {
-        if (uiState.value.isLoading) return
+    private fun observeSelectedMode() {
+        viewModelScope.launch {
+            quizPreferencesRepository.selectedMode.collectLatest { mode ->
+                uiState.update { it.copy(mode = mode) }
+                loadSession(mode)
+            }
+        }
+    }
 
+    private fun loadSession(mode: QuizMode = uiState.value.mode) {
+        loadSessionJob?.cancel()
         uiState.update {
             it.copy(
+                mode = mode,
                 isLoading = true,
                 isSubmitting = false,
                 error = null,
@@ -49,30 +66,31 @@ class QuizViewModel(
             )
         }
 
-        viewModelScope.launch {
-            when (val result = quizRepository.startSession(mode = uiState.value.mode)) {
-                is ApiResult.Success -> {
-                    uiState.update {
-                        it.copy(
-                            sessionId = result.value.sessionId,
-                            currentQuestion = result.value.currentQuestion,
-                            mode = result.value.mode,
-                            isLoading = false,
-                            error = null,
-                        )
+        loadSessionJob =
+            viewModelScope.launch {
+                when (val result = quizRepository.startSession()) {
+                    is ApiResult.Success -> {
+                        uiState.update {
+                            it.copy(
+                                sessionId = result.value.sessionId,
+                                currentQuestion = result.value.currentQuestion,
+                                mode = result.value.mode,
+                                isLoading = false,
+                                error = null,
+                            )
+                        }
                     }
-                }
 
-                is ApiResult.Failure -> {
-                    uiState.update {
-                        it.copy(
-                            isLoading = false,
-                            error = result.error.toQuizErrorText(),
-                        )
+                    is ApiResult.Failure -> {
+                        uiState.update {
+                            it.copy(
+                                isLoading = false,
+                                error = result.error.toQuizErrorText(),
+                            )
+                        }
                     }
                 }
             }
-        }
     }
 
     private fun submitBinaryAnswer(answer: Boolean) {

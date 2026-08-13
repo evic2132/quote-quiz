@@ -1,6 +1,5 @@
 package dev.elelan.quotequiz.feature.quiz
 
-import dev.elelan.quotequiz.contract.quiz.QuizMode
 import dev.elelan.quotequiz.contract.quiz.QuizSessionDto
 import dev.elelan.quotequiz.contract.quiz.QuizSessionStartRequest
 import dev.elelan.quotequiz.contract.quiz.SubmitAnswerRequest
@@ -8,11 +7,12 @@ import dev.elelan.quotequiz.contract.quiz.SubmitAnswerResponse
 import dev.elelan.quotequiz.core.api.QuizApi
 import dev.elelan.quotequiz.core.network.ApiError
 import dev.elelan.quotequiz.core.network.ApiResult
+import dev.elelan.quotequiz.core.settings.QuizPreferencesRepository
 import dev.elelan.quotequiz.core.session.SessionRepository
 import dev.elelan.quotequiz.core.session.SessionState
 
 interface QuizRepository {
-    suspend fun startSession(mode: QuizMode): ApiResult<QuizSessionDto>
+    suspend fun startSession(): ApiResult<QuizSessionDto>
 
     suspend fun submitAnswer(
         sessionId: String,
@@ -23,12 +23,13 @@ interface QuizRepository {
 class DefaultQuizRepository(
     private val quizApi: QuizApi,
     private val sessionRepository: SessionRepository,
+    private val quizPreferencesRepository: QuizPreferencesRepository,
 ) : QuizRepository {
-    override suspend fun startSession(mode: QuizMode): ApiResult<QuizSessionDto> {
+    override suspend fun startSession(): ApiResult<QuizSessionDto> {
         val token = currentToken() ?: return ApiResult.Failure(ApiError.Unauthorized)
         return quizApi.startSession(
             token = token,
-            request = QuizSessionStartRequest(mode = mode),
+            request = QuizSessionStartRequest(mode = quizPreferencesRepository.selectedMode.value),
         )
     }
 
