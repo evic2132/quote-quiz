@@ -37,6 +37,8 @@ spring-dependency-management = "1.1.7"
 junit = "4.13.2"
 
 # Build tooling
+detekt = "2.0.0-alpha.6"
+detekt-compose = "0.6.4"
 gradle-dotenv = "0.1.0"
 
 [libraries]
@@ -59,6 +61,8 @@ compose-runtime = { module = "org.jetbrains.compose.runtime:runtime", version.re
 compose-ui = { module = "org.jetbrains.compose.ui:ui", version.ref = "composeMultiplatform" }
 compose-uiTooling = { module = "org.jetbrains.compose.ui:ui-tooling", version.ref = "composeMultiplatform" }
 compose-uiToolingPreview = { module = "org.jetbrains.compose.ui:ui-tooling-preview", version.ref = "composeMultiplatform" }
+detekt-compose = { module = "io.nlopez.compose.rules:detekt", version.ref = "detekt-compose" }
+detekt-formatting = { module = "dev.detekt:detekt-rules-ktlint-wrapper", version.ref = "detekt" }
 
 # Kotlin / shared
 koin-compose = { module = "io.insert-koin:koin-compose", version.ref = "koin" }
@@ -112,8 +116,7 @@ androidApplication = { id = "com.android.application", version.ref = "agp" }
 androidMultiplatformLibrary = { id = "com.android.kotlin.multiplatform.library", version.ref = "agp" }
 composeMultiplatform = { id = "org.jetbrains.compose", version.ref = "composeMultiplatform" }
 composeCompiler = { id = "org.jetbrains.kotlin.plugin.compose", version.ref = "kotlin" }
-
-# Build tooling
+detekt = { id = "dev.detekt", version.ref = "detekt" }
 gradleDotenv = { id = "io.github.dsdolzhenko.dotenv", version.ref = "gradle-dotenv" }
 
 # Kotlin

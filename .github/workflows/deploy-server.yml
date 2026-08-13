@@ -1,0 +1,46 @@
+name: Deploy Server
+
+on:
+  workflow_dispatch:
+
+jobs:
+  verify-and-deploy:
+    runs-on: ubuntu-latest
+
+    permissions:
+      contents: read
+      security-events: write
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Java
+        uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: "21"
+
+      - name: Setup Gradle
+        uses: gradle/actions/setup-gradle@v4
+
+      - name: Run detekt
+        run: ./gradlew detekt --no-daemon
+
+      - name: Upload detekt SARIF
+        if: always()
+        uses: github/codeql-action/upload-sarif@v3
+        with:
+          sarif_file: build/reports/detekt/detekt.sarif
+          category: detekt-deploy
+
+      - name: Verify builds and tests
+        run: ./gradlew :server:test :app:shared:jvmTest :app:shared:compileCommonMainKotlinMetadata :app:androidApp:assembleDebug :server:bootJar --no-daemon
+
+      - name: Build server Docker image
+        run: docker build -t quote-quiz-server-ci .
+
+      - name: Trigger Render deploy
+        env:
+          RENDER_DEPLOY_HOOK_URL: ${{ secrets.RENDER_DEPLOY_HOOK_URL }}
+        run: curl --fail --request POST "$RENDER_DEPLOY_HOOK_URL"
