@@ -25,15 +25,37 @@ class QuizService(
     fun startSession(userId: Long, mode: QuizMode): QuizSessionDto {
         require(userRepository.existsById(userId)) { "User not found: $userId" }
 
-        val quotes = quoteRepository.findAll().shuffled().take(TOTAL_QUESTIONS)
+        val allQuotes = quoteRepository.findAll()
+        val quotes = allQuotes.shuffled().take(TOTAL_QUESTIONS)
         require(quotes.size == TOTAL_QUESTIONS) { "Not enough quotes to create a session." }
+        val allAuthors = allQuotes.map { it.author }.distinct()
+        require(allAuthors.size >= MULTIPLE_CHOICE_OPTION_COUNT) {
+            "Not enough distinct authors to create quiz distractors."
+        }
+        val binaryCorrectness =
+            List(TOTAL_QUESTIONS / 2) { true } +
+                List(TOTAL_QUESTIONS - (TOTAL_QUESTIONS / 2)) { false }
+        val randomizedBinaryCorrectness = binaryCorrectness.shuffled()
 
         val session = QuizSessionEntity(sessionId = UUID.randomUUID().toString(), userId = userId, mode = mode)
         val questions =
             quotes.mapIndexed { index, quote ->
                 when (mode) {
-                    QuizMode.BINARY -> createBinaryQuestion(session, quote, index + 1)
-                    QuizMode.MULTIPLE_CHOICE -> createMultipleChoiceQuestion(session, quote, quotes, index + 1)
+                    QuizMode.BINARY ->
+                        createBinaryQuestion(
+                            session = session,
+                            quote = quote,
+                            allAuthors = allAuthors,
+                            useCorrectAuthor = randomizedBinaryCorrectness[index],
+                            progress = index + 1,
+                        )
+                    QuizMode.MULTIPLE_CHOICE ->
+                        createMultipleChoiceQuestion(
+                            session = session,
+                            quote = quote,
+                            allAuthors = allAuthors,
+                            progress = index + 1,
+                        )
                 }
             }
 
@@ -111,14 +133,17 @@ class QuizService(
     private fun createBinaryQuestion(
         session: QuizSessionEntity,
         quote: QuoteEntity,
+        allAuthors: List<String>,
+        useCorrectAuthor: Boolean,
         progress: Int,
     ): QuizSessionQuestionEntity {
         val alternateAuthor =
-            quoteRepository.findAll()
-                .map { it.author }
-                .distinct()
-                .first { it != quote.author }
-        val useCorrectAuthor = progress % 2 == 0
+            allAuthors
+                .asSequence()
+                .filter { it != quote.author }
+                .shuffled()
+                .firstOrNull()
+                ?: error("Not enough distinct authors to create binary distractors.")
         return QuizSessionQuestionEntity(
             questionId = UUID.randomUUID().toString(),
             session = session,
@@ -133,17 +158,18 @@ class QuizService(
     private fun createMultipleChoiceQuestion(
         session: QuizSessionEntity,
         quote: QuoteEntity,
-        quotes: List<QuoteEntity>,
+        allAuthors: List<String>,
         progress: Int,
     ): QuizSessionQuestionEntity {
         val distractors =
-            quotes.asSequence()
-                .map { it.author }
+            allAuthors.asSequence()
                 .filter { it != quote.author }
-                .distinct()
-                .take(2)
+                .shuffled()
+                .take(MULTIPLE_CHOICE_OPTION_COUNT - 1)
                 .toList()
-        require(distractors.size == 2) { "Not enough distinct authors for multiple choice." }
+        require(distractors.size == MULTIPLE_CHOICE_OPTION_COUNT - 1) {
+            "Not enough distinct authors for multiple choice."
+        }
         val options = (distractors + quote.author).shuffled()
         return QuizSessionQuestionEntity(
             questionId = UUID.randomUUID().toString(),
@@ -204,6 +230,7 @@ class QuizService(
 
     private companion object {
         const val TOTAL_QUESTIONS = 10
+        const val MULTIPLE_CHOICE_OPTION_COUNT = 3
         val optionIds = listOf("A", "B", "C")
     }
 }
