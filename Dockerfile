@@ -6,6 +6,7 @@ COPY gradlew ./
 COPY gradle ./gradle
 COPY settings.gradle.kts build.gradle.kts gradle.properties ./
 COPY api-contract ./api-contract
+COPY app ./app
 COPY server ./server
 
 RUN chmod +x ./gradlew

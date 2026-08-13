@@ -4,10 +4,9 @@
 .idea
 .kotlin
 local.properties
+gradle/gradle-daemon-jvm.properties
 
 **/build
-
-app
 docs
 
 README.md
