@@ -5,7 +5,7 @@ import dev.elelan.quotequiz.core.session.SessionState
 import kotlin.test.Test
 import kotlin.test.assertEquals
 
-class AppShellDestinationTest {
+class AppContainerDestinationTest {
     @Test
     fun `loading state routes to splash`() {
         assertEquals(SplashRoute, SessionState.Loading.toRootRoute())
@@ -17,7 +17,7 @@ class AppShellDestinationTest {
     }
 
     @Test
-    fun `authenticated state routes to main shell`() {
+    fun `authenticated state routes to home`() {
         val state = SessionState.Authenticated(token = "token", user = demoUser())
 
         assertEquals(HomeRoute, state.toRootRoute())

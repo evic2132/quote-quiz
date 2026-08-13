@@ -1,0 +1,212 @@
+<!DOCTYPE html>
+
+<html class="h-full" lang="en"><head>
+    <meta charset="utf-8"/>
+    <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+    <title>Wisdom Trivia - Core Gameplay</title>
+    <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+    <link href="https://fonts.googleapis.com" rel="preconnect"/>
+    <link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&amp;family=Playfair+Display:wght@700&amp;display=swap" rel="stylesheet"/>
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+    <script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "secondary-fixed": "#e4e2e2",
+                        "secondary-container": "#e4e2e2",
+                        "primary-fixed-dim": "#c0c1ff",
+                        "surface-container-low": "#f7f2f8",
+                        "surface-container-high": "#ebe7ec",
+                        "secondary-fixed-dim": "#c8c6c6",
+                        "inverse-on-surface": "#f4eff5",
+                        "background": "#fdf8fd",
+                        "inverse-primary": "#c0c1ff",
+                        "surface": "#fdf8fd",
+                        "on-error-container": "#93000a",
+                        "surface-tint": "#4f54b4",
+                        "error": "#ba1a1a",
+                        "on-tertiary-container": "#a6a9b4",
+                        "surface-container-highest": "#e5e1e7",
+                        "outline": "#777683",
+                        "surface-variant": "#e5e1e7",
+                        "surface-bright": "#fdf8fd",
+                        "on-tertiary-fixed": "#181b24",
+                        "on-secondary": "#ffffff",
+                        "tertiary": "#252831",
+                        "error-container": "#ffdad6",
+                        "on-primary": "#ffffff",
+                        "on-background": "#1c1b1f",
+                        "surface-dim": "#ddd9de",
+                        "outline-variant": "#c7c5d4",
+                        "on-secondary-container": "#656464",
+                        "on-error": "#ffffff",
+                        "surface-container-lowest": "#ffffff",
+                        "on-surface-variant": "#464652",
+                        "tertiary-fixed-dim": "#c4c6d2",
+                        "surface-container": "#f1ecf2",
+                        "primary-fixed": "#e1e0ff",
+                        "on-surface": "#1c1b1f",
+                        "inverse-surface": "#313034",
+                        "on-tertiary-fixed-variant": "#434750",
+                        "primary": "#15157d",
+                        "on-tertiary": "#ffffff",
+                        "tertiary-container": "#3b3e47",
+                        "primary-container": "#2e3192",
+                        "on-primary-fixed-variant": "#373a9b",
+                        "on-primary-container": "#9da1ff",
+                        "on-primary-fixed": "#04006d",
+                        "secondary": "#5e5e5e",
+                        "on-secondary-fixed": "#1b1c1c",
+                        "on-secondary-fixed-variant": "#474747",
+                        "tertiary-fixed": "#e0e2ee"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.125rem",
+                        "lg": "0.25rem",
+                        "xl": "0.5rem",
+                        "full": "0.75rem"
+                    },
+                    "spacing": {
+                        "stack-md": "1rem",
+                        "stack-lg": "2rem",
+                        "gutter": "1rem",
+                        "margin-tablet": "2.5rem",
+                        "stack-sm": "0.5rem",
+                        "margin-mobile": "1.25rem"
+                    },
+                    "fontFamily": {
+                        "body-md": ["Inter"],
+                        "display-quote": ["Playfair Display"],
+                        "body-lg": ["Inter"],
+                        "headline-md": ["Inter"],
+                        "label-sm": ["Inter"],
+                        "display-quote-mobile": ["Playfair Display"],
+                        "label-lg": ["Inter"]
+                    },
+                    "fontSize": {
+                        "body-md": ["16px", { "lineHeight": "24px", "fontWeight": "400" }],
+                        "display-quote": ["32px", { "lineHeight": "42px", "letterSpacing": "-0.02em", "fontWeight": "700" }],
+                        "body-lg": ["18px", { "lineHeight": "28px", "fontWeight": "400" }],
+                        "headline-md": ["20px", { "lineHeight": "28px", "fontWeight": "600" }],
+                        "label-sm": ["11px", { "lineHeight": "16px", "letterSpacing": "0.5px", "fontWeight": "500" }],
+                        "display-quote-mobile": ["24px", { "lineHeight": "32px", "letterSpacing": "-0.01em", "fontWeight": "700" }],
+                        "label-lg": ["14px", { "lineHeight": "20px", "letterSpacing": "0.1px", "fontWeight": "500" }]
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        body {
+          min-height: max(884px, 100dvh);
+        }
+    </style>
+</head>
+<body class="bg-background text-on-background h-full flex flex-col font-body-md antialiased overflow-hidden">
+<!-- TopAppBar -->
+<header class="w-full top-0 bg-background dark:bg-background border-b border-secondary-fixed dark:border-outline-variant flat no shadows">
+    <div class="flex items-center justify-between px-margin-mobile py-stack-sm w-full">
+        <button class="hover:opacity-80 transition-opacity scale-down duration-200 active:scale-95 text-on-surface-variant dark:text-surface-variant">
+            <span class="material-symbols-outlined" data-icon="menu">menu</span>
+        </button>
+        <h1 class="font-headline-md text-headline-md font-display-quote text-display-quote text-primary dark:text-inverse-primary text-center flex-1">Wisdom Trivia</h1>
+        <button class="hover:opacity-80 transition-opacity scale-down duration-200 active:scale-95 text-on-surface-variant dark:text-surface-variant">
+            <span class="material-symbols-outlined" data-icon="history">history</span>
+        </button>
+    </div>
+</header>
+<!-- Main Canvas -->
+<main class="flex-1 flex flex-col px-margin-mobile overflow-y-auto pb-24">
+    <!-- Progress Bar (Level 0 / Anchor) -->
+    <div class="w-full h-1 bg-tertiary-fixed rounded-full overflow-hidden mt-stack-md mb-stack-lg">
+        <div class="h-full bg-primary w-[70%] transition-all duration-500 ease-out"></div>
+    </div>
+    <div class="flex justify-between items-end mb-stack-sm">
+        <span class="font-label-lg text-label-lg text-on-surface-variant">Question 7 of 10</span>
+        <span class="font-label-sm text-label-sm text-outline border border-outline px-2 py-1 rounded-full uppercase tracking-widest">Philosophy</span>
+    </div>
+    <!-- The Quote Stage (Level 1) -->
+    <div class="flex-1 flex flex-col justify-center max-w-2xl mx-auto w-full md:flex-row md:items-center md:gap-gutter">
+        <div class="relative bg-surface-container-low border border-tertiary-fixed rounded-xl p-stack-lg mb-stack-lg md:mb-0 shadow-sm md:flex-1 w-full min-h-[300px] flex items-center justify-center">
+            <!-- Decorative Quote Mark -->
+            <span class="absolute top-4 left-4 font-display-quote text-[80px] leading-none text-primary-fixed-dim opacity-30 select-none">“</span>
+            <p class="font-display-quote-mobile text-display-quote-mobile md:font-display-quote md:text-display-quote text-on-background text-center relative z-10 px-4">
+                The unexamined life is not worth living.
+            </p>
+            <span class="absolute bottom-4 right-4 font-display-quote text-[80px] leading-none text-primary-fixed-dim opacity-30 select-none rotate-180">“</span>
+        </div>
+        <!-- Answer Choices -->
+        <div class="flex flex-col gap-stack-sm md:flex-1 w-full">
+            <h2 class="font-headline-md text-headline-md text-on-surface mb-stack-sm md:mb-stack-md text-center md:text-left">Who said it?</h2>
+            <button class="w-full bg-surface border border-outline-variant text-on-surface rounded-lg py-4 px-6 text-left font-body-lg text-body-lg hover:bg-surface-container-high transition-colors flex items-center justify-between group active:scale-[0.98] duration-200">
+                <span>Plato</span>
+                <span class="material-symbols-outlined text-outline group-hover:text-primary transition-colors opacity-0 group-hover:opacity-100">arrow_forward</span>
+            </button>
+            <button class="w-full bg-surface border border-outline-variant text-on-surface rounded-lg py-4 px-6 text-left font-body-lg text-body-lg hover:bg-surface-container-high transition-colors flex items-center justify-between group active:scale-[0.98] duration-200">
+                <span>Socrates</span>
+                <span class="material-symbols-outlined text-outline group-hover:text-primary transition-colors opacity-0 group-hover:opacity-100">arrow_forward</span>
+            </button>
+            <button class="w-full bg-surface border border-outline-variant text-on-surface rounded-lg py-4 px-6 text-left font-body-lg text-body-lg hover:bg-surface-container-high transition-colors flex items-center justify-between group active:scale-[0.98] duration-200">
+                <span>Aristotle</span>
+                <span class="material-symbols-outlined text-outline group-hover:text-primary transition-colors opacity-0 group-hover:opacity-100">arrow_forward</span>
+            </button>
+        </div>
+    </div>
+    <!-- Utility Actions -->
+    <div class="mt-auto pt-stack-lg flex justify-between items-center max-w-2xl w-full mx-auto pb-4">
+        <button class="flex items-center gap-2 text-outline hover:text-on-surface transition-colors font-label-lg text-label-lg">
+            <span class="material-symbols-outlined" data-icon="lightbulb">lightbulb</span>
+            Hint
+        </button>
+        <button class="flex items-center gap-2 text-outline hover:text-on-surface transition-colors font-label-lg text-label-lg">
+            Skip
+            <span class="material-symbols-outlined" data-icon="skip_next">skip_next</span>
+        </button>
+    </div>
+</main>
+<!-- BottomNavBar -->
+<nav class="fixed bottom-0 w-full z-50 bg-surface dark:bg-surface border-t border-secondary-fixed dark:border-outline-variant flat no shadows md:hidden">
+    <div class="flex justify-around items-center px-4 pb-4 pt-3 w-full">
+        <!-- Active Tab -->
+        <button class="flex flex-col items-center justify-center bg-primary-container text-on-primary-container rounded-full px-5 py-1 hover:bg-surface-container-high transition-colors scale-down duration-200 active:scale-98">
+            <span class="material-symbols-outlined" data-icon="quiz" style="font-variation-settings: 'FILL' 1;">quiz</span>
+            <span class="font-label-lg text-label-lg mt-1">Quiz</span>
+        </button>
+        <!-- Inactive Tabs -->
+        <button class="flex flex-col items-center justify-center text-on-surface-variant dark:text-surface-variant py-1 hover:bg-surface-container-high transition-colors scale-down duration-200 active:scale-98">
+            <span class="material-symbols-outlined" data-icon="settings">settings</span>
+            <span class="font-label-lg text-label-lg mt-1">Settings</span>
+        </button>
+        <button class="flex flex-col items-center justify-center text-on-surface-variant dark:text-surface-variant py-1 hover:bg-surface-container-high transition-colors scale-down duration-200 active:scale-98">
+            <span class="material-symbols-outlined" data-icon="person">person</span>
+            <span class="font-label-lg text-label-lg mt-1">Profile</span>
+        </button>
+    </div>
+</nav>
+<script>
+    // Simple micro-interaction for answer selection
+    document.querySelectorAll('.flex-col > button').forEach(button => {
+        button.addEventListener('click', function() {
+            // Remove selected state from all
+            document.querySelectorAll('.flex-col > button').forEach(btn => {
+                btn.classList.remove('bg-primary-fixed', 'border-primary', 'text-primary');
+                btn.classList.add('bg-surface', 'border-outline-variant', 'text-on-surface');
+            });
+
+            // Add selected state to clicked
+            this.classList.remove('bg-surface', 'border-outline-variant', 'text-on-surface');
+            this.classList.add('bg-primary-fixed', 'border-primary', 'text-primary');
+
+            // Simulate feedback modal appearance after a brief delay
+            setTimeout(() => {
+                console.log('Show feedback bottom sheet');
+                // In a real app, this would trigger the bottom sheet component
+            }, 300);
+        });
+    });
+</script>
+</body></html>

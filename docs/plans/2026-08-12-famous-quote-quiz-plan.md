@@ -34,7 +34,7 @@ Do not overengineer the assignment.
 - Task 5 — Server quiz engine and API: `Completed`
 - Task 6 — Client core infrastructure: `Completed`
 - Task 7 — App shell and Navigation 3: `Completed`
-- Task 8 — Login feature: `Pending`
+- Task 8 — Login feature: `Completed`
 - Task 9 — Quiz feature: `Pending`
 - Task 10 — Settings and Profile: `Pending`
 - Task 11 — Android polish and compliance hardening: `Pending`

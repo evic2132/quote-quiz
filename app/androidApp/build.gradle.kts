@@ -17,6 +17,7 @@ dependencies {
 
     // Android entry point
     implementation(libs.androidx.activity.compose)
+    implementation(libs.splash.screen)
 
     // Tooling
     implementation(libs.compose.uiToolingPreview)

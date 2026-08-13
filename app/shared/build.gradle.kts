@@ -45,7 +45,7 @@ kotlin {
     sourceSets {
         androidMain.dependencies {
             // Networking
-            implementation(libs.ktor.client.android)
+            implementation(libs.ktor.client.okhttp)
 
             // Tooling
             implementation(libs.compose.uiToolingPreview)
@@ -68,6 +68,7 @@ kotlin {
 
             // Dependency injection
             implementation(libs.koin.compose)
+            implementation(libs.koin.compose.viewmodel)
             implementation(libs.koin.core)
 
             // Concurrency
@@ -79,6 +80,7 @@ kotlin {
             // Networking
             implementation(libs.ktor.client.core)
             implementation(libs.ktor.client.content.negotiation)
+            implementation(libs.ktor.client.logging)
             implementation(libs.ktor.serialization.kotlinx.json)
 
             // Persistence
