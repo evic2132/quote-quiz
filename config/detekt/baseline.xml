@@ -1,0 +1,356 @@
+<?xml version="1.0" ?>
+<SmellBaseline>
+  <ManuallySuppressedIssues/>
+  <CurrentIssues>
+    <ID>ArgumentListWrapping:CoreModule.kt:(quizApi = get(), sessionRepository = get(), quizPreferencesRepository = get())</ID>
+    <ID>ArgumentListWrapping:DemoDataInitializer.kt:DemoDataInitializer.Companion$(text = "A room without books is like a body without a soul.", author = "Marcus Tullius Cicero")</ID>
+    <ID>ArgumentListWrapping:DemoDataInitializer.kt:DemoDataInitializer.Companion$(text = "Do what you can, with what you have, where you are.", author = "Theodore Roosevelt")</ID>
+    <ID>ArgumentListWrapping:DemoDataInitializer.kt:DemoDataInitializer.Companion$(text = "If life were predictable it would cease to be life, and be without flavor.", author = "Eleanor Roosevelt")</ID>
+    <ID>ArgumentListWrapping:DemoDataInitializer.kt:DemoDataInitializer.Companion$(text = "If you tell the truth, you don't have to remember anything.", author = "Mark Twain")</ID>
+    <ID>ArgumentListWrapping:DemoDataInitializer.kt:DemoDataInitializer.Companion$(text = "Imperfection is beauty, madness is genius and it's better to be absolutely ridiculous than absolutely boring.", author = "Marilyn Monroe")</ID>
+    <ID>ArgumentListWrapping:DemoDataInitializer.kt:DemoDataInitializer.Companion$(text = "It does not matter how slowly you go as long as you do not stop.", author = "Confucius")</ID>
+    <ID>ArgumentListWrapping:DemoDataInitializer.kt:DemoDataInitializer.Companion$(text = "Live as if you were to die tomorrow. Learn as if you were to live forever.", author = "Mahatma Gandhi")</ID>
+    <ID>ArgumentListWrapping:DemoDataInitializer.kt:DemoDataInitializer.Companion$(text = "Many of life's failures are people who did not realize how close they were to success when they gave up.", author = "Thomas A. Edison")</ID>
+    <ID>ArgumentListWrapping:DemoDataInitializer.kt:DemoDataInitializer.Companion$(text = "Tell me and I forget. Teach me and I remember. Involve me and I learn.", author = "Benjamin Franklin")</ID>
+    <ID>ArgumentListWrapping:DemoDataInitializer.kt:DemoDataInitializer.Companion$(text = "The future belongs to those who believe in the beauty of their dreams.", author = "Eleanor Roosevelt")</ID>
+    <ID>ArgumentListWrapping:DemoDataInitializer.kt:DemoDataInitializer.Companion$(text = "Two things are infinite: the universe and human stupidity; and I'm not sure about the universe.", author = "Albert Einstein")</ID>
+    <ID>ArgumentListWrapping:JacksonConfig.kt:QuizModeDeserializer$(QuizMode::class.java, p.valueAsString, "Unsupported quiz mode")</ID>
+    <ID>ArgumentListWrapping:LoginViewModel.kt:LoginViewModel$(Res.string.not_implemented_forgot_password)</ID>
+    <ID>ArgumentListWrapping:LoginViewModel.kt:LoginViewModel$(Res.string.not_implemented_remember_me)</ID>
+    <ID>ArgumentListWrapping:LoginViewModel.kt:LoginViewModel$(UiText.StringResourceId(Res.string.not_implemented_forgot_password))</ID>
+    <ID>ArgumentListWrapping:LoginViewModel.kt:LoginViewModel$(UiText.StringResourceId(Res.string.not_implemented_remember_me))</ID>
+    <ID>ArgumentListWrapping:QuizServiceTest.kt:QuizServiceTest$(storedSession.questions.filter { it.proposedAuthor != it.correctAuthor }.all { it.proposedAuthor != null })</ID>
+    <ID>BinaryExpressionWrapping:QuizServiceTest.kt:QuizServiceTest$it.proposedAuthor != null</ID>
+    <ID>BlankLineBetweenWhenConditions:DefaultSessionRepository.kt:DefaultSessionRepository$when (val result = profileApi.getCurrentUser(token)) { is ApiResult.Success -&gt; SessionState.Authenticated(token = token, user = result.value) is ApiResult.Failure -&gt; { if (result.error == ApiError.Unauthorized) { tokenStorage.clear() } SessionState.Unauthenticated } }</ID>
+    <ID>BlankLineBetweenWhenConditions:LoginViewModel.kt:LoginViewModel$when (action) { is LoginAction.EmailChanged -&gt; _uiState.update { it.copy( email = action.value, emailError = null, loginError = null, ) } is LoginAction.PasswordChanged -&gt; _uiState.update { it.copy( password = action.value, passwordError = null, loginError = null, ) } LoginAction.SubmitClicked -&gt; submit() LoginAction.RememberMeClicked -&gt; emitMessage(UiText.StringResourceId(Res.string.not_implemented_remember_me)) LoginAction.ForgotPasswordClicked -&gt; emitMessage(UiText.StringResourceId(Res.string.not_implemented_forgot_password)) LoginAction.SignUpClicked -&gt; emitMessage(UiText.StringResourceId(Res.string.not_implemented_sign_up)) }</ID>
+    <ID>BlankLineBetweenWhenConditions:NetworkErrorMapper.kt:when (this) { is ClientRequestException -&gt; response.status.toApiError() is RedirectResponseException -&gt; response.status.toApiError() is ServerResponseException -&gt; response.status.toApiError() is ResponseException -&gt; response.status.toApiError() is ConnectTimeoutException, is SocketTimeoutException, is HttpRequestTimeoutException, is UnresolvedAddressException -&gt; ApiError.Network else -&gt; if (isPlatformNetworkError()) ApiError.Network else ApiError.Unknown(this) }</ID>
+    <ID>BlankLineBetweenWhenConditions:QuizScreen.kt:when { uiState.isLoading -&gt; QuizLoadingState() uiState.error != null -&gt; QuizErrorState( message = uiState.error.asComposeString(), onRetry = { onAction(QuizAction.RetryClicked) }, ) uiState.currentQuestion != null -&gt; QuizReadyState( uiState = uiState, onAction = onAction, ) }</ID>
+    <ID>BlankLineBetweenWhenConditions:QuizService.kt:QuizService$when (mode) { QuizMode.BINARY -&gt; createBinaryQuestion( session = session, quote = quote, allAuthors = allAuthors, useCorrectAuthor = randomizedBinaryCorrectness[index], progress = index + 1, ) QuizMode.MULTIPLE_CHOICE -&gt; createMultipleChoiceQuestion( session = session, quote = quote, allAuthors = allAuthors, progress = index + 1, ) }</ID>
+    <ID>BlankLineBetweenWhenConditions:SettingsViewModel.kt:SettingsViewModel$when (action) { SettingsAction.DailyChallengeClicked -&gt; emitNotImplementedMessage( UiText.StringResourceId(Res.string.settings_daily_challenge_not_implemented), ) SettingsAction.DifficultyClicked -&gt; emitNotImplementedMessage( UiText.StringResourceId(Res.string.settings_difficulty_not_implemented), ) is SettingsAction.ModeSelected -&gt; updateMode(action.mode) }</ID>
+    <ID>ClassSignature:ApiConfig.kt:ApiConfig</ID>
+    <ID>ClassSignature:ApiErrorResponse.kt:ApiErrorResponse</ID>
+    <ID>ClassSignature:AppTabs.kt:QuizResultRoute : NavKey</ID>
+    <ID>ClassSignature:AppUserDetailsService.kt:AppUserDetailsService : UserDetailsService</ID>
+    <ID>ClassSignature:AuthController.kt:AuthController</ID>
+    <ID>ClassSignature:AuthService.kt:AuthService</ID>
+    <ID>ClassSignature:CredentialsValidator.kt:CredentialsValidator$ValidationResult</ID>
+    <ID>ClassSignature:DefaultSessionRepository.kt:DefaultSessionRepository : SessionRepository</ID>
+    <ID>ClassSignature:HomeContainer.kt:HomeTabItem</ID>
+    <ID>ClassSignature:HomeNavigationState.kt:HomeNavigator</ID>
+    <ID>ClassSignature:KtorAuthApi.kt:KtorAuthApi : AuthApi</ID>
+    <ID>ClassSignature:KtorProfileApi.kt:KtorProfileApi : ProfileApi</ID>
+    <ID>ClassSignature:KtorQuizApi.kt:KtorQuizApi : QuizApi</ID>
+    <ID>ClassSignature:LoginRequest.kt:LoginRequest</ID>
+    <ID>ClassSignature:LoginResponse.kt:LoginResponse</ID>
+    <ID>ClassSignature:LoginViewModel.kt:LoginViewModel : ViewModel</ID>
+    <ID>ClassSignature:QuizController.kt:QuizController</ID>
+    <ID>ClassSignature:QuizOptionDto.kt:QuizOptionDto</ID>
+    <ID>ClassSignature:QuizPreferencesRepository.kt:SettingsQuizPreferencesRepository : QuizPreferencesRepository</ID>
+    <ID>ClassSignature:QuizSessionStartRequest.kt:QuizSessionStartRequest</ID>
+    <ID>ClassSignature:QuizViewModelTest.kt:QuizViewModelTest$FakeQuizPreferencesRepository : QuizPreferencesRepository</ID>
+    <ID>ClassSignature:RootNavigationState.kt:RootNavigationState</ID>
+    <ID>ClassSignature:RootNavigationState.kt:RootNavigator</ID>
+    <ID>ClassSignature:SessionState.kt:SessionState$Authenticated : SessionState</ID>
+    <ID>ClassSignature:SettingsContract.kt:SettingsUiState</ID>
+    <ID>ClassSignature:SettingsTokenStorage.kt:SettingsTokenStorage : TokenStorage</ID>
+    <ID>ClassSignature:SettingsViewModel.kt:SettingsViewModel : ViewModel</ID>
+    <ID>ClassSignature:TestController.kt:TestResponse</ID>
+    <ID>ClassSignature:UiText.kt:UiText$StringResourceId : UiText</ID>
+    <ID>ClassSignature:UserDto.kt:UserDto</ID>
+    <ID>ComposableParamOrder:LoginScreen.kt:@Composable private fun LoginBrandingPane</ID>
+    <ID>ComposableParamOrder:LoginScreen.kt:@Composable private fun LoginFormPane</ID>
+    <ID>ComposableParamOrder:LoginScreen.kt:@Composable private fun LoginHeader</ID>
+    <ID>CompositionLocalAllowlist:QuoteQuizTheme.kt:private val LocalSpacing = staticCompositionLocalOf { QuoteQuizSpacing() }</ID>
+    <ID>EmptyFunctionBlock:QuoteQuizServerApplicationTests.kt:QuoteQuizServerApplicationTests${ }</ID>
+    <ID>Filename:AppShellDestinationTest.kt:dev.elelan.quotequiz.app.AppShellDestinationTest.kt</ID>
+    <ID>Filename:MainShellNavigatorTest.kt:dev.elelan.quotequiz.app.MainShellNavigatorTest.kt</ID>
+    <ID>Filename:main.kt:dev.elelan.quotequiz.main.kt</ID>
+    <ID>FinalNewline:CredentialsValidator.kt:dev.elelan.quotequiz.feature.login.CredentialsValidator.kt</ID>
+    <ID>FinalNewline:MainViewController.kt:dev.elelan.quotequiz.MainViewController.kt</ID>
+    <ID>FinalNewline:Platform.js.kt:dev.elelan.quotequiz.Platform.js.kt</ID>
+    <ID>FinalNewline:Platform.wasmJs.kt:dev.elelan.quotequiz.Platform.wasmJs.kt</ID>
+    <ID>FinalNewline:SharedLogicWebTest.kt:dev.elelan.quotequiz.SharedLogicWebTest.kt</ID>
+    <ID>ForbiddenComment:QuizResultScreen.kt:// TODO: Add a special celebration animation for standout scores such as 10/10.</ID>
+    <ID>FunctionLiteral:CoreModule.kt:&lt;anonymous&gt;</ID>
+    <ID>FunctionLiteral:QuizServiceTest.kt:QuizServiceTest$&lt;anonymous&gt;</ID>
+    <ID>FunctionNaming:MainViewController.kt:fun MainViewController</ID>
+    <ID>FunctionSignature:ApiErrorUiText.kt:fun ApiError.toUiText: UiText</ID>
+    <ID>FunctionSignature:ApiExceptionHandler.kt:ApiExceptionHandler$@ExceptionHandler(BadCredentialsException::class, UsernameNotFoundException::class) fun handleInvalidCredentials: ResponseEntity&lt;ApiErrorResponse&gt;</ID>
+    <ID>FunctionSignature:ApiExceptionHandler.kt:ApiExceptionHandler$@ExceptionHandler(HttpMessageNotReadableException::class, IllegalArgumentException::class) fun handleInvalidRequest: ResponseEntity&lt;ApiErrorResponse&gt;</ID>
+    <ID>FunctionSignature:ApiExceptionHandler.kt:ApiExceptionHandler$@ExceptionHandler(MethodArgumentNotValidException::class) fun handleValidationFailure: ResponseEntity&lt;ApiErrorResponse&gt;</ID>
+    <ID>FunctionSignature:ApiExceptionHandler.kt:ApiExceptionHandler$@ExceptionHandler(QuizQuestionNotFoundException::class) fun handleQuizQuestionNotFound: ResponseEntity&lt;ApiErrorResponse&gt;</ID>
+    <ID>FunctionSignature:ApiExceptionHandler.kt:ApiExceptionHandler$@ExceptionHandler(QuizSessionNotFoundException::class) fun handleQuizSessionNotFound: ResponseEntity&lt;ApiErrorResponse&gt;</ID>
+    <ID>FunctionSignature:AppContainer.kt:@Composable internal fun AppPlaceholderScreen</ID>
+    <ID>FunctionSignature:AppShellDestination.kt:fun SessionState.toRootRoute: RootRoute</ID>
+    <ID>FunctionSignature:AppShellDestinationTest.kt:AppContainerDestinationTest$private fun demoUser</ID>
+    <ID>FunctionSignature:AppUserDetailsService.kt:AppUserDetailsService$override fun loadUserByUsername: UserDetails</ID>
+    <ID>FunctionSignature:AppUserPrincipal.kt:AppUserPrincipal$override fun getAuthorities: Collection&lt;GrantedAuthority&gt;</ID>
+    <ID>FunctionSignature:AppUserPrincipal.kt:AppUserPrincipal.Companion$fun fromUser: AppUserPrincipal</ID>
+    <ID>FunctionSignature:AuthController.kt:AuthController$@GetMapping("/me") fun me: UserDto</ID>
+    <ID>FunctionSignature:AuthController.kt:AuthController$@PostMapping("/auth/login") fun login: LoginResponse</ID>
+    <ID>FunctionSignature:DefaultScaffoldBody.kt:@Composable fun QuoteQuizBackground</ID>
+    <ID>FunctionSignature:DefaultSessionRepositoryTest.kt:DefaultSessionRepositoryTest$private fun demoUser</ID>
+    <ID>FunctionSignature:DemoDataInitializer.kt:DemoDataInitializer$@Bean fun seedDemoData: ApplicationRunner</ID>
+    <ID>FunctionSignature:DemoDataInitializer.kt:private fun BCryptPasswordEncoder.encodeRequired: String</ID>
+    <ID>FunctionSignature:HomeContainer.kt:@Composable fun HomeContainer</ID>
+    <ID>FunctionSignature:HomeContainer.kt:@Composable internal fun HomePlaceholderScreen</ID>
+    <ID>FunctionSignature:HomeContainer.kt:@Composable private fun HomeBottomBar</ID>
+    <ID>FunctionSignature:HomeNavigationState.kt:@Composable fun rememberHomeNavigationState: HomeNavigationState</ID>
+    <ID>FunctionSignature:HttpClientFactory.kt:fun createHttpClient</ID>
+    <ID>FunctionSignature:JacksonConfig.kt:JacksonConfig$@Bean fun quizModeModule: JacksonModule</ID>
+    <ID>FunctionSignature:JacksonConfig.kt:QuizModeDeserializer$override fun deserialize: QuizMode</ID>
+    <ID>FunctionSignature:JwtService.kt:JwtService$fun extractSubject: String</ID>
+    <ID>FunctionSignature:JwtService.kt:JwtService$private fun parseClaims: Claims</ID>
+    <ID>FunctionSignature:KtorAuthApi.kt:KtorAuthApi$override suspend fun login: ApiResult&lt;LoginResponse&gt;</ID>
+    <ID>FunctionSignature:KtorProfileApi.kt:KtorProfileApi$override suspend fun getCurrentUser: ApiResult&lt;UserDto&gt;</ID>
+    <ID>FunctionSignature:KtorQuizApi.kt:KtorQuizApi$override suspend fun submitAnswer: ApiResult&lt;SubmitAnswerResponse&gt;</ID>
+    <ID>FunctionSignature:LoginScreen.kt:@Composable fun LoginRouteScreen</ID>
+    <ID>FunctionSignature:LoginScreen.kt:@Composable private fun LoginBrandingPane</ID>
+    <ID>FunctionSignature:LoginScreen.kt:@Composable private fun LoginCompactLayout</ID>
+    <ID>FunctionSignature:LoginScreen.kt:@Composable private fun LoginFooter</ID>
+    <ID>FunctionSignature:LoginScreen.kt:@Composable private fun LoginFormCard</ID>
+    <ID>FunctionSignature:LoginScreen.kt:@Composable private fun LoginHeader</ID>
+    <ID>FunctionSignature:LoginScreen.kt:@Composable private fun LoginScreen</ID>
+    <ID>FunctionSignature:LoginScreen.kt:@Composable private fun LoginSplitLayout</ID>
+    <ID>FunctionSignature:MainShellNavigatorTest.kt:HomeNavigatorTest$private fun navigationState: HomeNavigationState</ID>
+    <ID>FunctionSignature:NetworkErrorMapper.kt:internal fun HttpStatusCode.toApiError: ApiError</ID>
+    <ID>FunctionSignature:NetworkErrorMapper.kt:internal fun Throwable.toApiError: ApiError</ID>
+    <ID>FunctionSignature:NetworkErrorMapper.kt:internal suspend fun &lt;T&gt; runApiCall: ApiResult&lt;T&gt;</ID>
+    <ID>FunctionSignature:PlatformTheme.android.kt:@Composable actual fun ApplyPlatformTheme</ID>
+    <ID>FunctionSignature:PlatformTheme.ios.kt:@Composable actual fun ApplyPlatformTheme</ID>
+    <ID>FunctionSignature:PlatformTheme.js.kt:@Composable actual fun ApplyPlatformTheme</ID>
+    <ID>FunctionSignature:PlatformTheme.jvm.kt:@Composable actual fun ApplyPlatformTheme</ID>
+    <ID>FunctionSignature:PlatformTheme.wasmJs.kt:@Composable actual fun ApplyPlatformTheme</ID>
+    <ID>FunctionSignature:ProfileScreen.kt:@Composable fun ProfileScreen</ID>
+    <ID>FunctionSignature:ProfileScreen.kt:@Composable private fun LogoutSection</ID>
+    <ID>FunctionSignature:ProfileScreen.kt:@Composable private fun PlaceholderStatCard</ID>
+    <ID>FunctionSignature:ProfileScreen.kt:@Composable private fun ProfileContent</ID>
+    <ID>FunctionSignature:ProfileScreen.kt:@Composable private fun ProfileField</ID>
+    <ID>FunctionSignature:ProfileScreen.kt:@Composable private fun ProfileHeader</ID>
+    <ID>FunctionSignature:QuizAnswerButtons.kt:@Composable fun QuizBinaryAnswerButtons</ID>
+    <ID>FunctionSignature:QuizAnswerButtons.kt:@Composable private fun QuizAnswerButton</ID>
+    <ID>FunctionSignature:QuizController.kt:QuizController$@PostMapping fun startSession: QuizSessionDto</ID>
+    <ID>FunctionSignature:QuizController.kt:QuizController$@PostMapping("/{sessionId}/answers") fun submitAnswer: SubmitAnswerResponse</ID>
+    <ID>FunctionSignature:QuizFeedbackDialog.kt:@Composable fun QuizFeedbackDialog</ID>
+    <ID>FunctionSignature:QuizFeedbackDialog.kt:@Composable fun QuizFeedbackDialogContent</ID>
+    <ID>FunctionSignature:QuizPreferencesRepository.kt:private fun Settings.getStoredQuizMode: QuizMode</ID>
+    <ID>FunctionSignature:QuizQuoteCard.kt:@Composable fun QuizQuoteCard</ID>
+    <ID>FunctionSignature:QuizQuoteCard.kt:@Composable fun QuizQuoteCardLoading</ID>
+    <ID>FunctionSignature:QuizQuoteCard.kt:@Composable private fun QuizQuoteCardTopAccent</ID>
+    <ID>FunctionSignature:QuizRepository.kt:DefaultQuizRepository$private fun currentToken: String?</ID>
+    <ID>FunctionSignature:QuizRepository.kt:QuizRepository$suspend fun submitAnswer: ApiResult&lt;SubmitAnswerResponse&gt;</ID>
+    <ID>FunctionSignature:QuizResultScreen.kt:@Composable fun QuizResultScreen</ID>
+    <ID>FunctionSignature:QuizResultScreen.kt:@Composable private fun QuizMode.displayName: String</ID>
+    <ID>FunctionSignature:QuizResultScreen.kt:@Composable private fun ResultStatRow</ID>
+    <ID>FunctionSignature:QuizResultScreen.kt:@Composable private fun ResultSummaryCard</ID>
+    <ID>FunctionSignature:QuizResultScreen.kt:@Composable private fun ScoreRing</ID>
+    <ID>FunctionSignature:QuizScreen.kt:@Composable fun QuizRouteScreen</ID>
+    <ID>FunctionSignature:QuizScreen.kt:@Composable fun QuizScreen</ID>
+    <ID>FunctionSignature:QuizScreen.kt:@Composable private fun QuizErrorState</ID>
+    <ID>FunctionSignature:QuizScreen.kt:@Composable private fun QuizInteractionPanel</ID>
+    <ID>FunctionSignature:QuizScreen.kt:@Composable private fun QuizInteractionPanelLoading</ID>
+    <ID>FunctionSignature:QuizScreen.kt:@Composable private fun QuizProgressLoadingSection</ID>
+    <ID>FunctionSignature:QuizScreen.kt:@Composable private fun QuizReadyState</ID>
+    <ID>FunctionSignature:QuizService.kt:QuizService$@Transactional fun submitAnswer: SubmitAnswerResponse</ID>
+    <ID>FunctionSignature:QuizService.kt:QuizService$private fun QuizSessionQuestionEntity.toDto: QuizQuestionDto</ID>
+    <ID>FunctionSignature:QuizService.kt:QuizService$private fun isBinaryAnswerCorrect: Boolean</ID>
+    <ID>FunctionSignature:QuizServiceTest.kt:QuizServiceTest$private fun correctOptionIdFor: String</ID>
+    <ID>FunctionSignature:QuizViewModel.kt:QuizViewModel$private fun submitAnswer</ID>
+    <ID>FunctionSignature:QuizViewModel.kt:private fun ApiError.toQuizErrorText: UiText</ID>
+    <ID>FunctionSignature:QuizViewModelTest.kt:private fun binaryQuestion</ID>
+    <ID>FunctionSignature:QuizViewModelTest.kt:private fun multipleChoiceSession</ID>
+    <ID>FunctionSignature:QuoteQuizTheme.kt:@Composable expect fun ApplyPlatformTheme</ID>
+    <ID>FunctionSignature:QuoteQuizTheme.kt:@Composable fun QuoteQuizTheme</ID>
+    <ID>FunctionSignature:RootNavigationState.kt:@Composable fun rememberRootNavigationState: RootNavigationState</ID>
+    <ID>FunctionSignature:SecurityConfig.kt:SecurityConfig$@Bean fun securityFilterChain: SecurityFilterChain</ID>
+    <ID>FunctionSignature:SettingsScreen.kt:@Composable fun SettingsRouteScreen</ID>
+    <ID>FunctionSignature:SettingsScreen.kt:@Composable private fun ModeSegmentButton</ID>
+    <ID>FunctionSignature:SettingsScreen.kt:@Composable private fun ModeSegmentedControl</ID>
+    <ID>FunctionSignature:SettingsScreen.kt:@Composable private fun SettingRow</ID>
+    <ID>FunctionSignature:SettingsScreen.kt:@Composable private fun SettingSection</ID>
+    <ID>FunctionSignature:SettingsScreen.kt:@Composable private fun SettingTexts</ID>
+    <ID>FunctionSignature:SettingsScreen.kt:@Composable private fun SettingsContent</ID>
+    <ID>FunctionSignature:Shimmer.kt:@Composable private fun shimmerBrush: Brush</ID>
+    <ID>FunctionSignature:TestController.kt:TestController$@GetMapping fun getTestResponse: TestResponse</ID>
+    <ID>FunctionSignature:UiText.kt:UiText$@Composable fun asComposeString: String</ID>
+    <ID>FunctionSignature:UiText.kt:UiText$suspend fun asString: String</ID>
+    <ID>ImportOrdering:AdaptiveWindowLayout.kt:import androidx.compose.foundation.layout.BoxWithConstraints import androidx.compose.runtime.Composable import androidx.compose.ui.unit.dp import androidx.window.core.layout.WindowSizeClass.Companion.WIDTH_DP_MEDIUM_LOWER_BOUND import androidx.window.core.layout.WindowSizeClass.Companion.WIDTH_DP_EXPANDED_LOWER_BOUND</ID>
+    <ID>ImportOrdering:ApiExceptionHandler.kt:import dev.elelan.quote_quiz_server.quiz.QuizQuestionNotFoundException import dev.elelan.quote_quiz_server.quiz.QuizSessionNotFoundException import org.springframework.http.HttpStatus import org.springframework.http.ResponseEntity import org.springframework.security.authentication.BadCredentialsException import org.springframework.security.core.userdetails.UsernameNotFoundException import org.springframework.http.converter.HttpMessageNotReadableException import org.springframework.web.bind.MethodArgumentNotValidException import org.springframework.web.bind.annotation.ExceptionHandler import org.springframework.web.bind.annotation.RestControllerAdvice import org.springframework.web.server.ResponseStatusException</ID>
+    <ID>ImportOrdering:AuthControllerTest.kt:import dev.elelan.quotequiz.contract.auth.LoginRequest import dev.elelan.quotequiz.contract.auth.LoginResponse import dev.elelan.quotequiz.contract.auth.UserDto import kotlin.test.assertEquals import org.junit.jupiter.api.Test import org.springframework.beans.factory.annotation.Autowired import org.springframework.boot.test.context.SpringBootTest import org.springframework.boot.webmvc.test.autoconfigure.AutoConfigureMockMvc import org.springframework.http.MediaType import org.springframework.test.web.servlet.MockMvc import org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get import org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post import org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath import org.springframework.test.web.servlet.result.MockMvcResultMatchers.status import tools.jackson.databind.ObjectMapper</ID>
+    <ID>ImportOrdering:CoreModule.kt:import dev.elelan.quotequiz.core.api.AuthApi import dev.elelan.quotequiz.core.api.KtorAuthApi import dev.elelan.quotequiz.core.api.KtorProfileApi import dev.elelan.quotequiz.core.api.KtorQuizApi import dev.elelan.quotequiz.core.api.ProfileApi import dev.elelan.quotequiz.core.api.QuizApi import dev.elelan.quotequiz.core.network.createHttpClient import dev.elelan.quotequiz.core.settings.QuizPreferencesRepository import dev.elelan.quotequiz.core.settings.SettingsQuizPreferencesRepository import dev.elelan.quotequiz.core.session.DefaultSessionRepository import dev.elelan.quotequiz.core.session.SessionRepository import dev.elelan.quotequiz.core.storage.SettingsTokenStorage import dev.elelan.quotequiz.core.storage.TokenStorage import dev.elelan.quotequiz.feature.quiz.DefaultQuizRepository import dev.elelan.quotequiz.feature.quiz.QuizRepository import io.ktor.client.engine.HttpClientEngineFactory import org.koin.dsl.module</ID>
+    <ID>ImportOrdering:DemoDataInitializer.kt:import dev.elelan.quote_quiz_server.quote.QuoteEntity import dev.elelan.quote_quiz_server.quote.QuoteRepository import dev.elelan.quote_quiz_server.user.UserEntity import dev.elelan.quote_quiz_server.user.UserRepository import org.springframework.boot.ApplicationRunner import org.springframework.context.annotation.Bean import org.springframework.context.annotation.Configuration import org.springframework.beans.factory.annotation.Value import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder</ID>
+    <ID>ImportOrdering:DemoDataInitializerTest.kt:import dev.elelan.quote_quiz_server.quote.QuoteRepository import dev.elelan.quote_quiz_server.user.UserRepository import kotlin.test.assertEquals import kotlin.test.assertTrue import org.junit.jupiter.api.Test import org.springframework.beans.factory.annotation.Autowired import org.springframework.boot.test.context.SpringBootTest</ID>
+    <ID>ImportOrdering:HomeContainer.kt:import androidx.compose.animation.ExitTransition import androidx.compose.animation.core.tween import androidx.compose.animation.fadeIn import androidx.compose.animation.fadeOut import androidx.compose.animation.togetherWith import androidx.compose.foundation.layout.Arrangement import androidx.compose.foundation.layout.Box import androidx.compose.foundation.layout.Column import androidx.compose.foundation.layout.RowScope import androidx.compose.foundation.layout.WindowInsets import androidx.compose.foundation.layout.fillMaxSize import androidx.compose.foundation.layout.fillMaxWidth import androidx.compose.foundation.layout.padding import androidx.compose.foundation.layout.size import androidx.compose.material3.Button import androidx.compose.material3.Icon import androidx.compose.material3.MaterialTheme import androidx.compose.material3.NavigationBar import androidx.compose.material3.NavigationBarItem import androidx.compose.material3.NavigationBarItemDefaults import androidx.compose.material3.Scaffold import androidx.compose.material3.Text import androidx.compose.runtime.Composable import androidx.compose.runtime.remember import androidx.compose.runtime.rememberCoroutineScope import androidx.compose.ui.Alignment import androidx.compose.ui.Modifier import androidx.compose.ui.text.style.TextAlign import androidx.compose.ui.unit.dp import androidx.navigation3.runtime.NavKey import androidx.navigation3.runtime.entryProvider import androidx.navigation3.runtime.rememberSaveableStateHolderNavEntryDecorator import androidx.navigation3.ui.NavDisplay import dev.elelan.quotequiz.app.MAIN_TABS import dev.elelan.quotequiz.app.ProfileTab import dev.elelan.quotequiz.app.QuizResultRoute import dev.elelan.quotequiz.app.QuizTab import dev.elelan.quotequiz.app.SettingsTab import dev.elelan.quotequiz.contract.auth.UserDto import dev.elelan.quotequiz.feature.profile.ProfileScreen import dev.elelan.quotequiz.feature.quiz.QuizRouteScreen import dev.elelan.quotequiz.feature.quiz.QuizResultScreen import dev.elelan.quotequiz.feature.quiz.QuizViewModel import dev.elelan.quotequiz.feature.quiz.QuizAction import dev.elelan.quotequiz.feature.settings.SettingsRouteScreen import dev.elelan.quotequiz.ui.core.DefaultScaffoldBody import dev.elelan.quotequiz.ui.core.QuoteQuizBackground import kotlinx.coroutines.launch import org.jetbrains.compose.resources.DrawableResource import org.jetbrains.compose.resources.painterResource import org.jetbrains.compose.resources.stringResource import org.koin.compose.viewmodel.koinViewModel import quotequiz.app.shared.generated.resources.Res import quotequiz.app.shared.generated.resources.action_logout import quotequiz.app.shared.generated.resources.ic_account_circle import quotequiz.app.shared.generated.resources.ic_psychology import quotequiz.app.shared.generated.resources.ic_settings import quotequiz.app.shared.generated.resources.tab_profile import quotequiz.app.shared.generated.resources.tab_quiz import quotequiz.app.shared.generated.resources.tab_settings</ID>
+    <ID>ImportOrdering:HttpClientFactory.kt:import io.ktor.client.HttpClient import io.ktor.client.engine.HttpClientEngineFactory import io.ktor.client.plugins.contentnegotiation.ContentNegotiation import io.ktor.client.plugins.defaultRequest import io.ktor.client.plugins.HttpTimeout import io.ktor.client.plugins.logging.LogLevel import io.ktor.client.plugins.logging.Logger import io.ktor.client.plugins.logging.Logging import io.ktor.client.request.accept import io.ktor.client.request.url import io.ktor.http.ContentType import io.ktor.http.contentType import io.ktor.serialization.kotlinx.json.json import kotlinx.serialization.json.Json</ID>
+    <ID>ImportOrdering:JwtService.kt:import io.jsonwebtoken.Claims import io.jsonwebtoken.Jwts import io.jsonwebtoken.security.Keys import java.nio.charset.StandardCharsets import java.util.Date import javax.crypto.SecretKey import org.springframework.beans.factory.annotation.Value import org.springframework.stereotype.Service</ID>
+    <ID>ImportOrdering:NetworkErrorMapper.kt:import io.ktor.client.plugins.ClientRequestException import io.ktor.client.plugins.HttpRequestTimeoutException import io.ktor.client.plugins.RedirectResponseException import io.ktor.client.plugins.ResponseException import io.ktor.client.plugins.ServerResponseException import io.ktor.client.network.sockets.ConnectTimeoutException import io.ktor.client.network.sockets.SocketTimeoutException import io.ktor.http.HttpStatusCode import io.ktor.util.network.UnresolvedAddressException import kotlinx.coroutines.CancellationException</ID>
+    <ID>ImportOrdering:QuizController.kt:import dev.elelan.quotequiz.contract.quiz.QuizSessionDto import dev.elelan.quotequiz.contract.quiz.QuizSessionStartRequest import dev.elelan.quotequiz.contract.quiz.SubmitAnswerRequest import dev.elelan.quotequiz.contract.quiz.SubmitAnswerResponse import dev.elelan.quote_quiz_server.auth.AppUserPrincipal import org.springframework.security.core.annotation.AuthenticationPrincipal import org.springframework.web.bind.annotation.PathVariable import org.springframework.web.bind.annotation.PostMapping import org.springframework.web.bind.annotation.RequestBody import org.springframework.web.bind.annotation.RequestMapping import org.springframework.web.bind.annotation.RestController</ID>
+    <ID>ImportOrdering:QuizControllerTest.kt:import dev.elelan.quotequiz.contract.auth.LoginRequest import dev.elelan.quotequiz.contract.auth.LoginResponse import dev.elelan.quotequiz.contract.quiz.QuizMode import dev.elelan.quotequiz.contract.quiz.QuizSessionDto import dev.elelan.quotequiz.contract.quiz.QuizSessionStartRequest import dev.elelan.quotequiz.contract.quiz.SubmitAnswerRequest import dev.elelan.quotequiz.contract.quiz.SubmitAnswerResponse import kotlin.test.assertEquals import kotlin.test.assertNotNull import org.junit.jupiter.api.Test import org.springframework.beans.factory.annotation.Autowired import org.springframework.boot.test.context.SpringBootTest import org.springframework.boot.webmvc.test.autoconfigure.AutoConfigureMockMvc import org.springframework.http.MediaType import org.springframework.test.web.servlet.MockMvc import org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get import org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post import org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath import org.springframework.test.web.servlet.result.MockMvcResultMatchers.status import tools.jackson.databind.ObjectMapper</ID>
+    <ID>ImportOrdering:QuizRepository.kt:import dev.elelan.quotequiz.contract.quiz.QuizSessionDto import dev.elelan.quotequiz.contract.quiz.QuizSessionStartRequest import dev.elelan.quotequiz.contract.quiz.SubmitAnswerRequest import dev.elelan.quotequiz.contract.quiz.SubmitAnswerResponse import dev.elelan.quotequiz.core.api.QuizApi import dev.elelan.quotequiz.core.network.ApiError import dev.elelan.quotequiz.core.network.ApiResult import dev.elelan.quotequiz.core.settings.QuizPreferencesRepository import dev.elelan.quotequiz.core.session.SessionRepository import dev.elelan.quotequiz.core.session.SessionState</ID>
+    <ID>ImportOrdering:QuizResultScreen.kt:import androidx.compose.animation.core.animateFloatAsState import androidx.compose.animation.core.tween import androidx.compose.foundation.Canvas import androidx.compose.foundation.background import androidx.compose.foundation.rememberScrollState import androidx.compose.foundation.verticalScroll import androidx.compose.foundation.layout.Arrangement import androidx.compose.foundation.layout.Box import androidx.compose.foundation.layout.Column import androidx.compose.foundation.layout.Row import androidx.compose.foundation.layout.fillMaxSize import androidx.compose.foundation.layout.fillMaxWidth import androidx.compose.foundation.layout.height import androidx.compose.foundation.layout.padding import androidx.compose.foundation.layout.size import androidx.compose.foundation.layout.widthIn import androidx.compose.foundation.shape.CircleShape import androidx.compose.foundation.shape.RoundedCornerShape import androidx.compose.material3.Button import androidx.compose.material3.ButtonDefaults import androidx.compose.material3.Icon import androidx.compose.material3.MaterialTheme import androidx.compose.material3.Surface import androidx.compose.material3.Text import androidx.compose.runtime.Composable import androidx.compose.runtime.LaunchedEffect import androidx.compose.runtime.getValue import androidx.compose.runtime.mutableStateOf import androidx.compose.runtime.remember import androidx.compose.runtime.setValue import androidx.compose.ui.Alignment import androidx.compose.ui.Modifier import androidx.compose.ui.graphics.Color import androidx.compose.ui.graphics.StrokeCap import androidx.compose.ui.graphics.drawscope.Stroke import androidx.compose.ui.text.style.TextAlign import androidx.compose.ui.tooling.preview.Preview import androidx.compose.ui.unit.dp import dev.elelan.quotequiz.contract.quiz.QuizMode import dev.elelan.quotequiz.contract.quiz.QuizResultDto import dev.elelan.quotequiz.ui.core.DefaultScaffoldBody import dev.elelan.quotequiz.ui.core.QuoteQuizBackground import dev.elelan.quotequiz.ui.theme.QuoteQuizTheme import org.jetbrains.compose.resources.painterResource import org.jetbrains.compose.resources.stringResource import quotequiz.app.shared.generated.resources.Res import quotequiz.app.shared.generated.resources.ic_restart_alt import quotequiz.app.shared.generated.resources.quiz_action_start_again import quotequiz.app.shared.generated.resources.quiz_result_accuracy import quotequiz.app.shared.generated.resources.quiz_result_correct import quotequiz.app.shared.generated.resources.quiz_result_incorrect import quotequiz.app.shared.generated.resources.quiz_result_mode import quotequiz.app.shared.generated.resources.quiz_result_mode_binary import quotequiz.app.shared.generated.resources.quiz_result_mode_multiple_choice import quotequiz.app.shared.generated.resources.quiz_result_title_complete</ID>
+    <ID>ImportOrdering:QuizScreen.kt:import androidx.compose.foundation.background import androidx.compose.foundation.clickable import androidx.compose.foundation.interaction.MutableInteractionSource import androidx.compose.foundation.rememberScrollState import androidx.compose.foundation.layout.Arrangement import androidx.compose.foundation.layout.Box import androidx.compose.foundation.layout.Column import androidx.compose.foundation.layout.Row import androidx.compose.foundation.layout.Spacer import androidx.compose.foundation.layout.fillMaxSize import androidx.compose.foundation.layout.fillMaxWidth import androidx.compose.foundation.layout.height import androidx.compose.foundation.layout.padding import androidx.compose.foundation.layout.width import androidx.compose.foundation.layout.widthIn import androidx.compose.foundation.shape.RoundedCornerShape import androidx.compose.foundation.verticalScroll import androidx.compose.material3.Button import androidx.compose.material3.ButtonDefaults import androidx.compose.material3.LinearProgressIndicator import androidx.compose.material3.MaterialTheme import androidx.compose.material3.Surface import androidx.compose.material3.Text import androidx.compose.runtime.Composable import androidx.compose.runtime.getValue import androidx.compose.runtime.LaunchedEffect import androidx.compose.runtime.mutableStateOf import androidx.compose.runtime.remember import androidx.compose.runtime.setValue import androidx.compose.ui.Alignment import androidx.compose.ui.Modifier import androidx.compose.ui.graphics.Color import androidx.compose.ui.text.style.TextAlign import androidx.compose.ui.tooling.preview.Preview import androidx.compose.ui.unit.dp import androidx.lifecycle.compose.collectAsStateWithLifecycle import dev.elelan.quotequiz.contract.quiz.QuizMode import dev.elelan.quotequiz.contract.quiz.QuizOptionDto import dev.elelan.quotequiz.contract.quiz.QuizQuestionDto import dev.elelan.quotequiz.contract.quiz.QuizResultDto import dev.elelan.quotequiz.ui.core.DefaultScaffoldBody import dev.elelan.quotequiz.ui.core.QuoteQuizBackground import dev.elelan.quotequiz.ui.core.shimmerPlaceholder import dev.elelan.quotequiz.ui.theme.QuoteQuizTheme import kotlinx.coroutines.delay import org.jetbrains.compose.resources.stringResource import org.koin.compose.viewmodel.koinViewModel import quotequiz.app.shared.generated.resources.Res import quotequiz.app.shared.generated.resources.app_title import quotequiz.app.shared.generated.resources.quiz_action_no import quotequiz.app.shared.generated.resources.quiz_action_retry import quotequiz.app.shared.generated.resources.quiz_action_yes import quotequiz.app.shared.generated.resources.quiz_binary_prompt import quotequiz.app.shared.generated.resources.quiz_multiple_choice_prompt import quotequiz.app.shared.generated.resources.quiz_progress import quotequiz.app.shared.generated.resources.quiz_state_error</ID>
+    <ID>ImportOrdering:QuizService.kt:import dev.elelan.quotequiz.contract.quiz.QuizMode import dev.elelan.quotequiz.contract.quiz.QuizOptionDto import dev.elelan.quotequiz.contract.quiz.QuizQuestionDto import dev.elelan.quotequiz.contract.quiz.QuizResultDto import dev.elelan.quotequiz.contract.quiz.QuizSessionDto import dev.elelan.quotequiz.contract.quiz.SubmitAnswerRequest import dev.elelan.quotequiz.contract.quiz.SubmitAnswerResponse import dev.elelan.quote_quiz_server.quote.QuoteEntity import dev.elelan.quote_quiz_server.quote.QuoteRepository import dev.elelan.quote_quiz_server.user.UserRepository import java.util.UUID import org.springframework.stereotype.Service import org.springframework.transaction.annotation.Transactional</ID>
+    <ID>ImportOrdering:QuizServiceTest.kt:import dev.elelan.quotequiz.contract.quiz.QuizMode import dev.elelan.quotequiz.contract.quiz.SubmitAnswerRequest import dev.elelan.quote_quiz_server.quote.QuoteRepository import dev.elelan.quote_quiz_server.user.UserRepository import kotlin.test.assertEquals import kotlin.test.assertNotNull import kotlin.test.assertTrue import org.junit.jupiter.api.Test import org.springframework.beans.factory.annotation.Autowired import org.springframework.boot.test.context.SpringBootTest</ID>
+    <ID>ImportOrdering:QuizViewModel.kt:import androidx.lifecycle.ViewModel import androidx.lifecycle.viewModelScope import dev.elelan.quotequiz.contract.quiz.QuizMode import dev.elelan.quotequiz.contract.quiz.SubmitAnswerRequest import dev.elelan.quotequiz.core.network.ApiError import dev.elelan.quotequiz.core.network.ApiResult import dev.elelan.quotequiz.core.settings.QuizPreferencesRepository import dev.elelan.quotequiz.core.ui.UiText import kotlinx.coroutines.Job import kotlinx.coroutines.flow.collectLatest import kotlinx.coroutines.flow.MutableStateFlow import kotlinx.coroutines.flow.StateFlow import kotlinx.coroutines.flow.update import kotlinx.coroutines.launch import quotequiz.app.shared.generated.resources.Res import quotequiz.app.shared.generated.resources.quiz_error_http import quotequiz.app.shared.generated.resources.quiz_error_network import quotequiz.app.shared.generated.resources.quiz_error_unauthorized import quotequiz.app.shared.generated.resources.quiz_error_unknown</ID>
+    <ID>ImportOrdering:QuoteQuizServerApplicationTests.kt:import org.junit.jupiter.api.Test import org.springframework.beans.factory.annotation.Autowired import org.springframework.boot.test.context.SpringBootTest import org.springframework.http.MediaType import org.springframework.boot.webmvc.test.autoconfigure.AutoConfigureMockMvc import org.springframework.test.web.servlet.MockMvc import org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get import org.springframework.test.web.servlet.result.MockMvcResultMatchers.content import org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath import org.springframework.test.web.servlet.result.MockMvcResultMatchers.status</ID>
+    <ID>ImportOrdering:Shimmer.kt:import androidx.compose.animation.core.LinearEasing import androidx.compose.animation.core.RepeatMode import androidx.compose.animation.core.animateFloat import androidx.compose.animation.core.infiniteRepeatable import androidx.compose.animation.core.rememberInfiniteTransition import androidx.compose.animation.core.tween import androidx.compose.foundation.background import androidx.compose.foundation.shape.RoundedCornerShape import androidx.compose.runtime.Composable import androidx.compose.runtime.getValue import androidx.compose.ui.Modifier import androidx.compose.ui.draw.clip import androidx.compose.ui.geometry.Offset import androidx.compose.ui.graphics.Brush import androidx.compose.ui.graphics.Color import androidx.compose.ui.graphics.Shape import androidx.compose.ui.composed import androidx.compose.ui.unit.dp</ID>
+    <ID>ImportOrdering:UserRepositoryTest.kt:import kotlin.test.assertEquals import kotlin.test.assertNotNull import org.junit.jupiter.api.Test import org.springframework.beans.factory.annotation.Autowired import org.springframework.boot.data.jpa.test.autoconfigure.DataJpaTest import org.springframework.dao.DataIntegrityViolationException import org.springframework.test.context.ActiveProfiles</ID>
+    <ID>Indentation:AuthService.kt:AuthService$ </ID>
+    <ID>Indentation:Platform.js.kt:JsPlatform$ </ID>
+    <ID>Indentation:QuizServiceTest.kt:QuizServiceTest$ </ID>
+    <ID>LambdaParameterInRestartableEffect:QuizScreen.kt:onQuizCompleted: (QuizResultDto) -&gt; Unit</ID>
+    <ID>LongMethod:HomeContainer.kt:@Composable fun HomeContainer</ID>
+    <ID>LongMethod:LoginScreen.kt:@Composable fun LoginQuoteInline</ID>
+    <ID>LongMethod:LoginScreen.kt:@Composable private fun LoginFormCard</ID>
+    <ID>LongMethod:QuizFeedbackDialog.kt:@Composable fun QuizFeedbackDialogContent</ID>
+    <ID>LongMethod:QuizResultScreen.kt:@Composable fun QuizResultScreen</ID>
+    <ID>LongMethod:SettingsScreen.kt:@Composable private fun SettingsContent</ID>
+    <ID>MatchingDeclarationName:AdaptiveWindowLayout.kt:AdaptiveLayoutSize</ID>
+    <ID>MatchingDeclarationName:AppShellDestinationTest.kt:AppContainerDestinationTest</ID>
+    <ID>MatchingDeclarationName:MainShellNavigatorTest.kt:HomeNavigatorTest</ID>
+    <ID>MatchingDeclarationName:Platform.js.kt:JsPlatform : Platform</ID>
+    <ID>MatchingDeclarationName:Platform.wasmJs.kt:WasmPlatform : Platform</ID>
+    <ID>MatchingDeclarationName:QuizApplication.kt:QuoteQuizServerApplication</ID>
+    <ID>MaxLineLength:CoreModule.kt:single&lt;QuizRepository&gt; { DefaultQuizRepository(quizApi = get(), sessionRepository = get(), quizPreferencesRepository = get()) }</ID>
+    <ID>MaxLineLength:DemoDataInitializer.kt:DemoDataInitializer.Companion$QuoteEntity(text = "A room without books is like a body without a soul.", author = "Marcus Tullius Cicero")</ID>
+    <ID>MaxLineLength:DemoDataInitializer.kt:DemoDataInitializer.Companion$QuoteEntity(text = "Do what you can, with what you have, where you are.", author = "Theodore Roosevelt")</ID>
+    <ID>MaxLineLength:DemoDataInitializer.kt:DemoDataInitializer.Companion$QuoteEntity(text = "If life were predictable it would cease to be life, and be without flavor.", author = "Eleanor Roosevelt")</ID>
+    <ID>MaxLineLength:DemoDataInitializer.kt:DemoDataInitializer.Companion$QuoteEntity(text = "If you tell the truth, you don't have to remember anything.", author = "Mark Twain")</ID>
+    <ID>MaxLineLength:DemoDataInitializer.kt:DemoDataInitializer.Companion$QuoteEntity(text = "Imperfection is beauty, madness is genius and it's better to be absolutely ridiculous than absolutely boring.", author = "Marilyn Monroe")</ID>
+    <ID>MaxLineLength:DemoDataInitializer.kt:DemoDataInitializer.Companion$QuoteEntity(text = "It does not matter how slowly you go as long as you do not stop.", author = "Confucius")</ID>
+    <ID>MaxLineLength:DemoDataInitializer.kt:DemoDataInitializer.Companion$QuoteEntity(text = "Live as if you were to die tomorrow. Learn as if you were to live forever.", author = "Mahatma Gandhi")</ID>
+    <ID>MaxLineLength:DemoDataInitializer.kt:DemoDataInitializer.Companion$QuoteEntity(text = "Many of life's failures are people who did not realize how close they were to success when they gave up.", author = "Thomas A. Edison")</ID>
+    <ID>MaxLineLength:DemoDataInitializer.kt:DemoDataInitializer.Companion$QuoteEntity(text = "Tell me and I forget. Teach me and I remember. Involve me and I learn.", author = "Benjamin Franklin")</ID>
+    <ID>MaxLineLength:DemoDataInitializer.kt:DemoDataInitializer.Companion$QuoteEntity(text = "The future belongs to those who believe in the beauty of their dreams.", author = "Eleanor Roosevelt")</ID>
+    <ID>MaxLineLength:DemoDataInitializer.kt:DemoDataInitializer.Companion$QuoteEntity(text = "Two things are infinite: the universe and human stupidity; and I'm not sure about the universe.", author = "Albert Einstein")</ID>
+    <ID>MaxLineLength:JacksonConfig.kt:QuizModeDeserializer$else -&gt; ctxt.handleWeirdStringValue(QuizMode::class.java, p.valueAsString, "Unsupported quiz mode") as QuizMode</ID>
+    <ID>MaxLineLength:LoginScreen.kt:style = if (compact) MaterialTheme.typography.displayMedium else MaterialTheme.typography.displayLarge</ID>
+    <ID>MaxLineLength:LoginViewModel.kt:LoginViewModel$LoginAction.ForgotPasswordClicked -&gt; emitMessage(UiText.StringResourceId(Res.string.not_implemented_forgot_password))</ID>
+    <ID>MaxLineLength:LoginViewModel.kt:LoginViewModel$LoginAction.RememberMeClicked -&gt; emitMessage(UiText.StringResourceId(Res.string.not_implemented_remember_me))</ID>
+    <ID>MaxLineLength:QuizQuoteCard.kt:quote = "Imagination is more important than knowledge. For knowledge is limited, whereas imagination embraces the entire world, stimulating progress, giving birth to evolution."</ID>
+    <ID>MaxLineLength:QuizServiceTest.kt:QuizServiceTest$assertTrue(storedSession.questions.filter { it.proposedAuthor != it.correctAuthor }.all { it.proposedAuthor != null })</ID>
+    <ID>MaxLineLength:SettingsScreen.kt:color = if (selected) MaterialTheme.colorScheme.onPrimary else MaterialTheme.colorScheme.onSurfaceVariant</ID>
+    <ID>MaximumLineLength:CoreModule.kt:}</ID>
+    <ID>MaximumLineLength:DemoDataInitializer.kt:DemoDataInitializer.Companion$,</ID>
+    <ID>MaximumLineLength:JacksonConfig.kt:QuizModeDeserializer$QuizMode</ID>
+    <ID>MaximumLineLength:LoginScreen.kt:,</ID>
+    <ID>MaximumLineLength:LoginViewModel.kt:LoginViewModel$)</ID>
+    <ID>MaximumLineLength:QuizQuoteCard.kt:,</ID>
+    <ID>MaximumLineLength:QuizServiceTest.kt:QuizServiceTest$)</ID>
+    <ID>MaximumLineLength:SettingsScreen.kt:,</ID>
+    <ID>ModifierComposed:Shimmer.kt:fun Modifier.shimmerPlaceholder: Modifier</ID>
+    <ID>ModifierMissing:HomeContainer.kt:@Composable fun HomeContainer</ID>
+    <ID>ModifierMissing:ProfileScreen.kt:@Composable fun ProfileScreen</ID>
+    <ID>ModifierMissing:QuizFeedbackDialog.kt:@Composable fun QuizFeedbackDialogContent</ID>
+    <ID>ModifierMissing:QuizResultScreen.kt:@Composable fun QuizResultScreen</ID>
+    <ID>ModifierMissing:QuizScreen.kt:@Composable fun QuizScreen</ID>
+    <ID>MultiLineIfElse:QuizFeedbackDialog.kt:MaterialTheme.colorScheme.error.copy(alpha = 0.08f)</ID>
+    <ID>MultiLineIfElse:QuizFeedbackDialog.kt:MaterialTheme.colorScheme.primary.copy(alpha = 0.08f)</ID>
+    <ID>MultipleEmitters:SettingsScreen.kt:@Composable private fun SettingTexts</ID>
+    <ID>NewLineAtEndOfFile:CredentialsValidator.kt:dev.elelan.quotequiz.feature.login.CredentialsValidator.kt</ID>
+    <ID>NewLineAtEndOfFile:MainViewController.kt:dev.elelan.quotequiz.MainViewController.kt</ID>
+    <ID>NewLineAtEndOfFile:Platform.js.kt:dev.elelan.quotequiz.Platform.js.kt</ID>
+    <ID>NewLineAtEndOfFile:Platform.wasmJs.kt:dev.elelan.quotequiz.Platform.wasmJs.kt</ID>
+    <ID>NewLineAtEndOfFile:SharedLogicWebTest.kt:dev.elelan.quotequiz.SharedLogicWebTest.kt</ID>
+    <ID>NoBlankLineBeforeRbrace:DefaultScaffoldBody.kt: </ID>
+    <ID>NoBlankLineBeforeRbrace:QuizFeedbackDialog.kt: </ID>
+    <ID>NoConsecutiveBlankLines:MainActivity.kt:MainActivity$ </ID>
+    <ID>NoConsecutiveBlankLines:QuizScreen.kt: </ID>
+    <ID>NoEmptyFirstLineInMethodBlock:QuizFeedbackDialog.kt: </ID>
+    <ID>NoEmptyFirstLineInMethodBlock:QuizResultScreen.kt: </ID>
+    <ID>NoUnusedImports:DefaultSessionRepositoryTest.kt:dev.elelan.quotequiz.core.session.DefaultSessionRepositoryTest.kt</ID>
+    <ID>NoUnusedImports:HomeContainer.kt:dev.elelan.quotequiz.home.HomeContainer.kt</ID>
+    <ID>NoUnusedImports:HomeNavigationState.kt:dev.elelan.quotequiz.home.HomeNavigationState.kt</ID>
+    <ID>NoUnusedImports:LoginViewModelTest.kt:dev.elelan.quotequiz.feature.login.LoginViewModelTest.kt</ID>
+    <ID>NoUnusedImports:QuizScreen.kt:dev.elelan.quotequiz.feature.quiz.QuizScreen.kt</ID>
+    <ID>NoUnusedImports:SecurityConfig.kt:dev.elelan.quote_quiz_server.SecurityConfig.kt</ID>
+    <ID>NoWildcardImports:SplashScreen.kt:import quotequiz.app.shared.generated.resources.*</ID>
+    <ID>PackageName:ApiAuthenticationEntryPoint.kt:package dev.elelan.quote_quiz_server.api</ID>
+    <ID>PackageName:ApiErrorResponse.kt:package dev.elelan.quote_quiz_server.api</ID>
+    <ID>PackageName:ApiExceptionHandler.kt:package dev.elelan.quote_quiz_server.api</ID>
+    <ID>PackageName:AppUserDetailsService.kt:package dev.elelan.quote_quiz_server.auth</ID>
+    <ID>PackageName:AppUserPrincipal.kt:package dev.elelan.quote_quiz_server.auth</ID>
+    <ID>PackageName:AuthController.kt:package dev.elelan.quote_quiz_server.auth</ID>
+    <ID>PackageName:AuthControllerTest.kt:package dev.elelan.quote_quiz_server.auth</ID>
+    <ID>PackageName:AuthService.kt:package dev.elelan.quote_quiz_server.auth</ID>
+    <ID>PackageName:DemoDataInitializer.kt:package dev.elelan.quote_quiz_server.bootstrap</ID>
+    <ID>PackageName:DemoDataInitializerTest.kt:package dev.elelan.quote_quiz_server.bootstrap</ID>
+    <ID>PackageName:JacksonConfig.kt:package dev.elelan.quote_quiz_server.api</ID>
+    <ID>PackageName:JwtAuthenticationFilter.kt:package dev.elelan.quote_quiz_server.auth</ID>
+    <ID>PackageName:JwtService.kt:package dev.elelan.quote_quiz_server.auth</ID>
+    <ID>PackageName:QuizApplication.kt:package dev.elelan.quote_quiz_server</ID>
+    <ID>PackageName:QuizController.kt:package dev.elelan.quote_quiz_server.quiz</ID>
+    <ID>PackageName:QuizControllerTest.kt:package dev.elelan.quote_quiz_server.quiz</ID>
+    <ID>PackageName:QuizQuestionNotFoundException.kt:package dev.elelan.quote_quiz_server.quiz</ID>
+    <ID>PackageName:QuizService.kt:package dev.elelan.quote_quiz_server.quiz</ID>
+    <ID>PackageName:QuizServiceTest.kt:package dev.elelan.quote_quiz_server.quiz</ID>
+    <ID>PackageName:QuizSessionEntity.kt:package dev.elelan.quote_quiz_server.quiz</ID>
+    <ID>PackageName:QuizSessionNotFoundException.kt:package dev.elelan.quote_quiz_server.quiz</ID>
+    <ID>PackageName:QuizSessionQuestionEntity.kt:package dev.elelan.quote_quiz_server.quiz</ID>
+    <ID>PackageName:QuizSessionRepository.kt:package dev.elelan.quote_quiz_server.quiz</ID>
+    <ID>PackageName:QuoteEntity.kt:package dev.elelan.quote_quiz_server.quote</ID>
+    <ID>PackageName:QuoteQuizServerApplicationTests.kt:package dev.elelan.quote_quiz_server</ID>
+    <ID>PackageName:QuoteRepository.kt:package dev.elelan.quote_quiz_server.quote</ID>
+    <ID>PackageName:SecurityConfig.kt:package dev.elelan.quote_quiz_server</ID>
+    <ID>PackageName:TestController.kt:package dev.elelan.quote_quiz_server</ID>
+    <ID>PackageName:UserEntity.kt:package dev.elelan.quote_quiz_server.user</ID>
+    <ID>PackageName:UserRepository.kt:package dev.elelan.quote_quiz_server.user</ID>
+    <ID>PackageName:UserRepositoryTest.kt:package dev.elelan.quote_quiz_server.user</ID>
+    <ID>PackageNaming:ApiAuthenticationEntryPoint.kt:package dev.elelan.quote_quiz_server.api</ID>
+    <ID>PackageNaming:ApiErrorResponse.kt:package dev.elelan.quote_quiz_server.api</ID>
+    <ID>PackageNaming:ApiExceptionHandler.kt:package dev.elelan.quote_quiz_server.api</ID>
+    <ID>PackageNaming:AppUserDetailsService.kt:package dev.elelan.quote_quiz_server.auth</ID>
+    <ID>PackageNaming:AppUserPrincipal.kt:package dev.elelan.quote_quiz_server.auth</ID>
+    <ID>PackageNaming:AuthController.kt:package dev.elelan.quote_quiz_server.auth</ID>
+    <ID>PackageNaming:AuthControllerTest.kt:package dev.elelan.quote_quiz_server.auth</ID>
+    <ID>PackageNaming:AuthService.kt:package dev.elelan.quote_quiz_server.auth</ID>
+    <ID>PackageNaming:DemoDataInitializer.kt:package dev.elelan.quote_quiz_server.bootstrap</ID>
+    <ID>PackageNaming:DemoDataInitializerTest.kt:package dev.elelan.quote_quiz_server.bootstrap</ID>
+    <ID>PackageNaming:JacksonConfig.kt:package dev.elelan.quote_quiz_server.api</ID>
+    <ID>PackageNaming:JwtAuthenticationFilter.kt:package dev.elelan.quote_quiz_server.auth</ID>
+    <ID>PackageNaming:JwtService.kt:package dev.elelan.quote_quiz_server.auth</ID>
+    <ID>PackageNaming:QuizApplication.kt:package dev.elelan.quote_quiz_server</ID>
+    <ID>PackageNaming:QuizController.kt:package dev.elelan.quote_quiz_server.quiz</ID>
+    <ID>PackageNaming:QuizControllerTest.kt:package dev.elelan.quote_quiz_server.quiz</ID>
+    <ID>PackageNaming:QuizQuestionNotFoundException.kt:package dev.elelan.quote_quiz_server.quiz</ID>
+    <ID>PackageNaming:QuizService.kt:package dev.elelan.quote_quiz_server.quiz</ID>
+    <ID>PackageNaming:QuizServiceTest.kt:package dev.elelan.quote_quiz_server.quiz</ID>
+    <ID>PackageNaming:QuizSessionEntity.kt:package dev.elelan.quote_quiz_server.quiz</ID>
+    <ID>PackageNaming:QuizSessionNotFoundException.kt:package dev.elelan.quote_quiz_server.quiz</ID>
+    <ID>PackageNaming:QuizSessionQuestionEntity.kt:package dev.elelan.quote_quiz_server.quiz</ID>
+    <ID>PackageNaming:QuizSessionRepository.kt:package dev.elelan.quote_quiz_server.quiz</ID>
+    <ID>PackageNaming:QuoteEntity.kt:package dev.elelan.quote_quiz_server.quote</ID>
+    <ID>PackageNaming:QuoteQuizServerApplicationTests.kt:package dev.elelan.quote_quiz_server</ID>
+    <ID>PackageNaming:QuoteRepository.kt:package dev.elelan.quote_quiz_server.quote</ID>
+    <ID>PackageNaming:SecurityConfig.kt:package dev.elelan.quote_quiz_server</ID>
+    <ID>PackageNaming:TestController.kt:package dev.elelan.quote_quiz_server</ID>
+    <ID>PackageNaming:UserEntity.kt:package dev.elelan.quote_quiz_server.user</ID>
+    <ID>PackageNaming:UserRepository.kt:package dev.elelan.quote_quiz_server.user</ID>
+    <ID>PackageNaming:UserRepositoryTest.kt:package dev.elelan.quote_quiz_server.user</ID>
+    <ID>ParameterNaming:HomeContainer.kt:onTabSelected: (NavKey) -&gt; Unit</ID>
+    <ID>ParameterNaming:QuizScreen.kt:onQuizCompleted: (QuizResultDto) -&gt; Unit</ID>
+    <ID>ParameterNaming:SettingsScreen.kt:onModeSelected: (QuizMode) -&gt; Unit</ID>
+    <ID>PreviewAnnotationNaming:FormFactorPreviews.kt:FormFactorPreviews</ID>
+    <ID>PreviewPublic:App.kt:@Composable @Preview fun App</ID>
+    <ID>PreviewPublic:MainActivity.kt:@Preview @Composable fun AppAndroidPreview</ID>
+    <ID>ReturnCount:QuizViewModel.kt:QuizViewModel$private fun submitAnswer</ID>
+    <ID>SpacingAroundColon:Platform.js.kt:JsPlatform$:</ID>
+    <ID>SpacingAroundColon:Platform.wasmJs.kt:WasmPlatform$:</ID>
+    <ID>TooGenericExceptionCaught:NetworkErrorMapper.kt:exception: Throwable</ID>
+    <ID>TooManyFunctions:LoginScreen.kt:dev.elelan.quotequiz.feature.login.LoginScreen.kt</ID>
+    <ID>TooManyFunctions:QuizScreen.kt:dev.elelan.quotequiz.feature.quiz.QuizScreen.kt</ID>
+    <ID>TrailingCommaOnCallSite:DefaultScaffoldBody.kt:( if (enableEdgeToEdge) { Modifier } else { Modifier.windowInsetsPadding(WindowInsets.statusBars) } )</ID>
+    <ID>TrailingCommaOnCallSite:DefaultScaffoldBody.kt:( if (shouldOverlayBlur) Modifier.blur(2.dp) else Modifier )</ID>
+    <ID>TrailingCommaOnCallSite:DefaultScaffoldBody.kt:( modifier = Modifier .then( if (enableEdgeToEdge) { Modifier } else { Modifier.windowInsetsPadding(WindowInsets.statusBars) } ) .then( if (shouldOverlayBlur) Modifier.blur(2.dp) else Modifier ) )</ID>
+    <ID>TrailingCommaOnCallSite:DefaultScaffoldBody.kt:( modifier = modifier.fillMaxSize() )</ID>
+    <ID>TrailingCommaOnCallSite:QuizFeedbackDialog.kt:( state = state, onConfirm = onConfirm )</ID>
+    <ID>TrailingCommaOnCallSite:QuizResultScreen.kt:( Res.string.quiz_result_mode, result.mode.displayName() )</ID>
+    <ID>TrailingCommaOnCallSite:QuizResultScreen.kt:( painter = painterResource(Res.drawable.ic_restart_alt), contentDescription = null )</ID>
+    <ID>TrailingCommaOnCallSite:QuizResultScreen.kt:( verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(4.dp) )</ID>
+    <ID>TrailingCommaOnDeclarationSite:NetworkErrorMapper.kt:is ConnectTimeoutException, is SocketTimeoutException, is HttpRequestTimeoutException, is UnresolvedAddressException -&gt; ApiError.Network</ID>
+    <ID>UnusedParameter:QuizScreen.kt:uiState: QuizUiState</ID>
+    <ID>WildcardImport:SplashScreen.kt:import quotequiz.app.shared.generated.resources.*</ID>
+    <ID>Wrapping:CoreModule.kt:DefaultQuizRepository(quizApi = get(), sessionRepository = get(), quizPreferencesRepository = get())</ID>
+    <ID>Wrapping:QuizServiceTest.kt:QuizServiceTest$(</ID>
+  </CurrentIssues>
+</SmellBaseline>
