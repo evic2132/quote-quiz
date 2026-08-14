@@ -44,6 +44,7 @@ import quotequiz.app.shared.generated.resources.profile_email_label
 import quotequiz.app.shared.generated.resources.profile_insights_subtitle
 import quotequiz.app.shared.generated.resources.profile_insights_title
 import quotequiz.app.shared.generated.resources.profile_logout_description
+import quotequiz.app.shared.generated.resources.profile_name_label
 import quotequiz.app.shared.generated.resources.profile_stat_placeholder_caption
 import quotequiz.app.shared.generated.resources.profile_stat_placeholder_value
 import quotequiz.app.shared.generated.resources.profile_stat_quizzes_taken
@@ -102,7 +103,7 @@ private fun ProfileContent(
             email = email,
         )
 
-        InsightsSection()
+        //InsightsSection()
 
         LogoutSection(onLogout = onLogout)
     }
@@ -153,7 +154,7 @@ private fun ProfileHeader(
                 verticalArrangement = Arrangement.spacedBy(14.dp),
             ) {
                 ProfileField(
-                    label = stringResource(Res.string.profile_title),
+                    label = stringResource(Res.string.profile_name_label),
                     value = name,
                 )
                 ProfileField(
@@ -266,7 +267,7 @@ private fun PlaceholderStatCard(
         modifier = Modifier.fillMaxWidth(),
         shape = RoundedCornerShape(12.dp),
         colors = CardDefaults.cardColors(
-            containerColor = QuoteQuizTheme.stageSurface.copy(alpha = 0.82f),
+            containerColor = QuoteQuizTheme.stageSurface,
         ),
         border = BorderStroke(1.dp, MaterialTheme.colorScheme.outlineVariant.copy(alpha = 0.75f)),
     ) {
@@ -311,12 +312,7 @@ private fun LogoutSection(
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.spacedBy(12.dp),
     ) {
-        Text(
-            text = stringResource(Res.string.profile_logout_description),
-            style = MaterialTheme.typography.bodyMedium,
-            color = MaterialTheme.colorScheme.onSurfaceVariant,
-            textAlign = TextAlign.Center,
-        )
+
         Button(
             onClick = { scope.launch { onLogout() } },
             modifier = Modifier.fillMaxWidth(),

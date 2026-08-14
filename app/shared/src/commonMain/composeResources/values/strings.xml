@@ -58,15 +58,16 @@
     <string name="settings_difficulty_not_implemented">Difficulty settings are not implemented yet.</string>
     <string name="settings_daily_challenge_not_implemented">Daily challenge is not implemented yet.</string>
     <string name="profile_title">Profile</string>
-    <string name="profile_subtitle">Signed in with your authenticated account.</string>
+    <string name="profile_subtitle">Your account details on this device.</string>
+    <string name="profile_name_label">Name</string>
     <string name="profile_email_label">Email</string>
-    <string name="profile_insights_title">Player Insights</string>
-    <string name="profile_insights_subtitle">These summary cards are visual placeholders for future profile stats.</string>
+    <string name="profile_insights_title">Highlights</string>
+    <string name="profile_insights_subtitle">Your quiz activity will appear here.</string>
     <string name="profile_stat_total_score">Total Score</string>
     <string name="profile_stat_quizzes_taken">Quizzes Taken</string>
-    <string name="profile_stat_placeholder_value">Coming soon</string>
-    <string name="profile_stat_placeholder_caption">Placeholder only</string>
-    <string name="profile_logout_description">Signing out clears the saved session on this device.</string>
+    <string name="profile_stat_placeholder_value">Not available</string>
+    <string name="profile_stat_placeholder_caption">Stats coming soon</string>
+    <string name="profile_logout_description">You can sign out of this device at any time.</string>
 
     <string name="login_quote">Words are, of course, the most powerful drug used by mankind.</string>
     <string name="login_quote_author">Rudyard Kipling</string>

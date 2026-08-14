@@ -143,7 +143,7 @@ object QuoteQuizTheme {
         @Composable get() = AssignmentValidationError
 
     val stageSurface: Color
-        @Composable get() = Color(0xFFF7F2F8)
+        @Composable get() = MaterialTheme.colorScheme.surfaceVariant.copy(alpha = 0.72f)
 }
 
 val AssignmentValidationError = Color(0xFFFF0000)
