@@ -35,7 +35,7 @@ jobs:
           category: detekt-deploy
 
       - name: Verify builds and tests
-        run: ./gradlew :server:test :app:shared:jvmTest :app:shared:compileCommonMainKotlinMetadata :app:androidApp:assembleDebug :server:bootJar --no-daemon
+        run: ./gradlew :server:test :app:shared:jvmTest :app:shared:compileCommonMainKotlinMetadata :app:androidApp:assembleDebug --no-daemon
 
       - name: Build server Docker image
         run: docker build -t quote-quiz-server-ci .
