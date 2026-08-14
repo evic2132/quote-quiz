@@ -1,4 +1,4 @@
-package dev.elelan.quotequiz.core.ui
+package dev.elelan.quotequiz.ui.core
 
 import androidx.compose.runtime.Composable
 import org.jetbrains.compose.resources.StringResource

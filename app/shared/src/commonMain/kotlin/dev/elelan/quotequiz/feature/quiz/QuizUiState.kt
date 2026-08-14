@@ -3,7 +3,7 @@ package dev.elelan.quotequiz.feature.quiz
 import dev.elelan.quotequiz.contract.quiz.QuizMode
 import dev.elelan.quotequiz.contract.quiz.QuizQuestionDto
 import dev.elelan.quotequiz.contract.quiz.QuizResultDto
-import dev.elelan.quotequiz.core.ui.UiText
+import dev.elelan.quotequiz.ui.core.UiText
 
 data class QuizUiState(
     val mode: QuizMode = QuizMode.BINARY,

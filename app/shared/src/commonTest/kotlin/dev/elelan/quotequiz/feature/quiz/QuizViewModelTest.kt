@@ -9,7 +9,7 @@ import dev.elelan.quotequiz.contract.quiz.SubmitAnswerResponse
 import dev.elelan.quotequiz.core.network.ApiError
 import dev.elelan.quotequiz.core.network.ApiResult
 import dev.elelan.quotequiz.core.settings.QuizPreferencesRepository
-import dev.elelan.quotequiz.core.ui.UiText
+import dev.elelan.quotequiz.ui.core.UiText
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.delay

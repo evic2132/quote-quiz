@@ -4,7 +4,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dev.elelan.quotequiz.contract.quiz.QuizMode
 import dev.elelan.quotequiz.core.settings.QuizPreferencesRepository
-import dev.elelan.quotequiz.core.ui.UiText
+import dev.elelan.quotequiz.ui.core.UiText
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow

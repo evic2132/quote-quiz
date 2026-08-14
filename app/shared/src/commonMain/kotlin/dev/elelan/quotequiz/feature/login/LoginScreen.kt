@@ -62,7 +62,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import dev.elelan.quotequiz.core.ui.UiText
+import dev.elelan.quotequiz.ui.core.UiText
 import dev.elelan.quotequiz.ui.core.AdaptiveWindowLayout
 import dev.elelan.quotequiz.ui.core.DefaultScaffoldBody
 import dev.elelan.quotequiz.ui.core.FormFactorPreviews

@@ -41,7 +41,7 @@ fun AppContainer() {
     }
 
     LaunchedEffect(sessionState, rootNavigator) {
-        rootNavigator.moveTo(sessionState.toRootRoute())
+        rootNavigator.moveTo(sessionState.toAppRoute())
     }
 
     NavDisplay(
@@ -49,9 +49,9 @@ fun AppContainer() {
         onBack = rootNavigator::goBack,
         entryDecorators = listOf(rememberSaveableStateHolderNavEntryDecorator()),
         entryProvider = entryProvider {
-            entry<SplashRoute> { SplashScreen() }
-            entry<LoginRoute> { LoginRouteScreen() }
-            entry<HomeRoute> {
+            entry<AppRoute.Splash> { SplashScreen() }
+            entry<AppRoute.Login> { LoginRouteScreen() }
+            entry<AppRoute.Home> {
                 val authenticatedState = sessionState as? SessionState.Authenticated
                 if (authenticatedState == null) {
                     SplashScreen()

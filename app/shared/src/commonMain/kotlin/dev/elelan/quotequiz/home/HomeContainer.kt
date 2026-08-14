@@ -29,21 +29,17 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
-import androidx.navigation3.runtime.NavKey
 import androidx.navigation3.runtime.entryProvider
 import androidx.navigation3.runtime.rememberSaveableStateHolderNavEntryDecorator
 import androidx.navigation3.ui.NavDisplay
+import dev.elelan.quotequiz.app.AppRoute
 import dev.elelan.quotequiz.app.MAIN_TABS
-import dev.elelan.quotequiz.app.ProfileTab
-import dev.elelan.quotequiz.app.QuizResultRoute
-import dev.elelan.quotequiz.app.QuizTab
-import dev.elelan.quotequiz.app.SettingsTab
 import dev.elelan.quotequiz.contract.auth.UserDto
 import dev.elelan.quotequiz.feature.profile.ProfileScreen
-import dev.elelan.quotequiz.feature.quiz.QuizRouteScreen
-import dev.elelan.quotequiz.feature.quiz.QuizResultScreen
-import dev.elelan.quotequiz.feature.quiz.QuizViewModel
 import dev.elelan.quotequiz.feature.quiz.QuizAction
+import dev.elelan.quotequiz.feature.quiz.QuizResultScreen
+import dev.elelan.quotequiz.feature.quiz.QuizRouteScreen
+import dev.elelan.quotequiz.feature.quiz.QuizViewModel
 import dev.elelan.quotequiz.feature.settings.SettingsRouteScreen
 import dev.elelan.quotequiz.ui.core.DefaultScaffoldBody
 import dev.elelan.quotequiz.ui.core.QuoteQuizBackground
@@ -62,7 +58,7 @@ import quotequiz.app.shared.generated.resources.tab_quiz
 import quotequiz.app.shared.generated.resources.tab_settings
 
 private data class HomeTabItem(
-    val route: NavKey,
+    val route: AppRoute,
     val label: String,
     val iconRes: DrawableResource,
 )
@@ -75,7 +71,7 @@ fun HomeContainer(
     val navigationState = rememberHomeNavigationState()
     val navigator = remember { HomeNavigator(navigationState) }
     val quizViewModel: QuizViewModel = koinViewModel()
-    val saveableDecorator = rememberSaveableStateHolderNavEntryDecorator<NavKey>()
+    val saveableDecorator = rememberSaveableStateHolderNavEntryDecorator<AppRoute>()
     val entryDecorators = remember(saveableDecorator) {
         listOf(saveableDecorator)
     }
@@ -108,15 +104,15 @@ fun HomeContainer(
             },
             entryDecorators = entryDecorators,
             entryProvider = entryProvider {
-                entry<QuizTab> {
+                entry<AppRoute.QuizTab> {
                     QuizRouteScreen(
                         viewModel = quizViewModel,
                         onQuizCompleted = { result ->
-                            navigator.navigate(QuizResultRoute(result))
+                            navigator.navigate(AppRoute.QuizResult(result))
                         },
                     )
                 }
-                entry<QuizResultRoute> { route ->
+                entry<AppRoute.QuizResult> { route ->
                     QuizResultScreen(
                         result = route.result,
                         onStartAgain = {
@@ -125,8 +121,8 @@ fun HomeContainer(
                         },
                     )
                 }
-                entry<SettingsTab> { SettingsRouteScreen() }
-                entry<ProfileTab> {
+                entry<AppRoute.SettingsTab> { SettingsRouteScreen() }
+                entry<AppRoute.ProfileTab> {
                     ProfileScreen(
                         name = user.name,
                         email = user.email,
@@ -142,17 +138,17 @@ fun HomeContainer(
 @Composable
 private fun rememberHomeTabItems(): List<HomeTabItem> = listOf(
     HomeTabItem(
-        route = QuizTab,
+        route = AppRoute.QuizTab,
         label = stringResource(Res.string.tab_quiz),
         iconRes = Res.drawable.ic_psychology,
     ),
     HomeTabItem(
-        route = SettingsTab,
+        route = AppRoute.SettingsTab,
         label = stringResource(Res.string.tab_settings),
         iconRes = Res.drawable.ic_settings,
     ),
     HomeTabItem(
-        route = ProfileTab,
+        route = AppRoute.ProfileTab,
         label = stringResource(Res.string.tab_profile),
         iconRes = Res.drawable.ic_account_circle,
     ),
@@ -161,8 +157,8 @@ private fun rememberHomeTabItems(): List<HomeTabItem> = listOf(
 @Composable
 private fun HomeBottomBar(
     tabs: List<HomeTabItem>,
-    selectedTab: NavKey,
-    onTabSelected: (NavKey) -> Unit,
+    selectedTab: AppRoute,
+    onTabSelected: (AppRoute) -> Unit,
 ) {
     NavigationBar {
         tabs.forEach { tab ->

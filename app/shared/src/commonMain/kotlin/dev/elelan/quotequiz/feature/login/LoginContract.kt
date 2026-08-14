@@ -1,6 +1,6 @@
 package dev.elelan.quotequiz.feature.login
 
-import dev.elelan.quotequiz.core.ui.UiText
+import dev.elelan.quotequiz.ui.core.UiText
 
 data class LoginUiState(
     val email: String = "",

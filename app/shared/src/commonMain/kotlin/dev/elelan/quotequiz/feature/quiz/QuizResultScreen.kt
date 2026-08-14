@@ -15,6 +15,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.widthIn
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -74,14 +75,13 @@ fun QuizResultScreen(
                 modifier = Modifier
                     .fillMaxSize()
                     .verticalScroll(scrollState)
+                    .widthIn(max = 640.dp)
                     .padding(horizontal = spacing.marginMobile, vertical = spacing.stackLg),
                 horizontalAlignment = Alignment.CenterHorizontally,
-                verticalArrangement = Arrangement.SpaceBetween,
+                verticalArrangement = Arrangement.spacedBy(spacing.stackLg),
             ) {
                 Column(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .weight(1f, fill = false),
+                    modifier = Modifier.fillMaxWidth(),
                     horizontalAlignment = Alignment.CenterHorizontally,
                     verticalArrangement = Arrangement.spacedBy(spacing.stackLg),
                 ) {
@@ -110,6 +110,8 @@ fun QuizResultScreen(
 
                     ResultSummaryCard(result = result)
                 }
+
+                Spacer(modifier = Modifier.height(spacing.stackSm))
 
                 Button(
                     onClick = onStartAgain,

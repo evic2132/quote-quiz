@@ -7,7 +7,7 @@ import dev.elelan.quotequiz.core.api.AuthApi
 import dev.elelan.quotequiz.core.network.ApiResult
 import dev.elelan.quotequiz.core.network.toUiText
 import dev.elelan.quotequiz.core.session.SessionRepository
-import dev.elelan.quotequiz.core.ui.UiText
+import dev.elelan.quotequiz.ui.core.UiText
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow

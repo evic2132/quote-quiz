@@ -8,7 +8,6 @@ import dev.elelan.quotequiz.core.network.ApiError
 import dev.elelan.quotequiz.core.network.ApiResult
 import dev.elelan.quotequiz.core.session.SessionRepository
 import dev.elelan.quotequiz.core.session.SessionState
-import dev.elelan.quotequiz.core.ui.UiText
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.delay
@@ -20,7 +19,6 @@ import kotlinx.coroutines.test.advanceUntilIdle
 import kotlinx.coroutines.test.resetMain
 import kotlinx.coroutines.test.runTest
 import kotlinx.coroutines.test.setMain
-import quotequiz.app.shared.generated.resources.Res
 import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertIs

@@ -1,6 +1,6 @@
 package dev.elelan.quotequiz.core.network
 
-import dev.elelan.quotequiz.core.ui.UiText
+import dev.elelan.quotequiz.ui.core.UiText
 
 fun ApiError.toUiText(
     network: UiText,

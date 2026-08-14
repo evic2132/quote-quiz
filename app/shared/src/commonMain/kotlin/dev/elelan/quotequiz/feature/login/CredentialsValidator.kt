@@ -1,6 +1,6 @@
 package dev.elelan.quotequiz.feature.login
 
-import dev.elelan.quotequiz.core.ui.UiText
+import dev.elelan.quotequiz.ui.core.UiText
 import quotequiz.app.shared.generated.resources.Res
 import quotequiz.app.shared.generated.resources.login_error_email_required
 import quotequiz.app.shared.generated.resources.login_error_password_required

@@ -14,8 +14,11 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.widthIn
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.HorizontalDivider
@@ -116,9 +119,13 @@ private fun SettingsContent(
     onAction: (SettingsAction) -> Unit,
 ) {
     val spacing = QuoteQuizTheme.spacing
+    val scrollState = rememberScrollState()
+
     Column(
         modifier = Modifier
             .fillMaxSize()
+            .verticalScroll(scrollState)
+            .widthIn(max = 640.dp)
             .padding(horizontal = spacing.marginMobile, vertical = spacing.stackLg),
         verticalArrangement = Arrangement.spacedBy(spacing.stackLg),
     ) {

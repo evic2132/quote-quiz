@@ -1,7 +1,7 @@
 package dev.elelan.quotequiz.feature.settings
 
 import dev.elelan.quotequiz.contract.quiz.QuizMode
-import dev.elelan.quotequiz.core.ui.UiText
+import dev.elelan.quotequiz.ui.core.UiText
 
 data class SettingsUiState(
     val selectedMode: QuizMode = QuizMode.BINARY,
