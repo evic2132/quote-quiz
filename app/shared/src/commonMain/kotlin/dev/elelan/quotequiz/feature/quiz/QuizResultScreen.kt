@@ -38,10 +38,13 @@ import androidx.compose.ui.graphics.StrokeCap
 import androidx.compose.ui.graphics.drawscope.Stroke
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import dev.elelan.quotequiz.contract.quiz.QuizMode
 import dev.elelan.quotequiz.contract.quiz.QuizResultDto
+import dev.elelan.quotequiz.ui.core.AdaptiveWindowLayout
 import dev.elelan.quotequiz.ui.core.DefaultScaffoldBody
+import dev.elelan.quotequiz.ui.core.FormFactorPreviews
 import dev.elelan.quotequiz.ui.core.QuoteQuizBackground
 import dev.elelan.quotequiz.ui.theme.QuoteQuizTheme
 import org.jetbrains.compose.resources.painterResource
@@ -62,82 +65,165 @@ fun QuizResultScreen(
     result: QuizResultDto,
     onStartAgain: () -> Unit,
 ) {
-    val spacing = QuoteQuizTheme.spacing
-    val scrollState = rememberScrollState()
-
     Box(modifier = Modifier.fillMaxSize()) {
         QuoteQuizBackground()
         DefaultScaffoldBody(
             modifier = Modifier
                 .fillMaxSize(),
         ) {
-            Column(
-                modifier = Modifier
-                    .fillMaxSize()
-                    .verticalScroll(scrollState)
-                    .widthIn(max = 640.dp)
-                    .padding(horizontal = spacing.marginMobile, vertical = spacing.stackLg),
-                horizontalAlignment = Alignment.CenterHorizontally,
-                verticalArrangement = Arrangement.spacedBy(spacing.stackLg),
+            AdaptiveWindowLayout(
+                compactContent = {
+                    QuizResultCompactLayout(
+                        result = result,
+                        onStartAgain = onStartAgain,
+                        maxWidth = 640.dp,
+                        horizontalPadding = QuoteQuizTheme.spacing.marginMobile,
+                    )
+                },
+                mediumContent = {
+                    QuizResultWideLayout(
+                        result = result,
+                        onStartAgain = onStartAgain,
+                        maxWidth = 920.dp,
+                        horizontalPadding = QuoteQuizTheme.spacing.marginTablet,
+                    )
+                },
+                expandedContent = {
+                    QuizResultWideLayout(
+                        result = result,
+                        onStartAgain = onStartAgain,
+                        maxWidth = 1040.dp,
+                        horizontalPadding = QuoteQuizTheme.spacing.marginTablet,
+                    )
+                },
+            )
+        }
+    }
+}
+
+@Composable
+private fun QuizResultCompactLayout(
+    result: QuizResultDto,
+    onStartAgain: () -> Unit,
+    maxWidth: Dp,
+    horizontalPadding: Dp,
+) {
+    val spacing = QuoteQuizTheme.spacing
+    val scrollState = rememberScrollState()
+
+    Column(
+        modifier = Modifier
+            .fillMaxSize()
+            .verticalScroll(scrollState)
+            .widthIn(max = maxWidth)
+            .padding(horizontal = horizontalPadding, vertical = spacing.stackLg),
+        horizontalAlignment = Alignment.CenterHorizontally,
+        verticalArrangement = Arrangement.spacedBy(spacing.stackLg),
+    ) {
+        QuizResultHeader(result = result)
+        ScoreRing(result = result)
+        ResultSummaryCard(result = result)
+        Spacer(modifier = Modifier.height(spacing.stackSm))
+        StartAgainButton(onStartAgain = onStartAgain)
+    }
+}
+
+@Composable
+private fun QuizResultWideLayout(
+    result: QuizResultDto,
+    onStartAgain: () -> Unit,
+    maxWidth: Dp,
+    horizontalPadding: Dp,
+) {
+    val spacing = QuoteQuizTheme.spacing
+    val scrollState = rememberScrollState()
+
+    Box(modifier = Modifier.fillMaxSize()) {
+        Column(
+            modifier = Modifier
+                .align(Alignment.TopCenter)
+                .fillMaxWidth()
+                .widthIn(max = maxWidth)
+                .verticalScroll(scrollState)
+                .padding(horizontal = horizontalPadding, vertical = spacing.stackLg),
+            horizontalAlignment = Alignment.CenterHorizontally,
+            verticalArrangement = Arrangement.spacedBy(spacing.stackLg),
+        ) {
+            QuizResultHeader(result = result)
+
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                horizontalArrangement = Arrangement.spacedBy(spacing.stackLg),
+                verticalAlignment = Alignment.CenterVertically,
             ) {
-                Column(
-                    modifier = Modifier.fillMaxWidth(),
-                    horizontalAlignment = Alignment.CenterHorizontally,
-                    verticalArrangement = Arrangement.spacedBy(spacing.stackLg),
+                Box(
+                    modifier = Modifier.weight(1f),
+                    contentAlignment = Alignment.Center,
                 ) {
-                    Column(
-                        horizontalAlignment = Alignment.CenterHorizontally,
-                        verticalArrangement = Arrangement.spacedBy(spacing.stackSm),
-                    ) {
-                        Text(
-                            text = stringResource(Res.string.quiz_result_title_complete),
-                            style = MaterialTheme.typography.displayMedium,
-                            color = MaterialTheme.colorScheme.primary,
-                            textAlign = TextAlign.Center,
-                        )
-                        Text(
-                            text = stringResource(
-                                Res.string.quiz_result_mode,
-                                result.mode.displayName()
-                            ),
-                            style = MaterialTheme.typography.bodyMedium,
-                            color = MaterialTheme.colorScheme.onSurfaceVariant,
-                            textAlign = TextAlign.Center,
-                        )
-                    }
-
                     ScoreRing(result = result)
-
+                }
+                Box(
+                    modifier = Modifier.weight(1f),
+                    contentAlignment = Alignment.Center,
+                ) {
                     ResultSummaryCard(result = result)
                 }
-
-                Spacer(modifier = Modifier.height(spacing.stackSm))
-
-                Button(
-                    onClick = onStartAgain,
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .widthIn(max = 360.dp)
-                        .height(48.dp),
-                    shape = RoundedCornerShape(8.dp),
-                    colors = ButtonDefaults.buttonColors(),
-                ) {
-
-                    Row(
-                        verticalAlignment = Alignment.CenterVertically,
-                        horizontalArrangement = Arrangement.spacedBy(4.dp)
-                    ) {
-                        Icon(
-                            painter = painterResource(Res.drawable.ic_restart_alt),
-                            contentDescription = null
-                        )
-                        Text(
-                            text = stringResource(Res.string.quiz_action_start_again),
-                            style = MaterialTheme.typography.labelLarge,
-                        )
-                    }
-                }
             }
+
+            StartAgainButton(onStartAgain = onStartAgain)
+        }
+    }
+}
+
+@Composable
+private fun QuizResultHeader(result: QuizResultDto) {
+    val spacing = QuoteQuizTheme.spacing
+
+    Column(
+        horizontalAlignment = Alignment.CenterHorizontally,
+        verticalArrangement = Arrangement.spacedBy(spacing.stackSm),
+    ) {
+        Text(
+            text = stringResource(Res.string.quiz_result_title_complete),
+            style = MaterialTheme.typography.displayMedium,
+            color = MaterialTheme.colorScheme.primary,
+            textAlign = TextAlign.Center,
+        )
+        Text(
+            text = stringResource(
+                Res.string.quiz_result_mode,
+                result.mode.displayName()
+            ),
+            style = MaterialTheme.typography.bodyMedium,
+            color = MaterialTheme.colorScheme.onSurfaceVariant,
+            textAlign = TextAlign.Center,
+        )
+    }
+}
+
+@Composable
+private fun StartAgainButton(onStartAgain: () -> Unit) {
+    Button(
+        onClick = onStartAgain,
+        modifier = Modifier
+            .fillMaxWidth()
+            .widthIn(max = 360.dp)
+            .height(48.dp),
+        shape = RoundedCornerShape(8.dp),
+        colors = ButtonDefaults.buttonColors(),
+    ) {
+        Row(
+            verticalAlignment = Alignment.CenterVertically,
+            horizontalArrangement = Arrangement.spacedBy(4.dp)
+        ) {
+            Icon(
+                painter = painterResource(Res.drawable.ic_restart_alt),
+                contentDescription = null
+            )
+            Text(
+                text = stringResource(Res.string.quiz_action_start_again),
+                style = MaterialTheme.typography.labelLarge,
+            )
         }
     }
 }
@@ -274,7 +360,7 @@ private fun QuizMode.displayName(): String =
         QuizMode.MULTIPLE_CHOICE -> stringResource(Res.string.quiz_result_mode_multiple_choice)
     }
 
-@Preview
+@FormFactorPreviews
 @Composable
 private fun QuizResultScreenPreview() {
     QuoteQuizTheme {

@@ -39,10 +39,13 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import dev.elelan.quotequiz.contract.quiz.QuizMode
+import dev.elelan.quotequiz.ui.core.AdaptiveWindowLayout
 import dev.elelan.quotequiz.ui.core.DefaultScaffoldBody
+import dev.elelan.quotequiz.ui.core.FormFactorPreviews
 import dev.elelan.quotequiz.ui.core.QuoteQuizBackground
 import dev.elelan.quotequiz.ui.theme.QuoteQuizTheme
 import kotlinx.coroutines.flow.collectLatest
@@ -118,98 +121,136 @@ private fun SettingsContent(
     uiState: SettingsUiState,
     onAction: (SettingsAction) -> Unit,
 ) {
+    AdaptiveWindowLayout(
+        compactContent = {
+            SettingsColumnLayout(
+                uiState = uiState,
+                onAction = onAction,
+                maxWidth = 640.dp,
+                horizontalPadding = QuoteQuizTheme.spacing.marginMobile,
+            )
+        },
+        mediumContent = {
+            SettingsColumnLayout(
+                uiState = uiState,
+                onAction = onAction,
+                maxWidth = 760.dp,
+                horizontalPadding = QuoteQuizTheme.spacing.marginTablet,
+            )
+        },
+        expandedContent = {
+            SettingsColumnLayout(
+                uiState = uiState,
+                onAction = onAction,
+                maxWidth = 820.dp,
+                horizontalPadding = QuoteQuizTheme.spacing.marginTablet,
+            )
+        },
+    )
+}
+
+@Composable
+private fun SettingsColumnLayout(
+    uiState: SettingsUiState,
+    onAction: (SettingsAction) -> Unit,
+    maxWidth: Dp,
+    horizontalPadding: Dp,
+) {
     val spacing = QuoteQuizTheme.spacing
     val scrollState = rememberScrollState()
 
-    Column(
-        modifier = Modifier
-            .fillMaxSize()
-            .verticalScroll(scrollState)
-            .widthIn(max = 640.dp)
-            .padding(horizontal = spacing.marginMobile, vertical = spacing.stackLg),
-        verticalArrangement = Arrangement.spacedBy(spacing.stackLg),
-    ) {
-        Text(
-            text = stringResource(Res.string.app_title),
-            style = MaterialTheme.typography.displayMedium,
-            color = MaterialTheme.colorScheme.primary,
-        )
-
+    Box(modifier = Modifier.fillMaxSize()) {
         Column(
-            verticalArrangement = Arrangement.spacedBy(spacing.stackSm),
+            modifier = Modifier
+                .align(Alignment.TopCenter)
+                .fillMaxWidth()
+                .widthIn(max = maxWidth)
+                .verticalScroll(scrollState)
+                .padding(horizontal = horizontalPadding, vertical = spacing.stackLg),
+            verticalArrangement = Arrangement.spacedBy(spacing.stackLg),
         ) {
             Text(
-                text = stringResource(Res.string.settings_title),
-                style = MaterialTheme.typography.headlineMedium,
+                text = stringResource(Res.string.app_title),
+                style = MaterialTheme.typography.displayMedium,
                 color = MaterialTheme.colorScheme.primary,
             )
-            Text(
-                text = stringResource(Res.string.settings_description),
-                style = MaterialTheme.typography.bodyMedium,
-                color = MaterialTheme.colorScheme.onSurfaceVariant,
-            )
-        }
 
-        Card(
-            shape = RoundedCornerShape(12.dp),
-            colors = CardDefaults.cardColors(
-                containerColor = MaterialTheme.colorScheme.surface.copy(alpha = 0.96f),
-            ),
-            border = BorderStroke(1.dp, MaterialTheme.colorScheme.outlineVariant.copy(alpha = 0.75f)),
-            elevation = CardDefaults.cardElevation(defaultElevation = 6.dp),
-        ) {
-            Column {
-                SettingSection(
-                    title = stringResource(Res.string.settings_mode_label),
-                    description = stringResource(Res.string.settings_mode_subtitle),
-                ) {
-                    ModeSegmentedControl(
-                        selectedMode = uiState.selectedMode,
-                        onModeSelected = { onAction(SettingsAction.ModeSelected(it)) },
-                    )
-                    WarningNote(text = stringResource(Res.string.settings_mode_note))
-                }
-                HorizontalDivider(color = MaterialTheme.colorScheme.outlineVariant.copy(alpha = 0.7f))
-                SettingRow(
-                    title = stringResource(Res.string.settings_difficulty_label),
-                    description = stringResource(Res.string.settings_difficulty_description),
-                    trailing = {
-                        Row(
-                            horizontalArrangement = Arrangement.spacedBy(8.dp),
-                            verticalAlignment = Alignment.CenterVertically,
-                        ) {
-                            Text(
-                                text = stringResource(Res.string.settings_mode_standard),
-                                style = MaterialTheme.typography.labelLarge,
-                                color = MaterialTheme.colorScheme.onSurfaceVariant,
-                            )
-                            Text(
-                                text = "›",
-                                style = MaterialTheme.typography.headlineMedium,
-                                color = MaterialTheme.colorScheme.onSurfaceVariant,
-                            )
-                        }
-                    },
-                    onClick = { onAction(SettingsAction.DifficultyClicked) },
+            Column(
+                verticalArrangement = Arrangement.spacedBy(spacing.stackSm),
+            ) {
+                Text(
+                    text = stringResource(Res.string.settings_title),
+                    style = MaterialTheme.typography.headlineMedium,
+                    color = MaterialTheme.colorScheme.primary,
                 )
-                HorizontalDivider(color = MaterialTheme.colorScheme.outlineVariant.copy(alpha = 0.7f))
-                SettingRow(
-                    title = stringResource(Res.string.settings_daily_challenge_label),
-                    description = stringResource(Res.string.settings_daily_challenge_description),
-                    trailing = {
-                        Switch(
-                            checked = uiState.dailyChallengeEnabled,
-                            onCheckedChange = { onAction(SettingsAction.DailyChallengeClicked) },
-                            colors = SwitchDefaults.colors(
-                                checkedThumbColor = MaterialTheme.colorScheme.onPrimary,
-                                checkedTrackColor = MaterialTheme.colorScheme.primary,
-                                uncheckedThumbColor = MaterialTheme.colorScheme.surface,
-                                uncheckedTrackColor = MaterialTheme.colorScheme.surfaceVariant,
-                            ),
+                Text(
+                    text = stringResource(Res.string.settings_description),
+                    style = MaterialTheme.typography.bodyMedium,
+                    color = MaterialTheme.colorScheme.onSurfaceVariant,
+                )
+            }
+
+            Card(
+                shape = RoundedCornerShape(12.dp),
+                colors = CardDefaults.cardColors(
+                    containerColor = MaterialTheme.colorScheme.surface.copy(alpha = 0.96f),
+                ),
+                border = BorderStroke(1.dp, MaterialTheme.colorScheme.outlineVariant.copy(alpha = 0.75f)),
+                elevation = CardDefaults.cardElevation(defaultElevation = 6.dp),
+            ) {
+                Column {
+                    SettingSection(
+                        title = stringResource(Res.string.settings_mode_label),
+                        description = stringResource(Res.string.settings_mode_subtitle),
+                    ) {
+                        ModeSegmentedControl(
+                            selectedMode = uiState.selectedMode,
+                            onModeSelected = { onAction(SettingsAction.ModeSelected(it)) },
                         )
-                    },
-                    onClick = { onAction(SettingsAction.DailyChallengeClicked) },
-                )
+                        WarningNote(text = stringResource(Res.string.settings_mode_note))
+                    }
+                    HorizontalDivider(color = MaterialTheme.colorScheme.outlineVariant.copy(alpha = 0.7f))
+                    SettingRow(
+                        title = stringResource(Res.string.settings_difficulty_label),
+                        description = stringResource(Res.string.settings_difficulty_description),
+                        trailing = {
+                            Row(
+                                horizontalArrangement = Arrangement.spacedBy(8.dp),
+                                verticalAlignment = Alignment.CenterVertically,
+                            ) {
+                                Text(
+                                    text = stringResource(Res.string.settings_mode_standard),
+                                    style = MaterialTheme.typography.labelLarge,
+                                    color = MaterialTheme.colorScheme.onSurfaceVariant,
+                                )
+                                Text(
+                                    text = "›",
+                                    style = MaterialTheme.typography.headlineMedium,
+                                    color = MaterialTheme.colorScheme.onSurfaceVariant,
+                                )
+                            }
+                        },
+                        onClick = { onAction(SettingsAction.DifficultyClicked) },
+                    )
+                    HorizontalDivider(color = MaterialTheme.colorScheme.outlineVariant.copy(alpha = 0.7f))
+                    SettingRow(
+                        title = stringResource(Res.string.settings_daily_challenge_label),
+                        description = stringResource(Res.string.settings_daily_challenge_description),
+                        trailing = {
+                            Switch(
+                                checked = uiState.dailyChallengeEnabled,
+                                onCheckedChange = { onAction(SettingsAction.DailyChallengeClicked) },
+                                colors = SwitchDefaults.colors(
+                                    checkedThumbColor = MaterialTheme.colorScheme.onPrimary,
+                                    checkedTrackColor = MaterialTheme.colorScheme.primary,
+                                    uncheckedThumbColor = MaterialTheme.colorScheme.surface,
+                                    uncheckedTrackColor = MaterialTheme.colorScheme.surfaceVariant,
+                                ),
+                            )
+                        },
+                        onClick = { onAction(SettingsAction.DailyChallengeClicked) },
+                    )
+                }
             }
         }
     }
@@ -376,7 +417,7 @@ private fun WarningNote(text: String) {
     }
 }
 
-@Preview
+@FormFactorPreviews
 @Composable
 private fun SettingsScreenPreview() {
     QuoteQuizTheme {

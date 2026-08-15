@@ -24,6 +24,7 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import dev.elelan.quotequiz.contract.quiz.QuizMode
 import dev.elelan.quotequiz.contract.quiz.QuizQuestionDto
@@ -35,10 +36,11 @@ import dev.elelan.quotequiz.ui.theme.QuoteQuizTheme
 fun QuizQuoteCard(
     question: QuizQuestionDto,
     modifier: Modifier = Modifier,
+    maxCardWidth: Dp = 560.dp,
 ) {
     BoxWithConstraints(modifier = modifier.fillMaxWidth()) {
         val cardShape = RoundedCornerShape(22.dp)
-        val cardWidth = maxWidth.coerceAtMost(332.dp)
+        val cardWidth = maxWidth.coerceAtMost(maxCardWidth)
 
         Card(
             modifier = Modifier
@@ -88,13 +90,14 @@ fun QuizQuoteCard(
 @Composable
 fun QuizQuoteCardLoading(
     modifier: Modifier = Modifier,
+    maxCardWidth: Dp = 560.dp,
 ) {
     val placeholderShape = RoundedCornerShape(22.dp)
     val placeholderColor = MaterialTheme.colorScheme.surfaceVariant.copy(alpha = 0.62f)
     val highlightColor = MaterialTheme.colorScheme.surface.copy(alpha = 0.92f)
 
     BoxWithConstraints(modifier = modifier.fillMaxWidth()) {
-        val cardWidth = maxWidth.coerceAtMost(332.dp)
+        val cardWidth = maxWidth.coerceAtMost(maxCardWidth)
 
         Box(
             modifier = Modifier

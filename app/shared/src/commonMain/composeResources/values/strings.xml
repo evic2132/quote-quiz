@@ -6,8 +6,9 @@
     <string name="tab_profile">Profile</string>
     <string name="action_logout">Logout</string>
 
-    <string name="splash_title">Loading session</string>
-    <string name="splash_body">Checking whether a saved login can restore the app session.</string>
+    <string name="splash_title">Quote Quiz</string>
+    <string name="splash_body">Discover timeless wisdom.</string>
+    <string name="splash_action_begin">Begin.</string>
 
     <string name="quiz_placeholder_body">Task 9 will implement the binary and multiple-choice quiz experience here.</string>
     <string name="quiz_open_result">Open quiz result screen</string>

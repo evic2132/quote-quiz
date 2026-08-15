@@ -8,19 +8,27 @@ import androidx.compose.animation.togetherWith
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.RowScope
 import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.material3.Button
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.NavigationBar
 import androidx.compose.material3.NavigationBarItem
 import androidx.compose.material3.NavigationBarItemDefaults
+import androidx.compose.material3.NavigationRail
+import androidx.compose.material3.NavigationRailItem
+import androidx.compose.material3.NavigationRailItemDefaults
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
@@ -41,6 +49,7 @@ import dev.elelan.quotequiz.feature.quiz.QuizResultScreen
 import dev.elelan.quotequiz.feature.quiz.QuizRouteScreen
 import dev.elelan.quotequiz.feature.quiz.QuizViewModel
 import dev.elelan.quotequiz.feature.settings.SettingsRouteScreen
+import dev.elelan.quotequiz.ui.core.AdaptiveWindowLayout
 import dev.elelan.quotequiz.ui.core.DefaultScaffoldBody
 import dev.elelan.quotequiz.ui.core.QuoteQuizBackground
 import kotlinx.coroutines.launch
@@ -71,68 +80,197 @@ fun HomeContainer(
     val navigationState = rememberHomeNavigationState()
     val navigator = remember { HomeNavigator(navigationState) }
     val quizViewModel: QuizViewModel = koinViewModel()
-    val saveableDecorator = rememberSaveableStateHolderNavEntryDecorator<AppRoute>()
-    val entryDecorators = remember(saveableDecorator) {
-        listOf(saveableDecorator)
-    }
     val tabs = rememberHomeTabItems()
 
+    AdaptiveWindowLayout(
+        compactContent = {
+            HomeCompactShell(
+                tabs = tabs,
+                selectedTab = navigationState.selectedTab,
+                onTabSelected = navigator::selectTab,
+                content = {
+                    HomeNavHost(
+                        navigationState = navigationState,
+                        navigator = navigator,
+                        quizViewModel = quizViewModel,
+                        user = user,
+                        onLogout = onLogout,
+                        modifier = it,
+                    )
+                },
+            )
+        },
+        mediumContent = {
+            HomeWideShell(
+                tabs = tabs,
+                selectedTab = navigationState.selectedTab,
+                onTabSelected = navigator::selectTab,
+                content = {
+                    HomeNavHost(
+                        navigationState = navigationState,
+                        navigator = navigator,
+                        quizViewModel = quizViewModel,
+                        user = user,
+                        onLogout = onLogout,
+                        modifier = it,
+                    )
+                },
+            )
+        },
+        expandedContent = {
+            HomeWideShell(
+                tabs = tabs,
+                selectedTab = navigationState.selectedTab,
+                onTabSelected = navigator::selectTab,
+                content = {
+                    HomeNavHost(
+                        navigationState = navigationState,
+                        navigator = navigator,
+                        quizViewModel = quizViewModel,
+                        user = user,
+                        onLogout = onLogout,
+                        modifier = it,
+                    )
+                },
+            )
+        },
+    )
+}
+
+@Composable
+private fun HomeCompactShell(
+    tabs: List<HomeTabItem>,
+    selectedTab: AppRoute,
+    onTabSelected: (AppRoute) -> Unit,
+    content: @Composable (Modifier) -> Unit,
+) {
     Scaffold(
         contentWindowInsets = WindowInsets(0, 0, 0, 0),
         bottomBar = {
             HomeBottomBar(
                 tabs = tabs,
-                selectedTab = navigationState.selectedTab,
-                onTabSelected = navigator::selectTab,
+                selectedTab = selectedTab,
+                onTabSelected = onTabSelected,
             )
         },
     ) { innerPadding ->
-        NavDisplay(
-            backStack = navigationState.currentBackStack,
-            onBack = navigator::goBack,
-            transitionSpec = {
-                fadeIn(animationSpec = tween(durationMillis = 180)) togetherWith
-                    ExitTransition.KeepUntilTransitionsFinished
-            },
-            popTransitionSpec = {
-                fadeIn(animationSpec = tween(durationMillis = 180)) togetherWith
-                    fadeOut(animationSpec = tween(durationMillis = 120))
-            },
-            predictivePopTransitionSpec = {
-                fadeIn(animationSpec = tween(durationMillis = 180)) togetherWith
-                    fadeOut(animationSpec = tween(durationMillis = 120))
-            },
-            entryDecorators = entryDecorators,
-            entryProvider = entryProvider {
-                entry<AppRoute.QuizTab> {
-                    QuizRouteScreen(
-                        viewModel = quizViewModel,
-                        onQuizCompleted = { result ->
-                            navigator.navigate(AppRoute.QuizResult(result))
+        content(Modifier.padding(innerPadding))
+    }
+}
+
+@Composable
+private fun HomeWideShell(
+    tabs: List<HomeTabItem>,
+    selectedTab: AppRoute,
+    onTabSelected: (AppRoute) -> Unit,
+    content: @Composable (Modifier) -> Unit,
+) {
+    Row(
+        modifier = Modifier
+            .fillMaxSize()
+            .navigationBarsPadding(),
+    ) {
+        Surface(
+            modifier = Modifier
+                .fillMaxHeight()
+                .width(108.dp),
+            color = MaterialTheme.colorScheme.surface.copy(alpha = 0.92f),
+            tonalElevation = 4.dp,
+            shadowElevation = 2.dp,
+        ) {
+            NavigationRail(
+                containerColor = androidx.compose.ui.graphics.Color.Transparent,
+                modifier = Modifier.fillMaxHeight(),
+            ) {
+                tabs.forEach { tab ->
+                    NavigationRailItem(
+                        selected = tab.route == selectedTab,
+                        onClick = { onTabSelected(tab.route) },
+                        icon = {
+                            Icon(
+                                painter = painterResource(tab.iconRes),
+                                contentDescription = tab.label,
+                                modifier = Modifier.size(24.dp),
+                            )
                         },
+                        label = { Text(tab.label) },
+                        alwaysShowLabel = true,
+                        colors = NavigationRailItemDefaults.colors(
+                            selectedIconColor = MaterialTheme.colorScheme.onPrimary,
+                            selectedTextColor = MaterialTheme.colorScheme.primary,
+                            indicatorColor = MaterialTheme.colorScheme.primary,
+                            unselectedIconColor = MaterialTheme.colorScheme.tertiary,
+                            unselectedTextColor = MaterialTheme.colorScheme.onSurfaceVariant,
+                        ),
                     )
                 }
-                entry<AppRoute.QuizResult> { route ->
-                    QuizResultScreen(
-                        result = route.result,
-                        onStartAgain = {
-                            quizViewModel.onAction(QuizAction.RestartQuizClicked)
-                            navigator.goBack()
-                        },
-                    )
-                }
-                entry<AppRoute.SettingsTab> { SettingsRouteScreen() }
-                entry<AppRoute.ProfileTab> {
-                    ProfileScreen(
-                        name = user.name,
-                        email = user.email,
-                        onLogout = onLogout,
-                    )
-                }
-            },
-            modifier = Modifier.padding(innerPadding),
+            }
+        }
+
+        content(
+            Modifier
+                .weight(1f)
+                .fillMaxHeight(),
         )
     }
+}
+
+@Composable
+private fun HomeNavHost(
+    navigationState: HomeNavigationState,
+    navigator: HomeNavigator,
+    quizViewModel: QuizViewModel,
+    user: UserDto,
+    onLogout: suspend () -> Unit,
+    modifier: Modifier = Modifier,
+) {
+    val entryDecorators = listOf(rememberSaveableStateHolderNavEntryDecorator<AppRoute>())
+
+    NavDisplay(
+        backStack = navigationState.currentBackStack,
+        onBack = navigator::goBack,
+        transitionSpec = {
+            fadeIn(animationSpec = tween(durationMillis = 180)) togetherWith
+                ExitTransition.KeepUntilTransitionsFinished
+        },
+        popTransitionSpec = {
+            fadeIn(animationSpec = tween(durationMillis = 180)) togetherWith
+                fadeOut(animationSpec = tween(durationMillis = 120))
+        },
+        predictivePopTransitionSpec = {
+            fadeIn(animationSpec = tween(durationMillis = 180)) togetherWith
+                fadeOut(animationSpec = tween(durationMillis = 120))
+        },
+        entryDecorators = entryDecorators,
+        entryProvider = entryProvider {
+            entry<AppRoute.QuizTab> {
+                QuizRouteScreen(
+                    viewModel = quizViewModel,
+                    onQuizCompleted = { result ->
+                        navigator.navigate(AppRoute.QuizResult(result))
+                    },
+                )
+            }
+            entry<AppRoute.QuizResult> { route ->
+                QuizResultScreen(
+                    result = route.result,
+                    onStartAgain = {
+                        quizViewModel.onAction(QuizAction.RestartQuizClicked)
+                        navigator.goBack()
+                    },
+                )
+            }
+            entry<AppRoute.SettingsTab> { SettingsRouteScreen() }
+            entry<AppRoute.ProfileTab> {
+                ProfileScreen(
+                    name = user.name,
+                    email = user.email,
+                    onLogout = onLogout,
+                )
+            }
+        },
+        modifier = modifier,
+    )
 }
 
 @Composable

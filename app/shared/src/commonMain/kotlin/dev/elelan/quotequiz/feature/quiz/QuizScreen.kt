@@ -3,7 +3,6 @@ package dev.elelan.quotequiz.feature.quiz
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.interaction.MutableInteractionSource
-import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -15,17 +14,17 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.widthIn
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Button
-import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.LinearProgressIndicator
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
@@ -33,14 +32,16 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import dev.elelan.quotequiz.contract.quiz.QuizMode
 import dev.elelan.quotequiz.contract.quiz.QuizOptionDto
 import dev.elelan.quotequiz.contract.quiz.QuizQuestionDto
 import dev.elelan.quotequiz.contract.quiz.QuizResultDto
+import dev.elelan.quotequiz.ui.core.AdaptiveWindowLayout
 import dev.elelan.quotequiz.ui.core.DefaultScaffoldBody
+import dev.elelan.quotequiz.ui.core.FormFactorPreviews
 import dev.elelan.quotequiz.ui.core.QuoteQuizBackground
 import dev.elelan.quotequiz.ui.core.shimmerPlaceholder
 import dev.elelan.quotequiz.ui.theme.QuoteQuizTheme
@@ -96,23 +97,32 @@ fun QuizScreen(
                 .fillMaxSize(),
             shouldOverlayBlur = uiState.feedbackDialog != null || showSubmittingOverlay,
         ) {
-            Box(
-                modifier = Modifier.fillMaxSize(),
-                contentAlignment = Alignment.Center,
-            ) {
-                when {
-                    uiState.isLoading -> QuizLoadingState()
-                    uiState.error != null -> QuizErrorState(
-                        message = uiState.error.asComposeString(),
-                        onRetry = { onAction(QuizAction.RetryClicked) },
-                    )
-
-                    uiState.currentQuestion != null -> QuizReadyState(
+            AdaptiveWindowLayout(
+                compactContent = {
+                    QuizScreenStateHost(
                         uiState = uiState,
                         onAction = onAction,
+                        contentMaxWidth = 640.dp,
+                        isTwoColumn = false,
                     )
-                }
-            }
+                },
+                mediumContent = {
+                    QuizScreenStateHost(
+                        uiState = uiState,
+                        onAction = onAction,
+                        contentMaxWidth = 900.dp,
+                        isTwoColumn = true,
+                    )
+                },
+                expandedContent = {
+                    QuizScreenStateHost(
+                        uiState = uiState,
+                        onAction = onAction,
+                        contentMaxWidth = 1100.dp,
+                        isTwoColumn = true,
+                    )
+                },
+            )
         }
         uiState.feedbackDialog?.let { feedbackDialog ->
             QuizFeedbackDialog(
@@ -142,43 +152,117 @@ fun QuizScreen(
 }
 
 @Composable
-private fun QuizLoadingState() {
+private fun QuizScreenStateHost(
+    uiState: QuizUiState,
+    onAction: (QuizAction) -> Unit,
+    contentMaxWidth: Dp,
+    isTwoColumn: Boolean = false,
+) {
+    Box(
+        modifier = Modifier.fillMaxSize(),
+        contentAlignment = Alignment.Center,
+    ) {
+        when {
+            uiState.isLoading -> QuizLoadingState(
+                quizMode = uiState.mode,
+                contentMaxWidth = contentMaxWidth,
+                isTwoColumn = isTwoColumn,
+            )
+
+            uiState.error != null -> QuizErrorState(
+                message = uiState.error.asComposeString(),
+                onRetry = { onAction(QuizAction.RetryClicked) },
+                contentMaxWidth = contentMaxWidth,
+            )
+
+            uiState.currentQuestion != null -> QuizReadyState(
+                uiState = uiState,
+                onAction = onAction,
+                contentMaxWidth = contentMaxWidth,
+                isTwoColumn = isTwoColumn,
+            )
+        }
+    }
+}
+
+@Composable
+private fun QuizLoadingState(
+    quizMode: QuizMode,
+    contentMaxWidth: Dp,
+    isTwoColumn: Boolean = false
+) {
     val spacing = QuoteQuizTheme.spacing
     val placeholderColor = MaterialTheme.colorScheme.surfaceVariant.copy(alpha = 0.62f)
     val highlightColor = MaterialTheme.colorScheme.surface.copy(alpha = 0.92f)
     val scrollState = rememberScrollState()
 
-    Column(
-        modifier = Modifier
-            .fillMaxWidth()
-            .widthIn(max = 640.dp)
-            .verticalScroll(scrollState)
-            .padding(horizontal = spacing.marginMobile, vertical = spacing.stackMd),
-        verticalArrangement = Arrangement.spacedBy(spacing.stackMd),
-    ) {
-        Text(
-            text = stringResource(Res.string.app_title),
-            style = MaterialTheme.typography.displayMedium,
-            color = MaterialTheme.colorScheme.primary,
-            textAlign = TextAlign.Center,
-            modifier = Modifier.fillMaxWidth(),
-        )
+    if (isTwoColumn) {
 
-        QuizProgressLoadingSection(
-            placeholderColor = placeholderColor,
-            highlightColor = highlightColor,
-        )
-
-        Column(
+        Row(
             modifier = Modifier.fillMaxWidth(),
-            verticalArrangement = Arrangement.spacedBy(spacing.stackMd),
-            horizontalAlignment = Alignment.CenterHorizontally,
+            horizontalArrangement = Arrangement.spacedBy(24.dp),
+            verticalAlignment = Alignment.Top,
         ) {
-            QuizQuoteCardLoading()
-            QuizInteractionPanelLoading(
+            QuizQuoteCardLoading(
+                modifier = Modifier.weight(1f),
+                maxCardWidth = 600.dp,
+            )
+
+            Column(
+                modifier = Modifier.weight(1f),
+                verticalArrangement = Arrangement.spacedBy(
+                    spacing.stackMd,
+                    alignment = Alignment.CenterVertically
+                ),
+            ) {
+                QuizProgressLoadingSection(
+                    placeholderColor = placeholderColor,
+                    highlightColor = highlightColor,
+                )
+                QuizInteractionPanelLoading(
+                    quizMode = quizMode,
+                    placeholderColor = placeholderColor,
+                    highlightColor = highlightColor,
+                )
+            }
+        }
+    } else {
+        Column(
+            modifier = Modifier
+                .fillMaxWidth()
+                .widthIn(max = contentMaxWidth)
+                .verticalScroll(scrollState)
+                .padding(horizontal = spacing.marginMobile, vertical = spacing.stackMd),
+            verticalArrangement = Arrangement.spacedBy(spacing.stackMd),
+        ) {
+            Text(
+                text = stringResource(Res.string.app_title),
+                style = MaterialTheme.typography.displayMedium,
+                color = MaterialTheme.colorScheme.primary,
+                textAlign = TextAlign.Center,
+                modifier = Modifier.fillMaxWidth(),
+            )
+
+            QuizProgressLoadingSection(
                 placeholderColor = placeholderColor,
                 highlightColor = highlightColor,
             )
+
+            Column(
+                modifier = Modifier.fillMaxWidth(),
+                verticalArrangement = Arrangement.spacedBy(
+                    spacing.stackMd,
+                    alignment = Alignment.CenterVertically
+                ),
+                horizontalAlignment = Alignment.CenterHorizontally,
+            ) {
+                QuizQuoteCardLoading()
+                QuizInteractionPanelLoading(
+                    quizMode = quizMode,
+                    placeholderColor = placeholderColor,
+                    highlightColor = highlightColor,
+                )
+            }
         }
     }
 }
@@ -235,10 +319,12 @@ private fun QuizProgressLoadingSection(
 private fun QuizErrorState(
     message: String,
     onRetry: () -> Unit,
+    contentMaxWidth: Dp,
 ) {
     Column(
         modifier = Modifier
             .fillMaxWidth()
+            .widthIn(max = contentMaxWidth)
             .padding(horizontal = 24.dp),
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.spacedBy(16.dp),
@@ -263,6 +349,8 @@ private fun QuizErrorState(
 private fun QuizReadyState(
     uiState: QuizUiState,
     onAction: (QuizAction) -> Unit,
+    contentMaxWidth: Dp,
+    isTwoColumn: Boolean = false,
 ) {
     val question = uiState.currentQuestion ?: return
     val spacing = QuoteQuizTheme.spacing
@@ -270,27 +358,74 @@ private fun QuizReadyState(
 
     Column(
         modifier = Modifier
-            .fillMaxWidth()
-            .widthIn(max = 640.dp)
+            .fillMaxSize()
+            .widthIn(max = contentMaxWidth)
             .verticalScroll(scrollState)
             .padding(horizontal = spacing.marginMobile, vertical = spacing.stackMd),
         verticalArrangement = Arrangement.spacedBy(spacing.stackMd),
     ) {
+
         Text(
             text = stringResource(Res.string.app_title),
             style = MaterialTheme.typography.displayMedium,
             color = MaterialTheme.colorScheme.primary,
-            textAlign = TextAlign.Center,
+            textAlign = TextAlign.Start,
             modifier = Modifier.fillMaxWidth(),
         )
-        QuizProgressSection(question = question)
-        QuizQuoteCard(question = question)
-        QuizInteractionPanel(
-            uiState = uiState,
-            question = question,
-            onAction = onAction,
-        )
+
+        Column(
+            modifier = Modifier
+                .fillMaxWidth()
+                .weight(1f)
+                .verticalScroll(scrollState),
+            verticalArrangement = Arrangement.spacedBy(
+                spacing.stackMd,
+                alignment = Alignment.CenterVertically
+            ),
+        ) {
+
+            if (isTwoColumn) {
+
+                Row(
+                    modifier = Modifier.fillMaxWidth(),
+                    horizontalArrangement = Arrangement.spacedBy(24.dp),
+                    verticalAlignment = Alignment.Top,
+                ) {
+
+                    // Quote Card on Left
+                    QuizQuoteCard(
+                        question = question,
+                        modifier = Modifier.weight(1f),
+                        maxCardWidth = 600.dp,
+                    )
+
+                    // Right Column: Progress Section top + Interaction Panel underneath
+                    Column(
+                        modifier = Modifier.weight(1f),
+                        verticalArrangement = Arrangement.spacedBy(16.dp),
+                    ) {
+
+                        QuizProgressSection(question = question)
+
+                        QuizInteractionPanel(
+                            question = question,
+                            onAction = onAction,
+                        )
+
+                    }
+                }
+            } else {
+
+                QuizProgressSection(question = question)
+                QuizQuoteCard(question = question)
+                QuizInteractionPanel(
+                    question = question,
+                    onAction = onAction,
+                )
+            }
+        }
     }
+
 }
 
 @Composable
@@ -301,13 +436,17 @@ private fun QuizProgressSection(question: QuizQuestionDto) {
         modifier = Modifier.fillMaxWidth(),
         verticalArrangement = Arrangement.spacedBy(8.dp),
     ) {
-        androidx.compose.foundation.layout.Row(
+        Row(
             modifier = Modifier.fillMaxWidth(),
             horizontalArrangement = Arrangement.SpaceBetween,
             verticalAlignment = Alignment.Bottom,
         ) {
             Text(
-                text = stringResource(Res.string.quiz_progress, question.progress, question.totalQuestions).uppercase(),
+                text = stringResource(
+                    Res.string.quiz_progress,
+                    question.progress,
+                    question.totalQuestions
+                ).uppercase(),
                 style = MaterialTheme.typography.labelLarge,
                 color = MaterialTheme.colorScheme.onSurfaceVariant,
             )
@@ -330,12 +469,12 @@ private fun QuizProgressSection(question: QuizQuestionDto) {
 
 @Composable
 private fun QuizInteractionPanel(
-    uiState: QuizUiState,
     question: QuizQuestionDto,
+    modifier: Modifier = Modifier,
     onAction: (QuizAction) -> Unit,
 ) {
     Surface(
-        modifier = Modifier.fillMaxWidth(),
+        modifier = modifier.fillMaxWidth(),
         color = MaterialTheme.colorScheme.surface.copy(alpha = 0.72f),
         shape = RoundedCornerShape(20.dp),
         tonalElevation = 0.dp,
@@ -389,9 +528,17 @@ private fun QuizInteractionPanel(
 
 @Composable
 private fun QuizInteractionPanelLoading(
+    quizMode: QuizMode,
     placeholderColor: Color,
     highlightColor: Color,
 ) {
+    val buttonCount = remember(quizMode) {
+        when (quizMode) {
+            QuizMode.BINARY -> 2
+            QuizMode.MULTIPLE_CHOICE -> 3
+        }
+    }
+
     Surface(
         modifier = Modifier.fillMaxWidth(),
         color = MaterialTheme.colorScheme.surface.copy(alpha = 0.72f),
@@ -403,7 +550,9 @@ private fun QuizInteractionPanelLoading(
                 .fillMaxWidth()
                 .padding(24.dp),
             verticalArrangement = Arrangement.spacedBy(12.dp),
+            horizontalAlignment = Alignment.CenterHorizontally,
         ) {
+            // Prompt text shimmer placeholder
             Spacer(
                 modifier = Modifier
                     .align(Alignment.CenterHorizontally)
@@ -415,13 +564,14 @@ private fun QuizInteractionPanelLoading(
                         highlightColor = highlightColor,
                     ),
             )
-            repeat(2) {
+            repeat(buttonCount) {
                 Spacer(
                     modifier = Modifier
+                        .widthIn(max = 420.dp)
                         .fillMaxWidth()
                         .height(58.dp)
                         .shimmerPlaceholder(
-                            shape = RoundedCornerShape(16.dp),
+                            shape = RoundedCornerShape(8.dp),
                             baseColor = placeholderColor,
                             highlightColor = highlightColor,
                         ),
@@ -431,7 +581,7 @@ private fun QuizInteractionPanelLoading(
     }
 }
 
-@Preview
+@FormFactorPreviews
 @Composable
 private fun QuizScreenReadyPreview() {
     QuoteQuizTheme {
@@ -451,7 +601,7 @@ private fun QuizScreenReadyPreview() {
     }
 }
 
-@Preview
+@FormFactorPreviews
 @Composable
 private fun QuizScreenMultiPreview() {
     QuoteQuizTheme {
@@ -476,7 +626,7 @@ private fun QuizScreenMultiPreview() {
 }
 
 
-@Preview
+@FormFactorPreviews
 @Composable
 private fun QuizScreenLoadingPreview() {
     QuoteQuizTheme {

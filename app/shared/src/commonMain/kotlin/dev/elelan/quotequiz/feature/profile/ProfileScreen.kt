@@ -4,13 +4,17 @@ import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.BoxWithConstraints
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.widthIn
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -20,6 +24,7 @@ import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.rememberCoroutineScope
@@ -31,8 +36,11 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
+import dev.elelan.quotequiz.ui.core.AdaptiveWindowLayout
 import dev.elelan.quotequiz.ui.core.DefaultScaffoldBody
+import dev.elelan.quotequiz.ui.core.FormFactorPreviews
 import dev.elelan.quotequiz.ui.core.QuoteQuizBackground
 import dev.elelan.quotequiz.ui.theme.QuoteQuizTheme
 import kotlinx.coroutines.launch
@@ -81,6 +89,39 @@ private fun ProfileContent(
     email: String,
     onLogout: suspend () -> Unit,
 ) {
+    AdaptiveWindowLayout(
+        compactContent = {
+            ProfileCompactLayout(
+                name = name,
+                email = email,
+                onLogout = onLogout,
+            )
+        },
+        mediumContent = {
+            ProfileCenteredLayout(
+                name = name,
+                email = email,
+                onLogout = onLogout,
+                maxWidth = 760.dp,
+                horizontalPadding = QuoteQuizTheme.spacing.marginTablet,
+            )
+        },
+        expandedContent = {
+            ProfileExpandedLayout(
+                name = name,
+                email = email,
+                onLogout = onLogout,
+            )
+        },
+    )
+}
+
+@Composable
+private fun ProfileCompactLayout(
+    name: String,
+    email: String,
+    onLogout: suspend () -> Unit,
+) {
     val spacing = QuoteQuizTheme.spacing
     val scrollState = rememberScrollState()
 
@@ -106,6 +147,112 @@ private fun ProfileContent(
         //InsightsSection()
 
         LogoutSection(onLogout = onLogout)
+    }
+}
+
+@Composable
+private fun ProfileCenteredLayout(
+    name: String,
+    email: String,
+    onLogout: suspend () -> Unit,
+    maxWidth: Dp,
+    horizontalPadding: Dp,
+) {
+    val spacing = QuoteQuizTheme.spacing
+    val scrollState = rememberScrollState()
+
+    Box(modifier = Modifier.fillMaxSize()) {
+        Column(
+            modifier = Modifier
+                .align(Alignment.TopCenter)
+                .fillMaxWidth()
+                .widthIn(max = maxWidth)
+                .verticalScroll(scrollState)
+                .padding(horizontal = horizontalPadding, vertical = spacing.stackLg),
+            horizontalAlignment = Alignment.CenterHorizontally,
+            verticalArrangement = Arrangement.spacedBy(spacing.stackLg),
+        ) {
+            Text(
+                text = stringResource(Res.string.app_title),
+                style = MaterialTheme.typography.displayMedium,
+                color = MaterialTheme.colorScheme.primary,
+            )
+
+            ProfileHeader(
+                name = name,
+                email = email,
+            )
+
+            LogoutSection(onLogout = onLogout)
+        }
+    }
+}
+
+@Composable
+private fun ProfileExpandedLayout(
+    name: String,
+    email: String,
+    onLogout: suspend () -> Unit,
+) {
+    val spacing = QuoteQuizTheme.spacing
+    val scrollState = rememberScrollState()
+
+    BoxWithConstraints(
+        modifier = Modifier
+            .fillMaxSize()
+            .verticalScroll(scrollState)
+            .padding(horizontal = spacing.marginTablet, vertical = spacing.stackLg),
+    ) {
+        Column(
+            modifier = Modifier
+                .align(Alignment.TopCenter)
+                .fillMaxWidth()
+                .widthIn(max = 1040.dp),
+            horizontalAlignment = Alignment.CenterHorizontally,
+            verticalArrangement = Arrangement.spacedBy(spacing.stackLg),
+        ) {
+            Text(
+                text = stringResource(Res.string.app_title),
+                style = MaterialTheme.typography.displayMedium,
+                color = MaterialTheme.colorScheme.primary,
+            )
+
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                horizontalArrangement = Arrangement.spacedBy(spacing.stackLg),
+                verticalAlignment = Alignment.Top,
+            ) {
+                Column(
+                    modifier = Modifier.weight(1.2f),
+                    verticalArrangement = Arrangement.spacedBy(spacing.stackLg),
+                ) {
+                    ProfileHeader(
+                        name = name,
+                        email = email,
+                    )
+                }
+
+                Surface(
+                    modifier = Modifier
+                        .weight(0.8f)
+                        .heightIn(min = 220.dp),
+                    color = MaterialTheme.colorScheme.surface.copy(alpha = 0.96f),
+                    shape = RoundedCornerShape(12.dp),
+                    tonalElevation = 2.dp,
+                    shadowElevation = 6.dp,
+                ) {
+                    Column(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(24.dp),
+                        verticalArrangement = Arrangement.spacedBy(spacing.stackMd),
+                    ) {
+                        Spacer(modifier = Modifier.weight(1f, fill = true))
+                        LogoutSection(onLogout = onLogout)
+                    }
+                }
+            }
+        }
     }
 }
 
@@ -333,7 +480,7 @@ private fun LogoutSection(
     }
 }
 
-@Preview
+@FormFactorPreviews
 @Composable
 private fun ProfileScreenPreview() {
     QuoteQuizTheme {
