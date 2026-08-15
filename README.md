@@ -1,7 +1,6 @@
 # Wisdom Trivia
 
 [![CI/CD](https://github.com/evic2132/quote-quiz/actions/workflows/ci.yml/badge.svg?branch=develop)](https://github.com/evic2132/quote-quiz/actions/workflows/ci.yml)
-[![codecov](https://codecov.io/gh/evic2132/quote-quiz/branch/develop/graph/badge.svg)](https://codecov.io/gh/evic2132/quote-quiz)
 [![Live Demo](https://img.shields.io/badge/Live_Demo-GitHub_Pages-2ea44f?style=for-the-badge&logo=github)](https://evic2132.github.io/quote-quiz/)
 
 > **Live Web App:** https://evic2132.github.io/quote-quiz/
