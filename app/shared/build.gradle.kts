@@ -1,3 +1,4 @@
+import org.jetbrains.kotlin.gradle.ExperimentalWasmDsl
 import org.jetbrains.kotlin.gradle.dsl.JvmTarget
 
 plugins {
@@ -20,6 +21,15 @@ kotlin {
     }
     
     jvm()
+
+    js {
+        browser()
+    }
+
+    @OptIn(ExperimentalWasmDsl::class)
+    wasmJs {
+        browser()
+    }
     
     android {
        namespace = "dev.elelan.quotequiz.app.shared"
@@ -103,6 +113,19 @@ kotlin {
             // Networking
             implementation(libs.ktor.client.cio)
         }
+        jsMain.dependencies {
+            // Networking
+            implementation(libs.ktor.client.js)
+
+            // Browser interop
+            implementation(libs.wrappers.browser)
+        }
+        wasmJsMain.dependencies {
+            // Networking
+            //implementation(libs.ktor.client.cio)
+            implementation(libs.ktor.client.js)
+        }
+
     }
 }
 

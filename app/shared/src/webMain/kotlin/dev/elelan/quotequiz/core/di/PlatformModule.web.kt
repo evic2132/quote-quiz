@@ -7,10 +7,10 @@ import io.ktor.client.engine.HttpClientEngineFactory
 import org.koin.core.module.Module
 import org.koin.dsl.module
 
+internal expect val browserHttpClientEngineFactory: HttpClientEngineFactory<*>
+
 internal actual val platformModule: Module = module {
+    single<HttpClientEngineFactory<*>> { browserHttpClientEngineFactory }
     single<Settings> { Settings() }
-    single<HttpClientEngineFactory<*>> {
-        error("WasmJS platform HTTP engine is not configured because this target is not in active use")
-    }
     single { ApiConfig(baseUrl = defaultApiBaseUrl()) }
 }
