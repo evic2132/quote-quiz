@@ -70,8 +70,7 @@ fun ProfileScreen(
         QuoteQuizBackground()
         DefaultScaffoldBody(
             modifier = Modifier
-                .fillMaxSize()
-                .navigationBarsPadding(),
+                .fillMaxSize(),
             enableEdgeToEdge = true,
         ) {
             ProfileContent(
@@ -111,6 +110,8 @@ private fun ProfileContent(
                 name = name,
                 email = email,
                 onLogout = onLogout,
+                //maxWidth = 760.dp,
+                //horizontalPadding = QuoteQuizTheme.spacing.marginTablet,
             )
         },
     )
@@ -133,18 +134,13 @@ private fun ProfileCompactLayout(
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.spacedBy(spacing.stackLg),
     ) {
-        Text(
-            text = stringResource(Res.string.app_title),
-            style = MaterialTheme.typography.displayMedium,
-            color = MaterialTheme.colorScheme.primary,
-        )
 
         ProfileHeader(
             name = name,
             email = email,
         )
 
-        //InsightsSection()
+        InsightsSection()
 
         LogoutSection(onLogout = onLogout)
     }
@@ -172,16 +168,13 @@ private fun ProfileCenteredLayout(
             horizontalAlignment = Alignment.CenterHorizontally,
             verticalArrangement = Arrangement.spacedBy(spacing.stackLg),
         ) {
-            Text(
-                text = stringResource(Res.string.app_title),
-                style = MaterialTheme.typography.displayMedium,
-                color = MaterialTheme.colorScheme.primary,
-            )
 
             ProfileHeader(
                 name = name,
                 email = email,
             )
+
+            InsightsSection()
 
             LogoutSection(onLogout = onLogout)
         }
@@ -211,11 +204,6 @@ private fun ProfileExpandedLayout(
             horizontalAlignment = Alignment.CenterHorizontally,
             verticalArrangement = Arrangement.spacedBy(spacing.stackLg),
         ) {
-            Text(
-                text = stringResource(Res.string.app_title),
-                style = MaterialTheme.typography.displayMedium,
-                color = MaterialTheme.colorScheme.primary,
-            )
 
             Row(
                 modifier = Modifier.fillMaxWidth(),
@@ -247,6 +235,7 @@ private fun ProfileExpandedLayout(
                             .padding(24.dp),
                         verticalArrangement = Arrangement.spacedBy(spacing.stackMd),
                     ) {
+                        InsightsSection()
                         Spacer(modifier = Modifier.weight(1f, fill = true))
                         LogoutSection(onLogout = onLogout)
                     }

@@ -53,55 +53,12 @@ fun AppContainer() {
             entry<AppRoute.Login> { LoginRouteScreen() }
             entry<AppRoute.Home> {
                 val authenticatedState = sessionState as? SessionState.Authenticated
-                if (authenticatedState == null) {
-                    SplashScreen()
-                } else {
-                    HomeContainer(
-                        user = authenticatedState.user,
-                        onLogout = { sessionRepository.logout() },
-                    )
-                }
+                    ?: return@entry
+                HomeContainer(
+                    user = authenticatedState.user,
+                    onLogout = { sessionRepository.logout() },
+                )
             }
         },
     )
-}
-
-@Composable
-internal fun AppPlaceholderScreen(
-    title: String,
-    body: String,
-) {
-    Box(modifier = Modifier.fillMaxSize()) {
-        QuoteQuizBackground()
-        DefaultScaffoldBody(
-            modifier = Modifier.fillMaxSize(),
-            enableEdgeToEdge = true,
-        ) {
-            Box(
-                modifier = Modifier.fillMaxSize(),
-                contentAlignment = Alignment.Center,
-            ) {
-                Column(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(horizontal = 24.dp),
-                    horizontalAlignment = Alignment.CenterHorizontally,
-                    verticalArrangement = Arrangement.spacedBy(16.dp),
-                ) {
-                    Text(
-                        text = title,
-                        style = MaterialTheme.typography.headlineMedium,
-                        color = MaterialTheme.colorScheme.onBackground,
-                        textAlign = TextAlign.Center,
-                    )
-                    Text(
-                        text = body,
-                        style = MaterialTheme.typography.bodyLarge,
-                        color = MaterialTheme.colorScheme.onSurfaceVariant,
-                        textAlign = TextAlign.Center,
-                    )
-                }
-            }
-        }
-    }
 }

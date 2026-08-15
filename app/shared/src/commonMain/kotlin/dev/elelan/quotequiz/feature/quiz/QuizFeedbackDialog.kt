@@ -95,12 +95,6 @@ fun QuizFeedbackDialogContent(
         if (isSuccess) MaterialTheme.colorScheme.primary.copy(alpha = 0.08f)
         else MaterialTheme.colorScheme.error.copy(alpha = 0.08f)
 
-//    Box(
-//        modifier = Modifier
-//            .fillMaxSize()
-//            .background(Color.Black.copy(alpha = 0.44f)),
-//        contentAlignment = Alignment.Center,
-//    )
     Surface(
         modifier = Modifier
             .widthIn(max = 460.dp)
@@ -202,6 +196,8 @@ fun QuizFeedbackDialogContent(
                         )
                     }
                 }
+
+                Spacer(modifier = Modifier.height(24.dp))
 
                 Button(
                     onClick = onConfirm,

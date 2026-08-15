@@ -49,7 +49,6 @@ import kotlinx.coroutines.delay
 import org.jetbrains.compose.resources.stringResource
 import org.koin.compose.viewmodel.koinViewModel
 import quotequiz.app.shared.generated.resources.Res
-import quotequiz.app.shared.generated.resources.app_title
 import quotequiz.app.shared.generated.resources.quiz_action_no
 import quotequiz.app.shared.generated.resources.quiz_action_retry
 import quotequiz.app.shared.generated.resources.quiz_action_yes
@@ -90,11 +89,12 @@ fun QuizScreen(
         }
     }
 
-    Box(modifier = Modifier.fillMaxSize()) {
+    Box(modifier = Modifier.fillMaxSize().background(Color.Magenta)) {
         QuoteQuizBackground()
         DefaultScaffoldBody(
             modifier = Modifier
                 .fillMaxSize(),
+            enableEdgeToEdge = true,
             shouldOverlayBlur = uiState.feedbackDialog != null || showSubmittingOverlay,
         ) {
             AdaptiveWindowLayout(
@@ -160,7 +160,11 @@ private fun QuizScreenStateHost(
 ) {
     Box(
         modifier = Modifier.fillMaxSize(),
-        contentAlignment = Alignment.Center,
+        contentAlignment = if (isTwoColumn) {
+            Alignment.Center
+        } else {
+            Alignment.TopCenter
+        },
     ) {
         when {
             uiState.isLoading -> QuizLoadingState(
@@ -232,16 +236,9 @@ private fun QuizLoadingState(
                 .fillMaxWidth()
                 .widthIn(max = contentMaxWidth)
                 .verticalScroll(scrollState)
-                .padding(horizontal = spacing.marginMobile, vertical = spacing.stackMd),
+                .padding(horizontal = spacing.marginMobile),
             verticalArrangement = Arrangement.spacedBy(spacing.stackMd),
         ) {
-            Text(
-                text = stringResource(Res.string.app_title),
-                style = MaterialTheme.typography.displayMedium,
-                color = MaterialTheme.colorScheme.primary,
-                textAlign = TextAlign.Center,
-                modifier = Modifier.fillMaxWidth(),
-            )
 
             QuizProgressLoadingSection(
                 placeholderColor = placeholderColor,
@@ -361,68 +358,55 @@ private fun QuizReadyState(
             .fillMaxSize()
             .widthIn(max = contentMaxWidth)
             .verticalScroll(scrollState)
-            .padding(horizontal = spacing.marginMobile, vertical = spacing.stackMd),
-        verticalArrangement = Arrangement.spacedBy(spacing.stackMd),
+            .padding(horizontal = spacing.marginMobile),
+        verticalArrangement = if (isTwoColumn) {
+            Arrangement.spacedBy(
+                space = spacing.stackMd,
+                alignment = Alignment.CenterVertically,
+            )
+        } else {
+            Arrangement.spacedBy(spacing.stackMd)
+        },
     ) {
 
-        Text(
-            text = stringResource(Res.string.app_title),
-            style = MaterialTheme.typography.displayMedium,
-            color = MaterialTheme.colorScheme.primary,
-            textAlign = TextAlign.Start,
-            modifier = Modifier.fillMaxWidth(),
-        )
+        if (isTwoColumn) {
 
-        Column(
-            modifier = Modifier
-                .fillMaxWidth()
-                .weight(1f)
-                .verticalScroll(scrollState),
-            verticalArrangement = Arrangement.spacedBy(
-                spacing.stackMd,
-                alignment = Alignment.CenterVertically
-            ),
-        ) {
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                horizontalArrangement = Arrangement.spacedBy(24.dp),
+                verticalAlignment = Alignment.Top,
+            ) {
 
-            if (isTwoColumn) {
+                // Quote Card on Left
+                QuizQuoteCard(
+                    question = question,
+                    modifier = Modifier.weight(1f),
+                    maxCardWidth = 600.dp,
+                )
 
-                Row(
-                    modifier = Modifier.fillMaxWidth(),
-                    horizontalArrangement = Arrangement.spacedBy(24.dp),
-                    verticalAlignment = Alignment.Top,
+                // Right Column: Progress Section top + Interaction Panel underneath
+                Column(
+                    modifier = Modifier.weight(1f),
+                    verticalArrangement = Arrangement.spacedBy(16.dp),
                 ) {
 
-                    // Quote Card on Left
-                    QuizQuoteCard(
+                    QuizProgressSection(question = question)
+
+                    QuizInteractionPanel(
                         question = question,
-                        modifier = Modifier.weight(1f),
-                        maxCardWidth = 600.dp,
+                        onAction = onAction,
                     )
 
-                    // Right Column: Progress Section top + Interaction Panel underneath
-                    Column(
-                        modifier = Modifier.weight(1f),
-                        verticalArrangement = Arrangement.spacedBy(16.dp),
-                    ) {
-
-                        QuizProgressSection(question = question)
-
-                        QuizInteractionPanel(
-                            question = question,
-                            onAction = onAction,
-                        )
-
-                    }
                 }
-            } else {
-
-                QuizProgressSection(question = question)
-                QuizQuoteCard(question = question)
-                QuizInteractionPanel(
-                    question = question,
-                    onAction = onAction,
-                )
             }
+        } else {
+
+            QuizProgressSection(question = question)
+            QuizQuoteCard(question = question)
+            QuizInteractionPanel(
+                question = question,
+                onAction = onAction,
+            )
         }
     }
 

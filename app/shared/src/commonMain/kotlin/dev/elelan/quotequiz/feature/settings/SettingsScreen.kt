@@ -9,19 +9,21 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.ColumnScope
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.widthIn
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.HorizontalDivider
+import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.SnackbarHost
@@ -49,10 +51,11 @@ import dev.elelan.quotequiz.ui.core.FormFactorPreviews
 import dev.elelan.quotequiz.ui.core.QuoteQuizBackground
 import dev.elelan.quotequiz.ui.theme.QuoteQuizTheme
 import kotlinx.coroutines.flow.collectLatest
+import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.resources.stringResource
 import org.koin.compose.viewmodel.koinViewModel
 import quotequiz.app.shared.generated.resources.Res
-import quotequiz.app.shared.generated.resources.app_title
+import quotequiz.app.shared.generated.resources.ic_arrow_forward_ios
 import quotequiz.app.shared.generated.resources.settings_daily_challenge_description
 import quotequiz.app.shared.generated.resources.settings_daily_challenge_label
 import quotequiz.app.shared.generated.resources.settings_description
@@ -97,14 +100,14 @@ private fun SettingsScreen(
     Box(modifier = Modifier.fillMaxSize()) {
         QuoteQuizBackground()
         Scaffold(
+            contentWindowInsets = WindowInsets(0, 0, 0, 0),
             snackbarHost = { SnackbarHost(snackbarHostState) },
             containerColor = Color.Transparent,
         ) { innerPadding ->
             DefaultScaffoldBody(
                 modifier = Modifier
                     .fillMaxSize()
-                    .padding(innerPadding)
-                    .navigationBarsPadding(),
+                    .padding(innerPadding),
                 enableEdgeToEdge = true,
             ) {
                 SettingsContent(
@@ -160,20 +163,20 @@ private fun SettingsColumnLayout(
     val scrollState = rememberScrollState()
 
     Box(modifier = Modifier.fillMaxSize()) {
+
         Column(
             modifier = Modifier
                 .align(Alignment.TopCenter)
                 .fillMaxWidth()
                 .widthIn(max = maxWidth)
                 .verticalScroll(scrollState)
-                .padding(horizontal = horizontalPadding, vertical = spacing.stackLg),
+                .padding(
+                    start = horizontalPadding,
+                    end = horizontalPadding,
+                    bottom = horizontalPadding
+                ),
             verticalArrangement = Arrangement.spacedBy(spacing.stackLg),
         ) {
-            Text(
-                text = stringResource(Res.string.app_title),
-                style = MaterialTheme.typography.displayMedium,
-                color = MaterialTheme.colorScheme.primary,
-            )
 
             Column(
                 verticalArrangement = Arrangement.spacedBy(spacing.stackSm),
@@ -195,8 +198,11 @@ private fun SettingsColumnLayout(
                 colors = CardDefaults.cardColors(
                     containerColor = MaterialTheme.colorScheme.surface.copy(alpha = 0.96f),
                 ),
-                border = BorderStroke(1.dp, MaterialTheme.colorScheme.outlineVariant.copy(alpha = 0.75f)),
-                elevation = CardDefaults.cardElevation(defaultElevation = 6.dp),
+                border = BorderStroke(
+                    1.dp,
+                    MaterialTheme.colorScheme.outlineVariant.copy(alpha = 0.75f)
+                ),
+                elevation = CardDefaults.cardElevation(defaultElevation = 2.dp),
             ) {
                 Column {
                     SettingSection(
@@ -223,10 +229,10 @@ private fun SettingsColumnLayout(
                                     style = MaterialTheme.typography.labelLarge,
                                     color = MaterialTheme.colorScheme.onSurfaceVariant,
                                 )
-                                Text(
-                                    text = "›",
-                                    style = MaterialTheme.typography.headlineMedium,
-                                    color = MaterialTheme.colorScheme.onSurfaceVariant,
+                                Icon(
+                                    painter = painterResource(Res.drawable.ic_arrow_forward_ios),
+                                    contentDescription = null,
+                                    tint = MaterialTheme.colorScheme.onSurfaceVariant
                                 )
                             }
                         },
