@@ -17,6 +17,7 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 import org.springframework.web.cors.CorsConfiguration
 import org.springframework.web.cors.CorsConfigurationSource
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource
+import org.springframework.web.filter.CorsFilter
 
 @Configuration
 class SecurityConfig(
@@ -57,8 +58,15 @@ class SecurityConfig(
     fun corsConfigurationSource(): CorsConfigurationSource {
         val configuration = CorsConfiguration().apply {
             allowedOriginPatterns = corsConfig.allowedOriginPatternsList
+            allowedOrigins = listOf(
+                "https://evic2132.github.io",
+                "https://quote-quiz.onrender.com",
+                "http://localhost:8080",
+                "http://localhost:3000"
+            )
             allowedMethods = listOf("GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS")
             allowedHeaders = listOf("*")
+            exposedHeaders = listOf("Authorization", "Content-Type")
             allowCredentials = false
             maxAge = 3600L
         }
@@ -67,4 +75,7 @@ class SecurityConfig(
             registerCorsConfiguration("/**", configuration)
         }
     }
+
+    @Bean
+    fun corsFilter(): CorsFilter = CorsFilter(corsConfigurationSource())
 }
