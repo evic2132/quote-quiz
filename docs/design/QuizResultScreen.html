@@ -1,0 +1,200 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+    <meta charset="utf-8"/>
+    <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+    <title>Quiz Complete - Wisdom Trivia</title>
+    <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&amp;family=Playfair+Display:wght@700&amp;display=swap" rel="stylesheet"/>
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+    <script id="tailwind-config">
+        tailwind.config = {
+          darkMode: "class",
+          theme: {
+            extend: {
+              "colors": {
+                      "secondary-fixed": "#e4e2e2",
+                      "secondary-container": "#e4e2e2",
+                      "primary-fixed-dim": "#c0c1ff",
+                      "surface-container-low": "#f7f2f8",
+                      "surface-container-high": "#ebe7ec",
+                      "secondary-fixed-dim": "#c8c6c6",
+                      "inverse-on-surface": "#f4eff5",
+                      "background": "#fdf8fd",
+                      "inverse-primary": "#c0c1ff",
+                      "surface": "#fdf8fd",
+                      "on-error-container": "#93000a",
+                      "surface-tint": "#4f54b4",
+                      "error": "#ba1a1a",
+                      "on-tertiary-container": "#a6a9b4",
+                      "surface-container-highest": "#e5e1e7",
+                      "outline": "#777683",
+                      "surface-variant": "#e5e1e7",
+                      "surface-bright": "#fdf8fd",
+                      "on-tertiary-fixed": "#181b24",
+                      "on-secondary": "#ffffff",
+                      "tertiary": "#252831",
+                      "error-container": "#ffdad6",
+                      "on-primary": "#ffffff",
+                      "on-background": "#1c1b1f",
+                      "surface-dim": "#ddd9de",
+                      "outline-variant": "#c7c5d4",
+                      "on-secondary-container": "#656464",
+                      "on-error": "#ffffff",
+                      "surface-container-lowest": "#ffffff",
+                      "on-surface-variant": "#464652",
+                      "tertiary-fixed-dim": "#c4c6d2",
+                      "surface-container": "#f1ecf2",
+                      "primary-fixed": "#e1e0ff",
+                      "on-surface": "#1c1b1f",
+                      "inverse-surface": "#313034",
+                      "on-tertiary-fixed-variant": "#434750",
+                      "primary": "#15157d",
+                      "on-tertiary": "#ffffff",
+                      "tertiary-container": "#3b3e47",
+                      "primary-container": "#2e3192",
+                      "on-primary-fixed-variant": "#373a9b",
+                      "on-primary-container": "#9da1ff",
+                      "on-primary-fixed": "#04006d",
+                      "secondary": "#5e5e5e",
+                      "on-secondary-fixed": "#1b1c1c",
+                      "on-secondary-fixed-variant": "#474747",
+                      "tertiary-fixed": "#e0e2ee"
+              },
+              "borderRadius": {
+                      "DEFAULT": "0.125rem",
+                      "lg": "0.25rem",
+                      "xl": "0.5rem",
+                      "full": "0.75rem"
+              },
+              "spacing": {
+                      "stack-md": "1rem",
+                      "stack-lg": "2rem",
+                      "gutter": "1rem",
+                      "margin-tablet": "2.5rem",
+                      "stack-sm": "0.5rem",
+                      "margin-mobile": "1.25rem"
+              },
+              "fontFamily": {
+                      "body-md": ["Inter"],
+                      "display-quote": ["Playfair Display"],
+                      "body-lg": ["Inter"],
+                      "headline-md": ["Inter"],
+                      "label-sm": ["Inter"],
+                      "display-quote-mobile": ["Playfair Display"],
+                      "label-lg": ["Inter"]
+              },
+              "fontSize": {
+                      "body-md": ["16px", {"lineHeight": "24px", "fontWeight": "400"}],
+                      "display-quote": ["32px", {"lineHeight": "42px", "letterSpacing": "-0.02em", "fontWeight": "700"}],
+                      "body-lg": ["18px", {"lineHeight": "28px", "fontWeight": "400"}],
+                      "headline-md": ["20px", {"lineHeight": "28px", "fontWeight": "600"}],
+                      "label-sm": ["11px", {"lineHeight": "16px", "letterSpacing": "0.5px", "fontWeight": "500"}],
+                      "display-quote-mobile": ["24px", {"lineHeight": "32px", "letterSpacing": "-0.01em", "fontWeight": "700"}],
+                      "label-lg": ["14px", {"lineHeight": "20px", "letterSpacing": "0.1px", "fontWeight": "500"}]
+              }
+            }
+          }
+        }
+    </script>
+    <style>
+        /* Progress Bar Base Animation */
+        @keyframes fillProgress {
+            from { width: 0; }
+            to { width: 80%; }
+        }
+        .animate-progress {
+            animation: fillProgress 1.5s ease-out forwards;
+        }
+    </style>
+    <style>
+        body {
+          min-height: max(884px, 100dvh);
+        }
+    </style>
+</head>
+<body class="bg-background text-on-background min-h-screen flex flex-col font-body-md overflow-x-hidden selection:bg-primary-fixed selection:text-on-primary-fixed">
+<!-- Main Content Area - Scrollable, avoids nav bars -->
+<main class="flex-grow pb-[80px]"> <!-- Padding for Bottom NavBar -->
+    <!-- Results Header Section -->
+    <section class="px-margin-mobile md:px-margin-tablet pt-stack-lg pb-stack-md flex flex-col items-center text-center mt-8">
+        <h1 class="font-display-quote-mobile md:font-display-quote text-display-quote-mobile md:text-display-quote text-primary mb-stack-sm">Quiz Complete</h1>
+        <p class="font-body-md text-body-md text-on-surface-variant">Mode: Multiple Choice</p>
+        <!-- Large Score Display -->
+        <div class="mt-stack-lg relative flex items-center justify-center">
+            <svg class="w-48 h-48 md:w-56 md:h-56 transform -rotate-90">
+                <circle class="stroke-tertiary-fixed fill-none" cx="96" cy="96" r="80" stroke-width="8"></circle>
+                <circle class="stroke-primary fill-none stroke-dasharray-[502] stroke-dashoffset-[100] transition-all duration-1000 ease-out" cx="96" cy="96" r="80" stroke-linecap="round" stroke-width="8" style="stroke-dashoffset: 100.5;"></circle>
+            </svg>
+            <div class="absolute inset-0 flex flex-col items-center justify-center">
+                <span class="font-display-quote-mobile md:font-display-quote text-display-quote-mobile md:text-display-quote text-primary">8 / 10</span>
+                <span class="font-label-lg text-label-lg text-on-surface-variant mt-1">80% Accuracy</span>
+            </div>
+        </div>
+    </section>
+    <!-- Breakdown Section -->
+    <section class="px-margin-mobile md:px-margin-tablet py-stack-md max-w-3xl mx-auto w-full">
+        <h2 class="font-headline-md text-headline-md text-on-surface mb-stack-md">Question Breakdown</h2>
+        <div class="flex flex-col gap-0 border border-secondary-fixed rounded-xl overflow-hidden bg-surface">
+            <!-- Question 1: Correct -->
+            <div class="flex items-start gap-4 p-4 border-b border-secondary-fixed bg-surface hover:bg-surface-container-low transition-colors">
+                <div class="shrink-0 mt-1">
+                    <span class="material-symbols-outlined text-[#15803d]" data-weight="fill" style="font-variation-settings: 'FILL' 1;">check_circle</span>
+                </div>
+                <div class="flex-grow">
+                    <p class="font-body-md text-body-md text-on-surface mb-1">"To be, or not to be, that is the question" is from which play?</p>
+                    <p class="font-label-sm text-label-sm text-on-surface-variant">Your answer: Hamlet</p>
+                </div>
+            </div>
+            <!-- Question 2: Incorrect -->
+            <div class="flex items-start gap-4 p-4 border-b border-secondary-fixed bg-surface hover:bg-surface-container-low transition-colors">
+                <div class="shrink-0 mt-1">
+                    <span class="material-symbols-outlined text-error" data-weight="fill" style="font-variation-settings: 'FILL' 1;">cancel</span>
+                </div>
+                <div class="flex-grow">
+                    <p class="font-body-md text-body-md text-on-surface mb-1">Who wrote "Pride and Prejudice"?</p>
+                    <p class="font-label-sm text-label-sm text-error line-through">Your answer: Emily Brontë</p>
+                    <p class="font-label-sm text-label-sm text-[#15803d] mt-1">Correct answer: Jane Austen</p>
+                </div>
+            </div>
+            <!-- Question 3: Correct -->
+            <div class="flex items-start gap-4 p-4 border-b border-secondary-fixed bg-surface hover:bg-surface-container-low transition-colors">
+                <div class="shrink-0 mt-1">
+                    <span class="material-symbols-outlined text-[#15803d]" data-weight="fill" style="font-variation-settings: 'FILL' 1;">check_circle</span>
+                </div>
+                <div class="flex-grow">
+                    <p class="font-body-md text-body-md text-on-surface mb-1">"I think, therefore I am" was coined by?</p>
+                    <p class="font-label-sm text-label-sm text-on-surface-variant">Your answer: René Descartes</p>
+                </div>
+            </div>
+            <!-- (Ellipsis for brevity, simulating 10 questions) -->
+            <div class="flex items-center justify-center p-4 bg-surface-container-lowest text-on-surface-variant">
+                <span class="material-symbols-outlined">more_horiz</span>
+            </div>
+        </div>
+    </section>
+    <!-- CTA Section -->
+    <section class="px-margin-mobile md:px-margin-tablet py-stack-lg flex justify-center mb-8">
+        <button class="bg-primary text-on-primary font-label-lg text-label-lg rounded-full px-8 py-4 hover:opacity-90 transition-opacity flex items-center gap-2 shadow-sm active:scale-[0.98]">
+            <span class="material-symbols-outlined text-xl">replay</span>
+            Start Again
+        </button>
+    </section>
+</main>
+<!-- BottomNavBar -->
+<nav class="md:hidden bg-surface dark:bg-surface border-t border-secondary-fixed dark:border-outline-variant fixed bottom-0 w-full z-50 flex justify-around items-center px-4 pb-4 pt-3 w-full">
+    <a class="flex flex-col items-center justify-center bg-primary-container text-on-primary-container rounded-full px-5 py-1 hover:opacity-80 transition-opacity scale-down duration-200 active:scale-98" href="#">
+        <span class="material-symbols-outlined" data-icon="quiz">quiz</span>
+        <span class="font-label-sm text-label-sm mt-1">Quiz</span>
+    </a>
+    <a class="flex flex-col items-center justify-center text-on-surface-variant dark:text-surface-variant py-1 hover:bg-surface-container-high transition-colors scale-down duration-200 active:scale-98 px-5 rounded-full" href="#">
+        <span class="material-symbols-outlined" data-icon="settings">settings</span>
+        <span class="font-label-sm text-label-sm mt-1">Settings</span>
+    </a>
+    <a class="flex flex-col items-center justify-center text-on-surface-variant dark:text-surface-variant py-1 hover:bg-surface-container-high transition-colors scale-down duration-200 active:scale-98 px-5 rounded-full" href="#">
+        <span class="material-symbols-outlined" data-icon="person">person</span>
+        <span class="font-label-sm text-label-sm mt-1">Profile</span>
+    </a>
+</nav>
+</body></html>

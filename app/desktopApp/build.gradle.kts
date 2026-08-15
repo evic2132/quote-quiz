@@ -21,11 +21,26 @@ dependencies {
 compose.desktop {
     application {
         mainClass = "dev.elelan.quotequiz.MainKt"
+        jvmArgs("-Dapple.awt.application.name=Wisdom Trivia")
 
         nativeDistributions {
             targetFormats(TargetFormat.Dmg, TargetFormat.Msi, TargetFormat.Deb)
-            packageName = "dev.elelan.quotequiz"
+            packageName = "Wisdom Trivia"
             packageVersion = "1.0.0"
+
+            macOS {
+                bundleID = "dev.elelan.quotequiz"
+                iconFile.set(project.file("src/main/resources/AppIcon.icns"))
+
+                infoPlist {
+                    extraKeysRawXml = """
+                        <key>CFBundleDisplayName</key>
+                        <string>Wisdom Trivia</string>
+                        <key>CFBundleName</key>
+                        <string>Wisdom Trivia</string>
+                    """.trimIndent()
+                }
+            }
         }
     }
 }

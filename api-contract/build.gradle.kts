@@ -1,9 +1,11 @@
+import org.jetbrains.kotlin.gradle.ExperimentalWasmDsl
 import org.jetbrains.kotlin.gradle.dsl.JvmTarget
 
 plugins {
     alias(libs.plugins.kotlinMultiplatform)
     alias(libs.plugins.androidMultiplatformLibrary)
     alias(libs.plugins.kotlinSerialization)
+    alias(libs.plugins.kover)
 }
 
 kotlin {
@@ -11,6 +13,15 @@ kotlin {
     iosSimulatorArm64()
 
     jvm()
+
+    js {
+        browser()
+    }
+
+    @OptIn(ExperimentalWasmDsl::class)
+    wasmJs {
+        browser()
+    }
 
     android {
         namespace = "dev.elelan.quotequiz.contract"

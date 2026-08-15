@@ -1,0 +1,409 @@
+name: CI/CD
+
+on:
+  pull_request:
+    branches:
+      - develop
+
+  push:
+    branches:
+      - develop
+
+  workflow_dispatch:
+
+# A newer commit makes an older CI/deployment run irrelevant.
+concurrency:
+  group: ci-cd-${{ github.ref }}
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+
+jobs:
+  quality:
+    name: Quality & Build
+    runs-on: ubuntu-latest
+
+    permissions:
+      contents: read
+
+      # Required for Detekt SARIF → GitHub Code Scanning.
+      security-events: write
+
+    outputs:
+      web_changed: ${{ steps.changes.outputs.web }}
+      server_changed: ${{ steps.changes.outputs.server }}
+      android_changed: ${{ steps.changes.outputs.android }}
+      quality_changed: ${{ steps.changes.outputs.quality }}
+
+    steps:
+      # -----------------------------------------------------------------------
+      # Checkout
+      # -----------------------------------------------------------------------
+
+      - name: Checkout
+        uses: actions/checkout@v6
+        with:
+          # Needed so we can reliably diff the current change ourselves.
+          fetch-depth: 0
+
+      # -----------------------------------------------------------------------
+      # Detect affected parts of the monorepo
+      # -----------------------------------------------------------------------
+
+      - name: Detect changed modules
+        id: changes
+        shell: bash
+        env:
+          EVENT_NAME: ${{ github.event_name }}
+
+          PUSH_BASE_SHA: ${{ github.event.before }}
+          CURRENT_SHA: ${{ github.sha }}
+
+          PR_BASE_SHA: ${{ github.event.pull_request.base.sha }}
+          PR_HEAD_SHA: ${{ github.event.pull_request.head.sha }}
+        run: |
+          set -euo pipefail
+
+          # Manual execution should validate/build everything.
+          if [[ "$EVENT_NAME" == "workflow_dispatch" ]]; then
+            echo "quality=true" >> "$GITHUB_OUTPUT"
+            echo "android=true" >> "$GITHUB_OUTPUT"
+            echo "web=true" >> "$GITHUB_OUTPUT"
+            echo "server=true" >> "$GITHUB_OUTPUT"
+            exit 0
+          fi
+
+          if [[ "$EVENT_NAME" == "pull_request" ]]; then
+            BASE_SHA="$PR_BASE_SHA"
+            HEAD_SHA="$PR_HEAD_SHA"
+          else
+            BASE_SHA="$PUSH_BASE_SHA"
+            HEAD_SHA="$CURRENT_SHA"
+          fi
+
+          # Handles unusual cases such as the first commit on a branch.
+          if [[ -z "$BASE_SHA" || "$BASE_SHA" =~ ^0+$ ]]; then
+            BASE_SHA="$(git rev-parse "${HEAD_SHA}^" 2>/dev/null || git rev-list --max-parents=0 "$HEAD_SHA")"
+          fi
+
+          echo "Diff: $BASE_SHA..$HEAD_SHA"
+
+          CHANGED_FILES="$(git diff --name-only "$BASE_SHA" "$HEAD_SHA")"
+
+          echo "Changed files:"
+          echo "$CHANGED_FILES"
+
+          QUALITY=false
+          ANDROID=false
+          WEB=false
+          SERVER=false
+
+          while IFS= read -r file; do
+            [[ -z "$file" ]] && continue
+
+            # -----------------------------------------------------------------
+            # Changes affecting quality/tests/coverage.
+            # -----------------------------------------------------------------
+            case "$file" in
+              api-contract/*|\
+              app/shared/*|\
+              app/androidApp/*|\
+              app/desktopApp/*|\
+              app/webApp/*|\
+              server/*|\
+              build.gradle.kts|\
+              settings.gradle.kts|\
+              gradle.properties|\
+              gradle/*|\
+              gradlew|\
+              gradlew.bat|\
+              config/detekt/*)
+                QUALITY=true
+                ;;
+            esac
+
+            # -----------------------------------------------------------------
+            # Android build dependencies.
+            #
+            # androidApp → shared → api-contract
+            # -----------------------------------------------------------------
+            case "$file" in
+              app/androidApp/*|\
+              app/shared/*|\
+              api-contract/*|\
+              build.gradle.kts|\
+              settings.gradle.kts|\
+              gradle.properties|\
+              gradle/*|\
+              gradlew|\
+              gradlew.bat)
+                ANDROID=true
+                ;;
+            esac
+
+            # -----------------------------------------------------------------
+            # Web build dependencies.
+            #
+            # webApp → shared → api-contract
+            # -----------------------------------------------------------------
+            case "$file" in
+              app/webApp/*|\
+              app/shared/*|\
+              api-contract/*|\
+              build.gradle.kts|\
+              settings.gradle.kts|\
+              gradle.properties|\
+              gradle/*|\
+              gradlew|\
+              gradlew.bat)
+                WEB=true
+                ;;
+            esac
+
+            # -----------------------------------------------------------------
+            # Server build/deployment dependencies.
+            #
+            # server → api-contract
+            # -----------------------------------------------------------------
+            case "$file" in
+              server/*|\
+              api-contract/*|\
+              Dockerfile|\
+              build.gradle.kts|\
+              settings.gradle.kts|\
+              gradle.properties|\
+              gradle/*|\
+              gradlew|\
+              gradlew.bat)
+                SERVER=true
+                ;;
+            esac
+
+          done <<< "$CHANGED_FILES"
+
+          echo "quality=$QUALITY"
+          echo "android=$ANDROID"
+          echo "web=$WEB"
+          echo "server=$SERVER"
+
+          echo "quality=$QUALITY" >> "$GITHUB_OUTPUT"
+          echo "android=$ANDROID" >> "$GITHUB_OUTPUT"
+          echo "web=$WEB" >> "$GITHUB_OUTPUT"
+          echo "server=$SERVER" >> "$GITHUB_OUTPUT"
+
+      # -----------------------------------------------------------------------
+      # Java + Gradle
+      #
+      # Only needed if actual Gradle/code work is required.
+      # -----------------------------------------------------------------------
+
+      - name: Setup Java
+        if: steps.changes.outputs.quality == 'true'
+        uses: actions/setup-java@v5
+        with:
+          distribution: temurin
+          java-version: "21"
+
+      - name: Setup Gradle
+        if: steps.changes.outputs.quality == 'true'
+        uses: gradle/actions/setup-gradle@v6
+        with:
+          # develop is your long-lived CI branch.
+          #
+          # Allows develop pushes to refresh the Gradle cache while PRs
+          # remain read-only.
+          cache-read-only: ${{ github.event_name == 'pull_request' }}
+
+      # =======================================================================
+      # 1. DETEKT
+      # =======================================================================
+
+      - name: Run Detekt
+        if: steps.changes.outputs.quality == 'true'
+        run: ./gradlew detekt --no-daemon
+
+      - name: Upload Detekt SARIF
+        if: >-
+          always() &&
+          steps.changes.outputs.quality == 'true' &&
+          (
+            github.event_name != 'pull_request' ||
+            github.event.pull_request.head.repo.full_name == github.repository
+          )
+        uses: github/codeql-action/upload-sarif@v4
+        with:
+          sarif_file: build/reports/detekt/detekt.sarif
+          category: detekt
+
+      # =======================================================================
+      # 2. UNIT TESTS + KOVER
+      #
+      # IMPORTANT:
+      # Kover aggregate report tasks automatically execute the relevant
+      # :server and :app:shared JVM tests.
+      #
+      # Do NOT separately run:
+      #
+      #   :server:test
+      #   :app:shared:jvmTest
+      #
+      # here.
+      # =======================================================================
+
+      - name: Run unit tests and Kover
+        if: steps.changes.outputs.quality == 'true'
+        run: |
+          ./gradlew \
+            :koverXmlReport \
+            :koverHtmlReport \
+            :koverVerify \
+            --no-daemon
+
+      # -----------------------------------------------------------------------
+      # Coverage report artifact
+      # -----------------------------------------------------------------------
+
+      - name: Upload Kover HTML report
+        if: always() && steps.changes.outputs.quality == 'true'
+        uses: actions/upload-artifact@v4
+        with:
+          name: kover-coverage-${{ github.sha }}
+          path: build/reports/kover/html/
+          if-no-files-found: ignore
+          retention-days: 14
+
+      # =======================================================================
+      # 3. BUILD VALIDATION
+      #
+      # One Gradle invocation with only the tasks affected by this change.
+      #
+      # This avoids:
+      #   - another GitHub runner
+      #   - another checkout
+      #   - another Gradle setup
+      #   - separate Gradle configuration for each platform
+      # =======================================================================
+
+      - name: Build affected targets
+        if: steps.changes.outputs.quality == 'true'
+        shell: bash
+        env:
+          ANDROID_CHANGED: ${{ steps.changes.outputs.android }}
+          WEB_CHANGED: ${{ steps.changes.outputs.web }}
+          SERVER_CHANGED: ${{ steps.changes.outputs.server }}
+        run: |
+          set -euo pipefail
+
+          TASKS=()
+
+          if [[ "$ANDROID_CHANGED" == "true" ]]; then
+            TASKS+=(":app:androidApp:assembleDebug")
+          fi
+
+          if [[ "$WEB_CHANGED" == "true" ]]; then
+            TASKS+=(":app:webApp:wasmJsBrowserDistribution")
+          fi
+
+          if [[ "$SERVER_CHANGED" == "true" ]]; then
+            TASKS+=(":server:bootJar")
+          fi
+
+          if [[ ${#TASKS[@]} -eq 0 ]]; then
+            echo "No platform build required."
+            exit 0
+          fi
+
+          echo "Running Gradle tasks:"
+          printf '  %s\n' "${TASKS[@]}"
+
+          ./gradlew "${TASKS[@]}" --no-daemon
+
+      # =======================================================================
+      # Prepare GitHub Pages artifact
+      #
+      # Only on a push to develop AND only when web-relevant files changed.
+      # The expensive WASM build was already completed above.
+      # =======================================================================
+
+      - name: Upload GitHub Pages artifact
+        if: >-
+          github.event_name == 'push' &&
+          steps.changes.outputs.web == 'true'
+        uses: actions/upload-pages-artifact@v5
+        with:
+          path: app/webApp/build/dist/wasmJs/productionExecutable/
+
+  # ==========================================================================
+  # WEB DEPLOYMENT
+  #
+  # No checkout.
+  # No Java.
+  # No Gradle.
+  # No rebuild.
+  #
+  # It deploys the artifact produced by the quality job.
+  # ==========================================================================
+
+  deploy-web:
+    name: Deploy Web
+    runs-on: ubuntu-latest
+
+    needs:
+      - quality
+
+    if: >-
+      github.event_name == 'push' &&
+      needs.quality.result == 'success' &&
+      needs.quality.outputs.web_changed == 'true'
+
+    permissions:
+      contents: read
+      pages: write
+      id-token: write
+
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+
+    steps:
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4
+
+  # ==========================================================================
+  # SERVER DEPLOYMENT
+  #
+  # The server has already:
+  #
+  #   ✓ passed Detekt
+  #   ✓ passed unit tests
+  #   ✓ passed Kover verification
+  #   ✓ produced a valid bootJar
+  #
+  # Render is responsible for performing the actual Docker build.
+  # ==========================================================================
+
+  deploy-server:
+    name: Deploy Server
+    runs-on: ubuntu-latest
+
+    needs:
+      - quality
+
+    if: >-
+      github.event_name == 'push' &&
+      needs.quality.result == 'success' &&
+      needs.quality.outputs.server_changed == 'true'
+
+    steps:
+      - name: Trigger Render deploy
+        env:
+          RENDER_DEPLOY_HOOK_URL: ${{ secrets.RENDER_DEPLOY_HOOK_URL }}
+        run: |
+          curl \
+            --fail \
+            --show-error \
+            --silent \
+            --request POST \
+            "$RENDER_DEPLOY_HOOK_URL"

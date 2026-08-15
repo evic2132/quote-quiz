@@ -5,6 +5,7 @@ plugins {
     alias(libs.plugins.springBoot)
     alias(libs.plugins.springDependencyManagement)
     alias(libs.plugins.kotlinJpa)
+    alias(libs.plugins.kover)
 }
 
 group = "dev.elelan"

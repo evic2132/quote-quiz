@@ -8,26 +8,24 @@ class RootNavigatorTest {
     @Test
     fun `moveTo replaces splash with target route`() {
         val state = RootNavigationState(
-            startRoute = SplashRoute,
-            backStack = NavBackStack<RootRoute>(SplashRoute),
+            backStack = NavBackStack(AppRoute.Splash),
         )
         val navigator = RootNavigator(state)
 
-        navigator.moveTo(LoginRoute)
+        navigator.moveTo(AppRoute.Login)
 
-        assertEquals(listOf(LoginRoute), state.backStack.toList())
+        assertEquals(listOf(AppRoute.Login), state.backStack.toList())
     }
 
     @Test
     fun `moveTo keeps single matching route stable`() {
         val state = RootNavigationState(
-            startRoute = SplashRoute,
-            backStack = NavBackStack<RootRoute>(HomeRoute),
+            backStack = NavBackStack(AppRoute.Home),
         )
         val navigator = RootNavigator(state)
 
-        navigator.moveTo(HomeRoute)
+        navigator.moveTo(AppRoute.Home)
 
-        assertEquals(listOf(HomeRoute), state.backStack.toList())
+        assertEquals(listOf(AppRoute.Home), state.backStack.toList())
     }
 }

@@ -5,25 +5,26 @@ import androidx.compose.runtime.remember
 import androidx.navigation3.runtime.NavBackStack
 
 @Composable
-fun rememberRootNavigationState(
-    startRoute: RootRoute = SplashRoute,
-): RootNavigationState =
-    remember(startRoute) {
+fun rememberRootNavigationState(startRoute: AppRoute = AppRoute.Splash): RootNavigationState {
+    val backStack = rememberAppRouteBackStack(startRoute)
+
+    return remember(startRoute, backStack) {
         RootNavigationState(
-            startRoute = startRoute,
-            backStack = NavBackStack(startRoute),
+            //startRoute = startRoute,
+            backStack = backStack,
         )
     }
+}
 
 class RootNavigationState(
-    val startRoute: RootRoute,
-    val backStack: NavBackStack<RootRoute>,
+    //val startRoute: AppRoute,
+    val backStack: NavBackStack<AppRoute>,
 )
 
 class RootNavigator(
     private val state: RootNavigationState,
 ) {
-    fun moveTo(route: RootRoute) {
+    fun moveTo(route: AppRoute) {
         if (state.backStack.lastOrNull() == route && state.backStack.size == 1) {
             return
         }

@@ -2,6 +2,7 @@ package dev.elelan.quote_quiz_server.quiz
 
 import dev.elelan.quotequiz.contract.quiz.QuizMode
 import dev.elelan.quotequiz.contract.quiz.SubmitAnswerRequest
+import dev.elelan.quote_quiz_server.quote.QuoteRepository
 import dev.elelan.quote_quiz_server.user.UserRepository
 import kotlin.test.assertEquals
 import kotlin.test.assertNotNull
@@ -21,6 +22,9 @@ class QuizServiceTest {
 
     @Autowired
     lateinit var userRepository: UserRepository
+
+    @Autowired
+    lateinit var quoteRepository: QuoteRepository
 
     @Test
     fun `start session creates exactly ten unique questions`() {
@@ -46,6 +50,21 @@ class QuizServiceTest {
     }
 
     @Test
+    fun `binary session uses balanced randomized correct and incorrect proposed authors`() {
+        val userId = requireNotNull(userRepository.findByEmail("demo@example.com")).id
+
+        val session = quizService.startSession(userId = userId, mode = QuizMode.BINARY)
+        val storedSession = requireNotNull(quizSessionRepository.findBySessionId(session.sessionId))
+
+        val proposedIsCorrectCount = storedSession.questions.count { it.proposedAuthor == it.correctAuthor }
+        val proposedIsIncorrectCount = storedSession.questions.count { it.proposedAuthor != it.correctAuthor }
+
+        assertEquals(5, proposedIsCorrectCount)
+        assertEquals(5, proposedIsIncorrectCount)
+        assertTrue(storedSession.questions.filter { it.proposedAuthor != it.correctAuthor }.all { it.proposedAuthor != null })
+    }
+
+    @Test
     fun `multiple choice session stores exactly three options and one correct answer`() {
         val userId = requireNotNull(userRepository.findByEmail("demo@example.com")).id
 
@@ -59,6 +78,21 @@ class QuizServiceTest {
             question.options.count { it == question.correctAuthor } == 1
         })
         assertEquals(listOf("A", "B", "C"), session.currentQuestion.options.map { it.id })
+    }
+
+    @Test
+    fun `multiple choice distractors come from the full author pool and remain distinct`() {
+        val userId = requireNotNull(userRepository.findByEmail("demo@example.com")).id
+        val allAuthors = quoteRepository.findAll().map { it.author }.distinct().toSet()
+
+        val session = quizService.startSession(userId = userId, mode = QuizMode.MULTIPLE_CHOICE)
+        val storedSession = requireNotNull(quizSessionRepository.findBySessionId(session.sessionId))
+
+        assertTrue(storedSession.questions.all { question ->
+            question.options.toSet().size == 3 &&
+                question.options.all { it in allAuthors } &&
+                question.options.count { it == question.correctAuthor } == 1
+        })
     }
 
     @Test

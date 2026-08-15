@@ -1,6 +1,7 @@
 package dev.elelan.quotequiz.core.network
 
 import io.ktor.client.plugins.ClientRequestException
+import io.ktor.client.plugins.HttpRequestTimeoutException
 import io.ktor.client.plugins.RedirectResponseException
 import io.ktor.client.plugins.ResponseException
 import io.ktor.client.plugins.ServerResponseException
@@ -25,8 +26,11 @@ internal fun Throwable.toApiError(): ApiError =
         is RedirectResponseException -> response.status.toApiError()
         is ServerResponseException -> response.status.toApiError()
         is ResponseException -> response.status.toApiError()
-        is ConnectTimeoutException, is SocketTimeoutException, is UnresolvedAddressException -> ApiError.Network
-        else -> ApiError.Unknown(this)
+        is ConnectTimeoutException,
+        is SocketTimeoutException,
+        is HttpRequestTimeoutException,
+        is UnresolvedAddressException -> ApiError.Network
+        else -> if (isPlatformNetworkError()) ApiError.Network else ApiError.Unknown(this)
     }
 
 internal fun HttpStatusCode.toApiError(): ApiError =

@@ -1,0 +1,204 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+    <meta charset="utf-8"/>
+    <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+    <title>Wisdom Trivia - Binary Mode</title>
+    <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&amp;family=Playfair+Display:wght@700&amp;display=swap" rel="stylesheet"/>
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+    <script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "secondary-fixed": "#e4e2e2",
+                        "secondary-container": "#e4e2e2",
+                        "primary-fixed-dim": "#c0c1ff",
+                        "surface-container-low": "#f7f2f8",
+                        "surface-container-high": "#ebe7ec",
+                        "secondary-fixed-dim": "#c8c6c6",
+                        "inverse-on-surface": "#f4eff5",
+                        "background": "#fdf8fd",
+                        "inverse-primary": "#c0c1ff",
+                        "surface": "#fdf8fd",
+                        "on-error-container": "#93000a",
+                        "surface-tint": "#4f54b4",
+                        "error": "#ba1a1a",
+                        "on-tertiary-container": "#a6a9b4",
+                        "surface-container-highest": "#e5e1e7",
+                        "outline": "#777683",
+                        "surface-variant": "#e5e1e7",
+                        "surface-bright": "#fdf8fd",
+                        "on-tertiary-fixed": "#181b24",
+                        "on-secondary": "#ffffff",
+                        "tertiary": "#252831",
+                        "error-container": "#ffdad6",
+                        "on-primary": "#ffffff",
+                        "on-background": "#1c1b1f",
+                        "surface-dim": "#ddd9de",
+                        "outline-variant": "#c7c5d4",
+                        "on-secondary-container": "#656464",
+                        "on-error": "#ffffff",
+                        "surface-container-lowest": "#ffffff",
+                        "on-surface-variant": "#464652",
+                        "tertiary-fixed-dim": "#c4c6d2",
+                        "surface-container": "#f1ecf2",
+                        "primary-fixed": "#e1e0ff",
+                        "on-surface": "#1c1b1f",
+                        "inverse-surface": "#313034",
+                        "on-tertiary-fixed-variant": "#434750",
+                        "primary": "#15157d",
+                        "on-tertiary": "#ffffff",
+                        "tertiary-container": "#3b3e47",
+                        "primary-container": "#2e3192",
+                        "on-primary-fixed-variant": "#373a9b",
+                        "on-primary-container": "#9da1ff",
+                        "on-primary-fixed": "#04006d",
+                        "secondary": "#5e5e5e",
+                        "on-secondary-fixed": "#1b1c1c",
+                        "on-secondary-fixed-variant": "#474747",
+                        "tertiary-fixed": "#e0e2ee"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.125rem",
+                        "lg": "0.25rem",
+                        "xl": "0.5rem",
+                        "full": "0.75rem"
+                    },
+                    "spacing": {
+                        "stack-md": "1rem",
+                        "stack-lg": "2rem",
+                        "gutter": "1rem",
+                        "margin-tablet": "2.5rem",
+                        "stack-sm": "0.5rem",
+                        "margin-mobile": "1.25rem"
+                    },
+                    "fontFamily": {
+                        "body-md": ["Inter"],
+                        "display-quote": ["Playfair Display"],
+                        "body-lg": ["Inter"],
+                        "headline-md": ["Inter"],
+                        "label-sm": ["Inter"],
+                        "display-quote-mobile": ["Playfair Display"],
+                        "label-lg": ["Inter"]
+                    },
+                    "fontSize": {
+                        "body-md": ["16px", { "lineHeight": "24px", "fontWeight": "400" }],
+                        "display-quote": ["32px", { "lineHeight": "42px", "letterSpacing": "-0.02em", "fontWeight": "700" }],
+                        "body-lg": ["18px", { "lineHeight": "28px", "fontWeight": "400" }],
+                        "headline-md": ["20px", { "lineHeight": "28px", "fontWeight": "600" }],
+                        "label-sm": ["11px", { "lineHeight": "16px", "letterSpacing": "0.5px", "fontWeight": "500" }],
+                        "display-quote-mobile": ["24px", { "lineHeight": "32px", "letterSpacing": "-0.01em", "fontWeight": "700" }],
+                        "label-lg": ["14px", { "lineHeight": "20px", "letterSpacing": "0.1px", "fontWeight": "500" }]
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        .quote-bg {
+            background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" fill="%23e1e0ff" opacity="0.1"><text x="-10" y="80" font-family="Playfair Display" font-size="120">“</text></svg>');
+            background-repeat: no-repeat;
+            background-position: top left;
+        }
+    </style>
+    <style>
+        body {
+          min-height: max(884px, 100dvh);
+        }
+    </style>
+</head>
+<body class="bg-background text-on-background font-body-md min-h-screen flex flex-col pt-16 pb-20 md:pb-0">
+<!-- TopAppBar -->
+<header class="fixed top-0 w-full z-50 bg-background border-b border-secondary-fixed flex items-center justify-between px-margin-mobile py-stack-sm md:hidden">
+    <button class="text-primary hover:opacity-80 transition-opacity scale-down duration-200 active:scale-95 flex items-center justify-center p-2 rounded-full focus:outline-none focus:ring-2 focus:ring-primary">
+        <span aria-label="Menu" class="material-symbols-outlined">menu</span>
+    </button>
+    <h1 class="font-display-quote text-display-quote-mobile text-primary font-bold tracking-tight">Wisdom Trivia</h1>
+    <button class="text-primary hover:opacity-80 transition-opacity scale-down duration-200 active:scale-95 flex items-center justify-center p-2 rounded-full focus:outline-none focus:ring-2 focus:ring-primary">
+        <span aria-label="History" class="material-symbols-outlined">history</span>
+    </button>
+</header>
+<!-- Desktop Header -->
+<header class="hidden md:flex fixed top-0 w-full z-50 bg-background border-b border-secondary-fixed items-center justify-between px-margin-tablet py-stack-md">
+    <div class="flex items-center gap-stack-md">
+        <button class="text-primary hover:opacity-80 transition-opacity flex items-center justify-center p-2 rounded-full">
+            <span class="material-symbols-outlined">menu</span>
+        </button>
+        <h1 class="font-display-quote text-display-quote text-primary font-bold">Wisdom Trivia</h1>
+    </div>
+    <nav class="flex gap-stack-lg">
+        <a class="font-headline-md text-headline-md text-primary border-b-2 border-primary pb-1" href="#">Quiz</a>
+        <a class="font-headline-md text-headline-md text-on-surface-variant hover:text-primary transition-colors" href="#">Settings</a>
+        <a class="font-headline-md text-headline-md text-on-surface-variant hover:text-primary transition-colors" href="#">Profile</a>
+    </nav>
+    <button class="text-primary hover:opacity-80 transition-opacity flex items-center justify-center p-2 rounded-full">
+        <span class="material-symbols-outlined">history</span>
+    </button>
+</header>
+<!-- Main Content Area -->
+<main class="flex-grow flex flex-col px-margin-mobile md:px-margin-tablet py-stack-lg max-w-4xl mx-auto w-full mt-4 md:mt-24">
+    <!-- Progress Indicator -->
+    <div class="w-full mb-stack-lg">
+        <div class="flex justify-between items-end mb-2">
+            <span class="font-label-lg text-label-lg text-on-surface-variant uppercase tracking-wider">Question 4 of 10</span>
+            <span class="font-label-sm text-label-sm text-primary font-semibold">40%</span>
+        </div>
+        <div class="w-full h-1 bg-tertiary-fixed rounded-full overflow-hidden">
+            <div class="h-full bg-primary rounded-full transition-all duration-500 ease-out w-2/5"></div>
+        </div>
+    </div>
+    <!-- Layout for Mobile (Stack) vs Desktop (Split) -->
+    <div class="flex flex-col md:flex-row gap-stack-lg flex-grow">
+        <!-- Quote Container (Left side on desktop) -->
+        <div class="w-full md:w-3/5 flex flex-col justify-center relative">
+            <!-- Decorative element -->
+            <div class="absolute -top-10 -left-6 text-9xl font-display-quote text-primary-fixed-dim opacity-20 pointer-events-none select-none md:block hidden">“</div>
+            <div class="bg-surface-container-lowest border border-tertiary-fixed rounded-xl p-stack-lg md:p-10 relative overflow-hidden shadow-sm">
+                <div class="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-primary-container to-primary-fixed"></div>
+                <p class="font-display-quote-mobile md:font-display-quote text-display-quote-mobile md:text-display-quote text-on-surface text-center md:text-left mb-6 relative z-10">
+                    "Imagination is more important than knowledge. For knowledge is limited, whereas imagination embraces the entire world, stimulating progress, giving birth to evolution."
+                </p>
+            </div>
+        </div>
+        <!-- Interaction Area (Right side on desktop) -->
+        <div class="w-full md:w-2/5 flex flex-col justify-center space-y-stack-md mt-stack-lg md:mt-0">
+            <div class="text-center md:text-left mb-stack-sm">
+                <h2 class="font-headline-md text-headline-md text-primary mb-2">Did Albert Einstein say this?</h2>
+                <p class="font-body-md text-body-md text-on-surface-variant">Select yes or no.</p>
+            </div>
+            <div class="flex flex-col gap-stack-sm w-full">
+                <button class="w-full py-4 px-6 rounded-xl border border-tertiary-fixed bg-surface-container-lowest text-on-surface font-headline-md text-headline-md hover:bg-primary-fixed hover:border-primary hover:text-primary transition-all duration-200 active:scale-[0.98] focus:outline-none focus:ring-2 focus:ring-primary flex justify-between items-center group shadow-sm hover:shadow-md">
+                    <span>Yes</span>
+                    <span class="material-symbols-outlined text-transparent group-hover:text-primary transition-colors">check_circle</span>
+                </button>
+                <button class="w-full py-4 px-6 rounded-xl border border-tertiary-fixed bg-surface-container-lowest text-on-surface font-headline-md text-headline-md hover:bg-error-container hover:border-error hover:text-error transition-all duration-200 active:scale-[0.98] focus:outline-none focus:ring-2 focus:ring-error flex justify-between items-center group shadow-sm hover:shadow-md">
+                    <span>No</span>
+                    <span class="material-symbols-outlined text-transparent group-hover:text-error transition-colors">cancel</span>
+                </button>
+            </div>
+            <div class="flex justify-center md:justify-start pt-stack-sm">
+                <button class="text-on-surface-variant hover:text-primary font-label-lg text-label-lg underline decoration-dashed underline-offset-4 transition-colors">Need a hint?</button>
+            </div>
+        </div>
+    </div>
+</main>
+<!-- BottomNavBar (Mobile Only) -->
+<nav class="fixed bottom-0 w-full z-50 bg-surface border-t border-secondary-fixed flex justify-around items-center px-4 pb-4 pt-3 md:hidden shadow-[0_-4px_6px_-1px_rgba(0,0,0,0.05)]">
+    <a class="flex flex-col items-center justify-center bg-primary-container text-on-primary-container rounded-full px-5 py-1 hover:bg-surface-container-high transition-colors scale-down duration-200 active:scale-98" href="#">
+        <span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">quiz</span>
+        <span class="font-label-lg text-label-lg mt-1">Quiz</span>
+    </a>
+    <a class="flex flex-col items-center justify-center text-on-surface-variant py-1 hover:bg-surface-container-high transition-colors scale-down duration-200 active:scale-98 px-5 rounded-full" href="#">
+        <span class="material-symbols-outlined">settings</span>
+        <span class="font-label-lg text-label-lg mt-1">Settings</span>
+    </a>
+    <a class="flex flex-col items-center justify-center text-on-surface-variant py-1 hover:bg-surface-container-high transition-colors scale-down duration-200 active:scale-98 px-5 rounded-full" href="#">
+        <span class="material-symbols-outlined">person</span>
+        <span class="font-label-lg text-label-lg mt-1">Profile</span>
+    </a>
+</nav>
+</body></html>

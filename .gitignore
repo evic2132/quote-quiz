@@ -22,3 +22,6 @@ local.properties
 
 # Temporary duplicate local generator copy
 quote-quiz-server/
+/kotlin-js-store/wasm/yarn.lock
+/kotlin-js-store/yarn.lock
+/kotlin-js-store/

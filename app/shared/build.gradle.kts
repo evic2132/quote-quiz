@@ -1,3 +1,4 @@
+import org.jetbrains.kotlin.gradle.ExperimentalWasmDsl
 import org.jetbrains.kotlin.gradle.dsl.JvmTarget
 
 plugins {
@@ -6,6 +7,7 @@ plugins {
     alias(libs.plugins.composeMultiplatform)
     alias(libs.plugins.composeCompiler)
     alias(libs.plugins.kotlinSerialization)
+    alias(libs.plugins.kover)
 }
 
 kotlin {
@@ -20,6 +22,15 @@ kotlin {
     }
     
     jvm()
+
+    js {
+        browser()
+    }
+
+    @OptIn(ExperimentalWasmDsl::class)
+    wasmJs {
+        browser()
+    }
     
     android {
        namespace = "dev.elelan.quotequiz.app.shared"
@@ -45,7 +56,7 @@ kotlin {
     sourceSets {
         androidMain.dependencies {
             // Networking
-            implementation(libs.ktor.client.android)
+            implementation(libs.ktor.client.okhttp)
 
             // Tooling
             implementation(libs.compose.uiToolingPreview)
@@ -59,6 +70,8 @@ kotlin {
             implementation(libs.compose.runtime)
             implementation(libs.compose.foundation)
             implementation(libs.compose.material3)
+            implementation(libs.compose.material3.adaptive)
+            implementation(libs.compose.material3.adaptiveNavigation3.suite)
             implementation(libs.compose.ui)
             implementation(libs.compose.components.resources)
             implementation(libs.compose.uiToolingPreview)
@@ -68,6 +81,7 @@ kotlin {
 
             // Dependency injection
             implementation(libs.koin.compose)
+            implementation(libs.koin.compose.viewmodel)
             implementation(libs.koin.core)
 
             // Concurrency
@@ -79,6 +93,7 @@ kotlin {
             // Networking
             implementation(libs.ktor.client.core)
             implementation(libs.ktor.client.content.negotiation)
+            implementation(libs.ktor.client.logging)
             implementation(libs.ktor.serialization.kotlinx.json)
 
             // Persistence
@@ -99,6 +114,19 @@ kotlin {
             // Networking
             implementation(libs.ktor.client.cio)
         }
+        jsMain.dependencies {
+            // Networking
+            implementation(libs.ktor.client.js)
+
+            // Browser interop
+            implementation(libs.wrappers.browser)
+        }
+        wasmJsMain.dependencies {
+            // Networking
+            //implementation(libs.ktor.client.cio)
+            implementation(libs.ktor.client.js)
+        }
+
     }
 }
 
