@@ -1,5 +1,9 @@
 # Wisdom Trivia
 
+[![Live Demo](https://img.shields.io/badge/Live_Demo-GitHub_Pages-2ea44f?style=for-the-badge&logo=github)](https://evic2132.github.io/quote-quiz/)
+
+> **Live Web App:** [https://evic2132.github.io/quote-quiz/](https://evic2132.github.io/quote-quiz/)\
+
 Wisdom Trivia is a Kotlin full-stack quote quiz application built with a Kotlin Multiplatform client and a Spring Boot backend. The shared client module powers Android first, with desktop, iOS, and browser targets using the same core UI and application logic.
 
 ## Features
