@@ -8,7 +8,6 @@ import org.springframework.http.HttpMethod
 import org.springframework.security.authentication.AuthenticationManager
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration
 import org.springframework.security.config.annotation.web.builders.HttpSecurity
-import org.springframework.security.config.Customizer
 import org.springframework.security.config.http.SessionCreationPolicy
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder
 import org.springframework.security.crypto.password.PasswordEncoder
@@ -23,7 +22,6 @@ import org.springframework.web.filter.CorsFilter
 class SecurityConfig(
     private val jwtAuthenticationFilter: JwtAuthenticationFilter,
     private val apiAuthenticationEntryPoint: ApiAuthenticationEntryPoint,
-    private val corsConfig: CorsConfig,
 ) {
 
     @Bean
@@ -38,9 +36,7 @@ class SecurityConfig(
             }
             .authorizeHttpRequests {
                 it
-                    // 1. CRITICAL: Allow all OPTIONS preflight requests globally
                     .requestMatchers(HttpMethod.OPTIONS, "/**").permitAll()
-                    // 2. Add H2 console path alongside your existing public endpoints
                     .requestMatchers("/api/test", "/api/v1/auth/login", "/h2-console/**").permitAll()
                     .anyRequest().authenticated()
             }
@@ -57,12 +53,14 @@ class SecurityConfig(
     @Bean
     fun corsConfigurationSource(): CorsConfigurationSource {
         val configuration = CorsConfiguration().apply {
-            allowedOriginPatterns = corsConfig.allowedOriginPatternsList
-            allowedOrigins = listOf(
+            allowedOriginPatterns = listOf(
                 "https://evic2132.github.io",
+                "https://*.github.io",
                 "https://quote-quiz.onrender.com",
-                "http://localhost:8080",
-                "http://localhost:3000"
+                "http://localhost:*",
+                "http://127.0.0.1:*",
+                "https://localhost:*",
+                "https://127.0.0.1:*"
             )
             allowedMethods = listOf("GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS")
             allowedHeaders = listOf("*")
