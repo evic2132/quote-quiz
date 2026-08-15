@@ -73,7 +73,4 @@ class SecurityConfig(
             registerCorsConfiguration("/**", configuration)
         }
     }
-
-    @Bean
-    fun corsFilter(): CorsFilter = CorsFilter(corsConfigurationSource())
 }
