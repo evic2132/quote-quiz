@@ -8,19 +8,19 @@ import kotlin.test.assertEquals
 class AppContainerDestinationTest {
     @Test
     fun `loading state routes to splash`() {
-        assertEquals(SplashRoute, SessionState.Loading.toRootRoute())
+        assertEquals(AppRoute.Splash, SessionState.Loading.toAppRoute())
     }
 
     @Test
     fun `unauthenticated state routes to login`() {
-        assertEquals(LoginRoute, SessionState.Unauthenticated.toRootRoute())
+        assertEquals(AppRoute.Login, SessionState.Unauthenticated.toAppRoute())
     }
 
     @Test
     fun `authenticated state routes to home`() {
         val state = SessionState.Authenticated(token = "token", user = demoUser())
 
-        assertEquals(HomeRoute, state.toRootRoute())
+        assertEquals(AppRoute.Home, state.toAppRoute())
     }
 
     private fun demoUser() =
