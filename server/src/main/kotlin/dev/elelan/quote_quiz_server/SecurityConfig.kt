@@ -29,7 +29,6 @@ class SecurityConfig(
     fun securityFilterChain(http: HttpSecurity): SecurityFilterChain =
         http
             .cors { it.configurationSource(corsConfigurationSource()) }
-            .cors(Customizer.withDefaults())
             .csrf { it.disable() }
             .sessionManagement { it.sessionCreationPolicy(SessionCreationPolicy.STATELESS) }
             .exceptionHandling { it.authenticationEntryPoint(apiAuthenticationEntryPoint) }

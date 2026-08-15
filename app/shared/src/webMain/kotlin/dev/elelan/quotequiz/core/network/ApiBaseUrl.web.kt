@@ -7,15 +7,17 @@ private const val ApiBaseUrlMetaName = "quotequiz-api-base-url"
 private const val LocalDevApiBaseUrl = "http://localhost:8080"
 
 actual fun defaultApiBaseUrl(): String {
-    val configuredBaseUrl = document
-        .querySelector("meta[name='$ApiBaseUrlMetaName']")
+    val configuredBaseUrl = document.head
+        ?.querySelector("meta[name='$ApiBaseUrlMetaName']")
         ?.getAttribute("content")
         ?.trim()
         ?.takeIf { it.isNotEmpty() }
 
-    return normalizeBrowserBaseUrl(
-        configuredBaseUrl ?: browserDefaultApiBaseUrl(),
-    )
+    if (configuredBaseUrl != null) {
+        return normalizeBrowserBaseUrl(configuredBaseUrl)
+    }
+
+    return normalizeBrowserBaseUrl(browserDefaultApiBaseUrl())
 }
 
 private fun browserDefaultApiBaseUrl(): String {
