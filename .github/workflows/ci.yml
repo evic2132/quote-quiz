@@ -70,3 +70,39 @@ jobs:
 
       - name: Build server Docker image
         run: docker build -t quote-quiz-server-ci .
+
+  deploy-web:
+    runs-on: ubuntu-latest
+    # Only run deployment on pushes to main/develop, not on pull requests
+    if: github.event_name == 'push'
+    needs:
+      - verify
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Java
+        uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: "21"
+
+      - name: Setup Gradle
+        uses: gradle/actions/setup-gradle@v4
+
+      - name: Build WasmJS Web App
+        run: ./gradlew :app:webApp:wasmJsBrowserDistribution --no-daemon
+
+      - name: Upload GitHub Pages Artifact
+        uses: actions/upload-pages-artifact@v3
+        with:
+          # Path to compiled WASM production build artifacts
+          path: app/webApp/build/dist/wasmJs/productionExecutable/
+
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4
