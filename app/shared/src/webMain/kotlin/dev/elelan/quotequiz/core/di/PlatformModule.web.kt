@@ -12,5 +12,5 @@ internal expect val browserHttpClientEngineFactory: HttpClientEngineFactory<*>
 internal actual val platformModule: Module = module {
     single<HttpClientEngineFactory<*>> { browserHttpClientEngineFactory }
     single<Settings> { Settings() }
-    single { ApiConfig(baseUrl = defaultApiBaseUrl()) }
+    factory { ApiConfig(baseUrl = defaultApiBaseUrl()) }
 }
