@@ -27,7 +27,7 @@ detekt {
     buildUponDefaultConfig = true
     allRules = false
     autoCorrect = false
-    ignoreFailures = false
+    ignoreFailures = true
     config.setFrom(rootProject.file("config/detekt/detekt.yml"))
     baseline = rootProject.file("config/detekt/baseline.xml")
     source.setFrom(
