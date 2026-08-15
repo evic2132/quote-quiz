@@ -39,9 +39,9 @@ Do not overengineer the assignment.
 - Task 10 — Settings and Profile: `Completed`
 - Task 11 — Android polish and compliance hardening: `In progress`
 - Task 12 — Comprehensive test hardening: `Pending`
-- Task 13 — Bonus platforms: `Pending`
+- Task 13 — Bonus platforms: `Completed`
 - Task 14 — CI, Docker, and documentation: `Verified awaiting approval/commit`
-- Task 15 — Optional deployment/showcase: `Pending`
+- Task 15 — Optional deployment/showcase: `In Progress`
 - Task 16 — Final assignment compliance audit: `Pending`
 
 ---
