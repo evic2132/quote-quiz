@@ -47,7 +47,6 @@ class DemoDataInitializer(
                 )
             }
 
-            quoteRepository.deleteAll()
             if (quoteRepository.count() == 0L) {
                 quoteRepository.saveAll(DEMO_QUOTES)
 
