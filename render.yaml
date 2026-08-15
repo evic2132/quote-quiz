@@ -5,6 +5,7 @@ services:
     plan: free
     region: singapore
     branch: develop
+    autoDeploy: false
     dockerfilePath: ./Dockerfile
     healthCheckPath: /api/test
     envVars:
