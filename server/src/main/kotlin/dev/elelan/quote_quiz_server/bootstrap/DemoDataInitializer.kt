@@ -8,10 +8,16 @@ import org.springframework.boot.ApplicationRunner
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
 import org.springframework.beans.factory.annotation.Value
+import org.springframework.core.io.Resource
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder
+import tools.jackson.databind.ObjectMapper
 
 @Configuration
-class DemoDataInitializer {
+class DemoDataInitializer(
+    private val objectMapper: ObjectMapper,
+    @Value("classpath:data/famous_quotes.json")
+    private val quotesJsonResource: Resource,
+) {
 
     @Bean
     fun seedDemoData(
@@ -41,10 +47,30 @@ class DemoDataInitializer {
                 )
             }
 
+            quoteRepository.deleteAll()
             if (quoteRepository.count() == 0L) {
                 quoteRepository.saveAll(DEMO_QUOTES)
+
+                val quotes = loadQuotesFromJson()
+                quoteRepository.saveAll(quotes)
             }
         }
+
+    private fun loadQuotesFromJson(): List<QuoteEntity> {
+        if (!quotesJsonResource.exists()) return emptyList()
+
+        val seedDtos = objectMapper.readValue(
+            quotesJsonResource.inputStream,
+            Array<QuoteSeedDto>::class.java,
+        )
+
+        return seedDtos.map { dto ->
+            QuoteEntity(
+                text = dto.text,
+                author = dto.author,
+            )
+        }
+    }
 
     private companion object {
         val DEMO_QUOTES =
@@ -87,3 +113,8 @@ private fun BCryptPasswordEncoder.encodeRequired(rawPassword: String): String =
     requireNotNull(encode(rawPassword)) {
         "BCrypt encoder returned a null password hash."
     }
+
+private data class QuoteSeedDto(
+    val text: String = "",
+    val author: String = "",
+)
