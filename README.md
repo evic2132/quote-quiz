@@ -1,64 +1,52 @@
 # Wisdom Trivia
 
+[![CI/CD](https://github.com/evic2132/quote-quiz/actions/workflows/ci.yml/badge.svg?branch=develop)](https://github.com/evic2132/quote-quiz/actions/workflows/ci.yml)
+[![codecov](https://codecov.io/gh/evic2132/quote-quiz/branch/develop/graph/badge.svg)](https://codecov.io/gh/evic2132/quote-quiz)
 [![Live Demo](https://img.shields.io/badge/Live_Demo-GitHub_Pages-2ea44f?style=for-the-badge&logo=github)](https://evic2132.github.io/quote-quiz/)
 
-> **Live Web App:** [https://evic2132.github.io/quote-quiz/](https://evic2132.github.io/quote-quiz/)\
+> **Live Web App:** https://evic2132.github.io/quote-quiz/
 
-Wisdom Trivia is a Kotlin full-stack quote quiz application built with a Kotlin Multiplatform client and a Spring Boot backend. The shared client module powers Android first, with desktop, iOS, and browser targets using the same core UI and application logic.
+Wisdom Trivia is a Kotlin full-stack quote quiz application built with a Kotlin Multiplatform client
+and a Spring Boot backend. The shared client module powers Android first, with desktop, iOS, and
+browser targets using the same core UI and application logic.
 
 ## Features
 
-- Email and password login with persisted authenticated session
-- Two quiz modes: binary and multiple choice
-- Ten-question server-generated quiz sessions
-- Immediate answer feedback with modal confirmation before advancing
-- Quiz results summary with restart flow
-- Read-only profile screen with logout
-- Shared Compose Multiplatform UI across platforms
+- Splash screen and persisted login
+- Email/password authentication
+- Quiz, Settings, and Profile tabs
+- Binary (Yes/No) and multiple-choice modes
+- 10 questions per session
+- Backend-generated questions and distractors
+- Correct/incorrect feedback before advancing
+- Results screen with restart
+- Read-only profile and logout
+- Portrait and landscape support
 
-## Technology Stack
+## Tech Stack
 
-### Client
+**Client:** Kotlin Multiplatform, Compose Multiplatform, Navigation 3,
+Ktor Client, Koin, Multiplatform Settings, Kotlinx Serialization.
 
-- Kotlin Multiplatform
-- Compose Multiplatform
-- Navigation 3
-- Ktor Client
-- Koin
-- Multiplatform Settings
-- Kotlinx Serialization
+**Backend:** Kotlin, Spring Boot, Spring MVC, Spring Security, Spring
+Data JPA, H2, JWT.
 
-### Server
+**Tooling:** Gradle, Detekt, Kover, Codecov, GitHub Actions, Docker,
+Render, GitHub Pages.
 
-- Kotlin
-- Spring Boot
-- Spring MVC
-- Spring Security
-- Spring Data JPA
-- H2
-- JWT
-
-### Tooling
-
-- Gradle
-- Detekt
-- GitHub Actions
-- Docker
-- Render Blueprint
-
-## Module Layout
+## Project Structure
 
 ```text
 .
-├── api-contract      # Shared REST DTOs and enums
+├── api-contract      # Shared REST contracts
 ├── app
-│   ├── androidApp    # Android application entry point
-│   ├── desktopApp    # Desktop JVM entry point
-│   ├── iosApp        # iOS host app consuming the shared framework
-│   ├── shared        # Shared KMP UI, state, networking, DI, navigation
-│   └── webApp        # Browser host for JS and Wasm builds
+│   ├── shared        # Shared KMP UI, state, networking, DI and navigation
+│   ├── androidApp     # Android launcher
+│   ├── desktopApp     # Desktop launcher
+│   ├── iosApp         # iOS host
+│   └── webApp         # Web JS/Wasm host
 ├── server            # Spring Boot backend
-├── config/detekt     # Static analysis config and baseline
+├── config/detekt     # Static analysis config
 └── docs/design       # UI references and design notes
 ```
 
@@ -70,88 +58,41 @@ flowchart LR
     D["desktopApp"] --> S
     I["iosApp"] --> S
     W["webApp"] --> S
-
     S --> C["api-contract"]
     V["server"] --> C
-
     S --> K["Ktor Client + Koin + Settings"]
-    V --> J["Spring MVC + Security + JPA + H2"]
+    V --> Q["Quiz Engine + Quote Dataset"]
+    V --> J["Spring MVC + Security + JPA"]
+    J --> DB["H2"]
 ```
 
-### Client structure
-
-- `app:shared` contains shared Compose UI, navigation, view models, repositories, API clients, and session handling.
-- Platform modules stay thin and only host the shared `App()` entry point.
-- Authentication state sits above tab navigation:
-  - Splash
-  - Login
-  - Main app container
-
-### Server structure
-
-- Controllers handle HTTP endpoints.
-- Services own quiz and authentication behavior.
-- Repositories and JPA entities stay server-only.
-- `api-contract` is the only shared code between client and server.
+`api-contract` is shared by the client and server. Platform apps stay
+thin and reuse `app:shared`.
 
 ## Supported Platforms
 
-| Platform | Status | Notes |
-| --- | --- | --- |
-| Android | Primary | Main packaged app target |
-| Desktop JVM | Supported | Shared UI via `desktopApp` |
-| iOS | Supported | Xcode host app using `QuoteQuizCore` |
-| Web JS | Supported | Browser host in `webApp` |
-| Web Wasm | Supported | Browser host in `webApp` |
+| Platform    | Status    | Notes                                |
+|-------------|-----------|--------------------------------------|
+| Android     | Primary   | Main packaged app target             |
+| Desktop JVM | Supported | Shared UI via `desktopApp`           |
+| iOS         | Supported | Xcode host app using `QuoteQuizCore` |
+| Web JS      | Supported | Browser host in `webApp`             |
+| Web Wasm    | Supported | Browser host in `webApp`             |
 
-## Local Development
+## Run Locally
 
-### Prerequisites
+Requirements: JDK 21, Android Studio/IntelliJ IDEA, and Xcode 15+ for
+iOS. Docker is optional.
 
-- JDK 21
-- Android Studio or IntelliJ IDEA with Kotlin Multiplatform support
-- Xcode 15+ for iOS
-- Docker for containerized server runs
-
-### Clone and bootstrap
-
-```bash
-git clone [https://github.com/evic2132/quote-quiz](https://github.com/evic2132/quote-quiz)
-cd quiz-app
+``` bash
+git clone https://github.com/evic2132/quote-quiz.git
+cd quote-quiz
 cp .env.example .env
-```
-
-The `.env` file is optional for local development, but keeping one next to the root project makes the Spring Boot run configuration predictable.
-
-### Demo credentials
-
-The server seeds two users on startup:
-
-- `demo@example.com` / `password123`
-- `reviewer@example.com` / `reviewer123`
-
-### Environment variables
-
-Server configuration is driven by environment variables. Start from [.env.example](./.env.example).
-
-Common variables:
-
-- `QUOTEQUIZ_DB_USERNAME`
-- `QUOTEQUIZ_DB_PASSWORD`
-- `QUOTEQUIZ_DEMO_USER_PASSWORD`
-- `QUOTEQUIZ_REVIEWER_USER_PASSWORD`
-- `QUOTEQUIZ_JWT_SECRET`
-- `SERVER_PORT`
-
-## Running the Server
-
-### Gradle
-
-```bash
 ./gradlew :server:bootRun
 ```
 
-The server starts on `http://localhost:8080` by default.
+The `.env` file is optional for local development.
+The backend runs at `http://localhost:8080`.
 
 Health check:
 
@@ -159,81 +100,50 @@ Health check:
 curl http://localhost:8080/api/test
 ```
 
-### Docker
+### Demo Accounts
 
-Build the image:
-
-```bash
-docker build -t wisdom-trivia-server .
+``` text
+demo@example.com      / password123
+reviewer@example.com  / reviewer123
 ```
 
-Run the container:
-
-```bash
-docker run --rm -p 8080:10000 \
-  -e PORT=10000 \
-  -e QUOTEQUIZ_JWT_SECRET=dev-only-jwt-secret-change-me-32chars \
-  wisdom-trivia-server
-```
-
-The repository also includes a Render blueprint at [render.yaml](./render.yaml).
-
-## Running the Client
-
-Start the backend first, then launch any client target.
+Deployment passwords can be overridden with environment variables.
 
 ### Android
 
-From Android Studio:
+Open the project in Android Studio and run `androidApp`.
 
-- open the project
-- select the `androidApp` run configuration
-- run on an Android device or emulator
-
-Useful verification command:
-
-```bash
+``` bash
 ./gradlew :app:androidApp:assembleDebug
 ```
 
-Android development assumes an emulator by default and uses `http://10.0.2.2:8080` as the backend base URL.
+The Android emulator uses `http://10.0.2.2:8080` for the local backend.
 
-### Desktop
+### Bonus Targets
 
-```bash
+``` bash
+# Desktop
 ./gradlew :app:desktopApp:run
+
+# Web JS
+./gradlew :app:webApp:jsBrowserDevelopmentRun
+
+# Web Wasm
+./gradlew :app:webApp:wasmJsBrowserDevelopmentRun
 ```
 
-### iOS
-
-Open the Xcode project:
-
-- [app/iosApp/iosApp.xcodeproj](./app/iosApp/iosApp.xcodeproj)
-
-The shared framework is produced from `app:shared` with framework name `QuoteQuizCore`.
-
-### Web JS
-
-```bash
-./gradlew :app:webApp:jsBrowserDevelopmentRun --no-daemon
-```
-
-This serves the browser app on `http://localhost:8081`.
-
-### Web Wasm
-
-```bash
-./gradlew :app:webApp:wasmJsBrowserDevelopmentRun --no-daemon
-```
+For iOS, open [app/iosApp/iosApp.xcodeproj](./app/iosApp/iosApp.xcodeproj)j in Xcode.
 
 ### Base URL behavior
 
 - Android uses the emulator host mapping `http://10.0.2.2:8080`.
 - Desktop and iOS default to `http://localhost:8080`.
 - Browser builds default to `http://localhost:8080` when opened on localhost.
-- Browser builds can also override the API base URL through the `quotequiz-api-base-url` meta tag in [app/webApp/src/webMain/resources/index.html](./app/webApp/src/webMain/resources/index.html).
+- Browser builds can also override the API base URL through the `quotequiz-api-base-url` meta tag
+  in [app/webApp/src/webMain/resources/index.html](./app/webApp/src/webMain/resources/index.html).
 
-If you run Android on a physical device instead of an emulator, point the client to your machine's LAN IP and ensure the backend is reachable on that network.
+If you run Android on a physical device instead of an emulator, point the client to your machine's
+LAN IP and ensure the backend is reachable on that network.
 
 ## API Summary
 
@@ -242,20 +152,20 @@ Base URL: `http://localhost:8080`
 ### Public
 
 - `GET /api/test`
-  - health/status response
+    - health/status response
 - `POST /api/v1/auth/login`
-  - accepts email and password
-  - returns JWT token and current user
+    - accepts email and password
+    - returns JWT token and current user
 
 ### Authenticated
 
 - `GET /api/v1/me`
-  - returns current user profile
+    - returns current user profile
 - `POST /api/v1/quiz/sessions`
-  - starts a new quiz session in the selected mode
+    - starts a new quiz session in the selected mode
 - `POST /api/v1/quiz/sessions/{sessionId}/answers`
-  - validates an answer
-  - returns feedback, next question, or final result
+    - validates an answer
+    - returns feedback, next question, or final result
 
 ### Authentication header
 
@@ -274,53 +184,54 @@ API errors use a consistent JSON response shape:
 }
 ```
 
-## Quality Checks
+## Tests & Quality
 
-### Static analysis
-
-```bash
+``` bash
+# Static analysis
 ./gradlew detekt --no-daemon
+
+# Tests + aggregate JVM coverage
+./gradlew :koverXmlReport :koverHtmlReport :koverVerify --no-daemon
 ```
 
-Detekt configuration lives in:
+Coverage focuses on `app:shared` and `server`, where the testable
+application logic lives. CI uploads Detekt SARIF to GitHub Code Scanning
+and Kover coverage to Codecov.
 
-- [config/detekt/detekt.yml](./config/detekt/detekt.yml)
-- [config/detekt/baseline.xml](./config/detekt/baseline.xml)
+## CI/CD
 
-### Tests and verification
+GitHub Actions runs checks before affected builds and deployments.
 
-Shared and server tests:
+- Android is built when Android/shared dependencies change.
+- Web is deployed to GitHub Pages only for web-related changes.
+- Server changes trigger Render only after verification succeeds.
+- Pull requests run verification without deployment.
+- Path-based change detection avoids unnecessary builds.
 
-```bash
-./gradlew :server:test :app:shared:jvmTest --no-daemon
+## Docker
+
+``` bash
+docker build -t wisdom-trivia-server .
+
+docker run --rm -p 8080:10000   -e PORT=10000   -e QUOTEQUIZ_JWT_SECRET=dev-only-jwt-secret-change-me-32chars   wisdom-trivia-server
 ```
 
-Common build verification:
+Render configuration is in [`render.yaml`](./render.yaml).
 
-```bash
-./gradlew :app:shared:compileCommonMainKotlinMetadata :app:androidApp:assembleDebug --no-daemon
-```
+## Design Decisions
 
-Browser-target verification:
+- Shared Compose UI across client targets
+- Thin platform launcher modules
+- Shared REST DTOs in `api-contract`
+- Server-authoritative quiz sessions and scoring
+- Idempotent answer submission for safe retries
+- Multiplatform Settings for session persistence
+- JWT authentication without refresh-token complexity
+- H2 for simple reviewer setup
 
-```bash
-./gradlew :app:shared:compileKotlinJs :app:shared:compileKotlinWasmJs :app:webApp:compileKotlinJs :app:webApp:compileKotlinWasmJs --no-daemon
-```
-
-## CI
-
-GitHub Actions workflows:
-
-- [ci.yml](./.github/workflows/ci.yml)
-  - runs Detekt
-  - uploads Detekt SARIF
-  - verifies server tests, shared JVM tests, shared metadata compilation, and Android debug assembly
-  - builds the Docker image
-  - builds and deploys the WasmJS Web App to GitHub Pages
-- [deploy-server.yml](./.github/workflows/deploy-server.yml)
-  - reruns verification
-  - builds the Docker image
-  - triggers deployment through a Render deploy hook
+The project deliberately avoids unnecessary assignment complexity such
+as OAuth, refresh tokens, Redis, PostgreSQL, microservices, and a local
+Room database.
 
 ## Design Notes
 
@@ -329,18 +240,6 @@ GitHub Actions workflows:
 - Multiple-choice distractors are generated by the backend.
 - Duplicate answer submissions are handled idempotently so the client can safely retry.
 - The project favors shared UI and shared state management over per-platform feature duplication.
-
-## Deliberate Scope Limits
-
-This project intentionally stays small and focused:
-
-- no refresh-token flow
-- no OAuth or external identity provider
-- no PostgreSQL or Redis
-- no Room-based local database
-- no microservices split
-- no heavy Clean Architecture ceremony
-- no server-side reactive stack
 
 ## Design References
 
