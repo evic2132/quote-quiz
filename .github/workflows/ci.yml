@@ -30,9 +30,6 @@ jobs:
       # Required for Detekt SARIF → GitHub Code Scanning.
       security-events: write
 
-      # Used by Codecov OIDC.
-      id-token: write
-
     outputs:
       web_changed: ${{ steps.changes.outputs.web }}
       server_changed: ${{ steps.changes.outputs.server }}
@@ -173,7 +170,6 @@ jobs:
               server/*|\
               api-contract/*|\
               Dockerfile|\
-              render.yaml|\
               build.gradle.kts|\
               settings.gradle.kts|\
               gradle.properties|\
@@ -276,27 +272,6 @@ jobs:
           path: build/reports/kover/html/
           if-no-files-found: ignore
           retention-days: 14
-
-      # -----------------------------------------------------------------------
-      # Codecov
-      #
-      # OIDC avoids maintaining a CODECOV_TOKEN.
-      # -----------------------------------------------------------------------
-
-      - name: Upload coverage to Codecov
-        if: >-
-          steps.changes.outputs.quality == 'true' &&
-          (
-            github.event_name != 'pull_request' ||
-            github.event.pull_request.head.repo.full_name == github.repository
-          )
-        uses: codecov/codecov-action@v5
-        with:
-          use_oidc: true
-          files: build/reports/kover/coverage.xml
-          fail_ci_if_error: true
-          flags: unit-tests
-          name: quotequiz-kover
 
       # =======================================================================
       # 3. BUILD VALIDATION

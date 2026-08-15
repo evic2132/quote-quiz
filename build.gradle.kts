@@ -1,5 +1,4 @@
 import dev.detekt.gradle.Detekt
-import dev.detekt.gradle.extensions.DetektExtension
 
 plugins {
     alias(libs.plugins.androidApplication) apply false
@@ -40,6 +39,7 @@ detekt {
             "api-contract/src",
             "app/androidApp/src",
             "app/desktopApp/src",
+            "app/webApp/src",
             "app/shared/src",
             "server/src",
         ),
