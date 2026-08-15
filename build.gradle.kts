@@ -7,6 +7,7 @@ plugins {
     alias(libs.plugins.composeMultiplatform) apply false
     alias(libs.plugins.composeCompiler) apply false
     alias(libs.plugins.detekt)
+    alias(libs.plugins.kover)
     alias(libs.plugins.gradleDotenv) apply false
     alias(libs.plugins.kotlinSerialization) apply false
     alias(libs.plugins.kotlinJvm) apply false
@@ -20,6 +21,10 @@ plugins {
 dependencies {
     detektPlugins(libs.detekt.formatting)
     detektPlugins(libs.detekt.compose)
+
+    kover(project(":server"))
+    kover(project(":app:shared"))
+    kover(project(":api-contract"))
 }
 
 detekt {
@@ -46,5 +51,45 @@ tasks.withType<Detekt>().configureEach {
     reports {
         html.required.set(true)
         sarif.required.set(true)
+    }
+}
+
+kover {
+    reports {
+        total {
+            html {
+                onCheck = false
+                htmlDir.set(
+                    layout.buildDirectory.dir("reports/kover/html")
+                )
+            }
+
+            xml {
+                onCheck = false
+                xmlFile.set(
+                    layout.buildDirectory.file("reports/kover/coverage.xml")
+                )
+            }
+        }
+
+        filters {
+            excludes {
+                classes(
+                    "*.BuildConfig",
+                    "*.*Application",
+                    "*.generated.*",
+                )
+
+                annotatedBy(
+                    "androidx.compose.ui.tooling.preview.Preview",
+                )
+            }
+        }
+
+        verify {
+            rule {
+                minBound(20)
+            }
+        }
     }
 }
