@@ -21,6 +21,8 @@ spring:
         format_sql: true
 
 quotequiz:
+  cors:
+    allowed-origin-patterns: ${QUOTEQUIZ_CORS_ALLOWED_ORIGIN_PATTERNS:http://localhost:*,http://127.0.0.1:*,https://localhost:*,https://127.0.0.1:*,https://quote-quiz.onrender.com}
   security:
     jwt-secret: ${QUOTEQUIZ_JWT_SECRET:dev-only-jwt-secret-change-me-32chars}
   seed:
